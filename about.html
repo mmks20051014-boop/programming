@@ -12,6 +12,18 @@
     <meta property="og:description" content="40歳・文系営業職。PCはブラウザ検索だけ。独学3日で挫折した私が、90日のITスクールで何を手に入れ、何に苦しんだか。数字で語る体験記。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://myprogramming.netlify.app/about.html">
+    <meta property="og:image"       content="https://myprogramming.netlify.app/assets/images/ogp.png">
+    <meta property="og:image:width"  content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale"      content="ja_JP">
+    <meta property="og:site_name"   content="CodeRoute 90">
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="about me - CodeRoute 90 | 40歳・文系営業職がITスクールで転職した記録">
+    <meta name="twitter:description" content="40歳・文系営業職。PCはブラウザ検索だけ。独学3日で挫折した私が、90日のITスクールで何を手に入れ、何に苦しんだか。">
+    <meta name="twitter:image"       content="https://myprogramming.netlify.app/assets/images/ogp.png">
+    <!-- canonical -->
+    <link rel="canonical" href="https://myprogramming.netlify.app/about.html">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -731,6 +743,49 @@
             }
         }
     </style>
+
+    <!-- ===== 構造化データ (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "@id": "https://myprogramming.netlify.app/about.html",
+      "url": "https://myprogramming.netlify.app/about.html",
+      "name": "about me - CodeRoute 90",
+      "description": "40歳・文系営業職がITスクールで転職した実体験記。生存者バイアスなし、数字で語る90日間の攻略ログ。",
+      "inLanguage": "ja",
+      "isPartOf": { "@id": "https://myprogramming.netlify.app/#website" },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "CodeRoute 90 運営者",
+        "description": "40歳・文系営業職。PCはブラウザ検索のみ。独学3日で挫折したが、90日のITスクールでエンジニア転職を達成し、現在フリーランスとして稼働中。",
+        "knowsAbout": ["ITスクール", "プログラミング学習", "エンジニア転職", "フリーランス", "40代転職"]
+      }
+    }
+    </script>
+    <!-- ===== /構造化データ ===== -->
+
+    <!-- ===== Google Analytics 4 ===== -->
+    <!-- ↓ GA4 測定ID（例: G-ABCDE12345）に差し替えてください -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <!-- ===== /Google Analytics 4 ===== -->
+
+    <!-- ===== Microsoft Clarity ===== -->
+    <!-- ↓ Clarity プロジェクトID（例: abcde12345）に差し替えてください -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+    </script>
+    <!-- ===== /Microsoft Clarity ===== -->
 </head>
 <body>
 

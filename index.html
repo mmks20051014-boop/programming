@@ -14,6 +14,15 @@
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://myprogramming.netlify.app">
     <meta property="og:image" content="https://www.genspark.ai/api/files/s/73DQXk61">
+    <meta property="og:locale"      content="ja_JP">
+    <meta property="og:site_name"   content="CodeRoute 90">
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="CodeRoute 90｜最短距離で「未経験」を脱却する攻略ログ">
+    <meta name="twitter:description" content="時間を最優先し、最短で結果を出すための学習設計・スクール活用・詰まりどころを公開する、90日間の攻略ログ。">
+    <meta name="twitter:image"       content="https://myprogramming.netlify.app/assets/images/ogp.png">
+    <!-- canonical -->
+    <link rel="canonical" href="https://myprogramming.netlify.app">
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +37,64 @@
 
     <!-- CSS -->
     <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- ===== 構造化データ (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "WebSite",
+          "@id": "https://myprogramming.netlify.app/#website",
+          "url": "https://myprogramming.netlify.app",
+          "name": "CodeRoute 90",
+          "description": "40歳・文系から90日でエンジニア転職した運営者が、最短で結果を出すための学習設計とスクール活用術を事実ベースで共有するメディア",
+          "inLanguage": "ja",
+          "potentialAction": {
+            "@type": "SearchAction",
+            "target": {
+              "@type": "EntryPoint",
+              "urlTemplate": "https://myprogramming.netlify.app/blog.html?s={search_term_string}"
+            },
+            "query-input": "required name=search_term_string"
+          }
+        },
+        {
+          "@type": "Organization",
+          "@id": "https://myprogramming.netlify.app/#organization",
+          "name": "CodeRoute 90",
+          "url": "https://myprogramming.netlify.app",
+          "logo": {
+            "@type": "ImageObject",
+            "url": "https://myprogramming.netlify.app/assets/images/logo.png"
+          }
+        }
+      ]
+    }
+    </script>
+    <!-- ===== /構造化データ ===== -->
+
+    <!-- ===== Google Analytics 4 ===== -->
+    <!-- ↓ GA4 測定ID（例: G-ABCDE12345）に差し替えてください -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-XXXXXXXXXX');
+    </script>
+    <!-- ===== /Google Analytics 4 ===== -->
+
+    <!-- ===== Microsoft Clarity ===== -->
+    <!-- ↓ Clarity プロジェクトID（例: abcde12345）に差し替えてください -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "YOUR_CLARITY_ID");
+    </script>
+    <!-- ===== /Microsoft Clarity ===== -->
 </head>
 <body>
     <!-- Header -->
