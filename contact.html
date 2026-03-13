@@ -11,7 +11,7 @@
     <meta property="og:title" content="お問い合わせ - CodeRoute 90">
     <meta property="og:description" content="ITスクールについてのご相談やプログラミング学習についてのご質問をお受けしています">
     <meta property="og:type" content="website">
-    <meta property="og:url" content="https://shiromiya.example.com/contact.html">
+    <meta property="og:url" content="https://myprogramming.netlify.app/contact.html">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,207 +25,407 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <style>
+        /* ===== CONTACT PAGE STYLES ===== */
+
+        /* --- Hero Section --- */
         .contact-hero {
-            background: var(--gradient-hero);
-            color: var(--text-light);
-            padding: 8rem 2rem 4rem;
-            text-align: center;
             position: relative;
+            padding: 10rem 2rem 6rem;
+            text-align: center;
+            overflow: hidden;
+            background: var(--gradient-hero);
+            border-bottom: 1px solid var(--border-subtle);
         }
-        
+
+        .contact-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(0, 212, 255, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 50%, rgba(236, 72, 153, 0.06) 0%, transparent 60%);
+            pointer-events: none;
+        }
+
+        /* Animated grid lines */
+        .contact-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0, 212, 255, 0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 212, 255, 0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            pointer-events: none;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            color: var(--accent-cyan);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 2rem;
+            letter-spacing: 0.05em;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-badge::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--accent-cyan);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.5; transform: scale(0.8); }
+        }
+
         .contact-hero h1 {
-            color: var(--text-light);
-            margin-bottom: 1rem;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
+
         .contact-hero p {
-            font-size: 1.2rem;
-            color: var(--slate-gray);
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+            line-height: 1.8;
         }
-        
+
+        /* --- Section Layout --- */
+        .section {
+            margin-bottom: 6rem;
+        }
+
+        /* --- Contact Options Cards --- */
         .contact-options {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 3rem;
+            gap: 2rem;
             margin: 4rem 0;
         }
-        
+
         .contact-card {
-            background: white;
-            padding: 3rem 2rem;
-            border-radius: 20px;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 3rem 2.5rem;
             text-align: center;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
             overflow: hidden;
         }
-        
+
         .contact-card::before {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
             right: 0;
-            height: 4px;
-            background: var(--gradient-cta);
+            height: 2px;
+            background: var(--gradient-primary);
+            opacity: 0.7;
         }
-        
+
+        .contact-card::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-glass);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            border-radius: var(--radius-lg);
+        }
+
+        .contact-card:hover::after {
+            opacity: 1;
+        }
+
         .contact-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(100, 180, 255, 0.2);
-            border-color: rgba(100, 180, 255, 0.3);
+            transform: translateY(-8px);
+            box-shadow: var(--shadow-hover);
+            border-color: var(--border-glow);
         }
-        
+
         .contact-icon {
-            font-size: 3rem;
-            color: var(--accent-blue);
+            font-size: 2.5rem;
             margin-bottom: 1.5rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            color: var(--accent-cyan);
+            position: relative;
+            z-index: 1;
         }
-        
+
+        .contact-card:nth-child(2) .contact-icon {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+        }
+
         .contact-card h3 {
-            color: var(--primary-bg);
+            font-size: 1.4rem;
+            font-weight: 600;
             margin-bottom: 1rem;
-            font-size: 1.5rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: relative;
+            z-index: 1;
         }
-        
+
         .contact-card p {
-            color: var(--slate-gray);
+            color: var(--text-secondary);
             margin-bottom: 2rem;
-            line-height: 1.7;
+            line-height: 1.8;
+            position: relative;
+            z-index: 1;
         }
-        
+
+        .contact-card .cta-button {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* --- Form Container --- */
         .contact-form {
-            background: white;
-            padding: 3rem;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 3.5rem;
             margin: 3rem 0;
             max-width: 800px;
             margin-left: auto;
             margin-right: auto;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .contact-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+        }
+
+        .contact-form h2 {
+            font-size: clamp(1.5rem, 3vw, 2rem);
+            font-weight: 700;
+            margin-bottom: 0.75rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .form-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
+            line-height: 1.7;
+        }
+
+        /* --- Form Elements --- */
         .form-group {
             margin-bottom: 2rem;
         }
-        
+
         .form-label {
             display: block;
-            margin-bottom: 0.8rem;
-            font-weight: 700;
-            color: var(--primary-bg);
-            font-size: 1.1rem;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.95rem;
+            letter-spacing: 0.02em;
         }
-        
+
         .form-label .required {
-            color: #e53e3e;
+            color: var(--accent-pink);
             margin-left: 0.3rem;
+            font-size: 0.8rem;
         }
-        
+
         .form-control {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 0.9rem 1.1rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8fafc;
-            color: var(--text-dark);
-        }
-        
-        .form-control:focus {
+            font-family: var(--font-secondary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
             outline: none;
-            border-color: var(--accent-blue);
-            background: white;
-            color: var(--text-dark);
-            box-shadow: 0 0 20px rgba(100, 180, 255, 0.2);
         }
-        
+
+        .form-control::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-control:focus {
+            border-color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.04);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1), 0 0 20px rgba(0, 212, 255, 0.1);
+        }
+
         .form-control.error {
-            border-color: #e53e3e;
-            background: #fff5f5;
+            border-color: var(--accent-pink);
+            background: rgba(236, 72, 153, 0.04);
+            box-shadow: 0 0 0 3px rgba(236, 72, 153, 0.1);
         }
-        
+
         .form-textarea {
             min-height: 150px;
             resize: vertical;
         }
-        
+
         .form-select {
             width: 100%;
-            padding: 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 12px;
+            padding: 0.9rem 1.1rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
             font-size: 1rem;
-            background: #f8fafc;
-            color: var(--text-dark);
+            font-family: var(--font-secondary);
+            background: rgba(255, 255, 255, 0.04);
+            color: var(--text-primary);
             cursor: pointer;
-        }
-        
-        .form-select:focus {
             outline: none;
-            border-color: var(--accent-blue);
-            background: white;
-            color: var(--text-dark);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2300d4ff' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+            padding-right: 2.5rem;
         }
-        
+
+        .form-select option {
+            background: #1a1a1a;
+            color: var(--text-primary);
+        }
+
+        .form-select:focus {
+            border-color: var(--accent-cyan);
+            background-color: rgba(0, 212, 255, 0.04);
+            box-shadow: 0 0 0 3px rgba(0, 212, 255, 0.1);
+        }
+
         .form-help {
-            font-size: 0.9rem;
-            color: var(--slate-gray);
-            margin-top: 0.5rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-top: 0.4rem;
             display: block;
         }
-        
+
         .form-error {
-            color: #e53e3e;
-            font-size: 0.9rem;
-            margin-top: 0.5rem;
+            color: var(--accent-pink);
+            font-size: 0.85rem;
+            margin-top: 0.4rem;
             display: none;
+            align-items: center;
+            gap: 0.3rem;
         }
-        
+
         .form-error.show {
-            display: block;
+            display: flex;
         }
-        
+
         .form-row {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
+            gap: 1.5rem;
         }
-        
+
+        /* --- Submit Button --- */
         .form-submit {
-            background: var(--gradient-cta);
-            color: white;
+            background: var(--gradient-primary);
+            color: #fff;
             border: none;
-            padding: 1.2rem 3rem;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            padding: 1rem 3rem;
+            border-radius: var(--radius-lg);
+            font-size: 1.05rem;
             font-weight: 700;
+            font-family: var(--font-secondary);
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 20px rgba(100, 180, 255, 0.4);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: block;
-            margin: 2rem auto 0;
+            margin: 2.5rem auto 0;
+            position: relative;
+            overflow: hidden;
+            letter-spacing: 0.02em;
         }
-        
+
+        .form-submit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .form-submit:hover::before {
+            left: 100%;
+        }
+
         .form-submit:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 32px rgba(100, 180, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 212, 255, 0.4);
         }
-        
+
         .form-submit:disabled {
-            opacity: 0.6;
+            opacity: 0.5;
             cursor: not-allowed;
             transform: none;
         }
-        
+
         .form-submit.loading {
-            position: relative;
             color: transparent;
         }
-        
+
         .form-submit.loading::after {
             content: '';
             position: absolute;
@@ -234,125 +434,230 @@
             width: 20px;
             height: 20px;
             margin: -10px 0 0 -10px;
-            border: 2px solid white;
+            border: 2px solid rgba(255,255,255,0.4);
+            border-top-color: #fff;
             border-radius: 50%;
-            border-top-color: transparent;
             animation: spin 0.8s linear infinite;
         }
-        
+
         @keyframes spin {
             to { transform: rotate(360deg); }
         }
-        
+
+        /* --- Privacy Note --- */
+        .privacy-note {
+            background: rgba(0, 212, 255, 0.05);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            color: var(--text-secondary);
+            padding: 1.2rem 1.5rem;
+            border-radius: var(--radius-md);
+            margin: 2rem 0;
+            font-size: 0.9rem;
+            line-height: 1.7;
+            display: flex;
+            gap: 0.75rem;
+            align-items: flex-start;
+        }
+
+        .privacy-note i {
+            color: var(--accent-cyan);
+            margin-top: 0.15rem;
+            flex-shrink: 0;
+        }
+
+        .privacy-note strong {
+            color: var(--text-primary);
+        }
+
+        /* --- Success Message --- */
         .success-message {
-            background: linear-gradient(135deg, #48bb78 0%, #38a169 100%);
-            color: white;
-            padding: 2rem;
-            border-radius: 15px;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid rgba(0, 212, 255, 0.3);
+            color: var(--text-primary);
+            padding: 3rem 2rem;
+            border-radius: var(--radius-lg);
             text-align: center;
             margin: 2rem 0;
             display: none;
+            backdrop-filter: blur(10px);
         }
-        
+
         .success-message.show {
             display: block;
-            animation: slideIn 0.5s ease;
+            animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
+
         @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to   { opacity: 1; transform: translateY(0); }
         }
-        
+
         .success-message i {
             font-size: 3rem;
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
             display: block;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .contact-info {
-            background: var(--gradient-section);
+
+        .success-message h3 {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .success-message p {
+            color: var(--text-secondary);
+        }
+
+        /* --- Contact Info Section --- */
+        .contact-info-section {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
             padding: 3rem 2rem;
-            border-radius: 20px;
             text-align: center;
             margin: 3rem 0;
+            backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
         }
-        
-        .contact-info h3 {
-            color: var(--primary-bg);
+
+        .contact-info-section::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            opacity: 0.5;
+        }
+
+        .contact-info-section h3 {
+            font-size: 1.5rem;
+            font-weight: 600;
             margin-bottom: 1rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        
-        .contact-info p {
-            color: var(--slate-gray);
-            margin-bottom: 2rem;
+
+        .contact-info-section > p {
+            color: var(--text-secondary);
+            margin-bottom: 2.5rem;
         }
-        
+
         .contact-methods {
             display: flex;
             justify-content: center;
             gap: 3rem;
             margin-top: 2rem;
         }
-        
+
         .contact-method {
             text-align: center;
         }
-        
-        .contact-method i {
-            font-size: 2rem;
-            color: var(--accent-blue);
-            margin-bottom: 0.5rem;
-            display: block;
+
+        .contact-method-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            transition: all 0.3s ease;
         }
-        
+
+        .contact-method:nth-child(2) .contact-method-icon {
+            background: rgba(139, 92, 246, 0.08);
+            border-color: rgba(139, 92, 246, 0.2);
+            color: var(--accent-purple);
+        }
+
+        .contact-method:nth-child(3) .contact-method-icon {
+            background: rgba(236, 72, 153, 0.08);
+            border-color: rgba(236, 72, 153, 0.2);
+            color: var(--accent-pink);
+        }
+
+        .contact-method:hover .contact-method-icon {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-glow);
+        }
+
         .contact-method p {
             margin: 0;
             font-weight: 500;
-        }
-        
-        .privacy-note {
-            background: #fff5cd;
-            border: 1px solid #f6e05e;
-            color: #744210;
-            padding: 1.5rem;
-            border-radius: 12px;
-            margin: 2rem 0;
+            color: var(--text-secondary);
             font-size: 0.9rem;
         }
-        
-        .privacy-note i {
-            margin-right: 0.5rem;
+
+        /* --- Section Divider --- */
+        .section-divider {
+            text-align: center;
+            margin: 2rem 0 3.5rem;
+            position: relative;
         }
-        
+
+        .section-divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border-subtle);
+        }
+
+        .section-divider span {
+            position: relative;
+            background: var(--secondary-dark);
+            padding: 0 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            letter-spacing: 0.1em;
+        }
+
+        /* --- Responsive --- */
         @media (max-width: 768px) {
             .contact-options {
                 grid-template-columns: 1fr;
-                gap: 2rem;
+                gap: 1.5rem;
             }
-            
+
             .contact-form {
-                padding: 2rem 1rem;
+                padding: 2.5rem 1.5rem;
             }
-            
+
             .form-row {
                 grid-template-columns: 1fr;
-                gap: 1.5rem;
+                gap: 0;
             }
-            
+
             .contact-methods {
                 flex-direction: column;
+                align-items: center;
                 gap: 1.5rem;
             }
-            
+
             .contact-card {
-                padding: 2rem 1.5rem;
+                padding: 2.5rem 2rem;
+            }
+
+            .contact-hero {
+                padding: 8rem 1.5rem 4rem;
             }
         }
     </style>
@@ -362,23 +667,24 @@
     <header>
         <nav>
             <div class="logo">
-                <i class="fas fa-graduation-cap"></i> CodeAcademy
+                <i class="fas fa-graduation-cap"></i> CodeRoute 90
             </div>
             <ul class="nav-links">
                 <li><a href="index.html">ホーム</a></li>
                 <li><a href="about.html">私について</a></li>
                 <li><a href="blog.html">ブログ</a></li>
-                <li><a href="#contact">お問い合わせ</a></li>
+                <li><a href="contact.html" style="color: var(--accent-cyan);">お問い合わせ</a></li>
             </ul>
         </nav>
     </header>
 
     <!-- Contact Hero Section -->
     <section class="contact-hero">
-        <div class="container">
-            <h1><i class="fas fa-envelope"></i> お問い合わせ</h1>
-            <p>ITスクールについてのご相談やプログラミング学習についてのご質問をお受けしています</p>
+        <div class="hero-badge">
+            <i class="fas fa-envelope"></i> CONTACT
         </div>
+        <h1>お問い合わせ</h1>
+        <p>ITスクールについてのご相談や<br>プログラミング学習についてのご質問をお受けしています</p>
     </section>
 
     <!-- Main Content -->
@@ -391,21 +697,21 @@
                         <i class="fas fa-briefcase"></i>
                     </div>
                     <h3>仕事のご依頼</h3>
-                    <p>Webサイト制作: >   静的サイトから簡単なWebアプリまで、保守性の高いコードで構築します。最短[1週間]で納品可能です。</p>
-                    <p>プログラミング学習のご相談を受け付けています。ITスクール選び、学習方法、キャリア相談など、お気軽にご相談ください。</p>
+                    <p>Webサイト制作から簡単なWebアプリまで、保守性の高いコードで構築します。最短<strong style="color:var(--accent-cyan)">1週間</strong>で納品可能です。</p>
+                    <p>プログラミング学習のご相談も受け付けています。ITスクール選び、学習方法、キャリア相談など、お気軽にどうぞ。</p>
                     <a href="#work-form" class="cta-button">
-                        <i class="fas fa-arrow-down"></i> 依頼フォームへ
+                        <i class="fas fa-arrow-down"></i>&nbsp; 依頼フォームへ
                     </a>
                 </div>
                 
                 <div class="contact-card">
                     <div class="contact-icon">
-                        <i class="fas fa-question-circle"></i>
+                        <i class="fas fa-comments"></i>
                     </div>
                     <h3>ご質問・相談</h3>
                     <p>「3ヶ月でどうやって転職までこぎ着けたのか？」——私の実体験に基づき、最短ルートでエンジニアを目指すための学習順序や、スクール選びの本音にお答えします。</p>
-                    <a href="#question-form" class="cta-button">
-                        <i class="fas fa-arrow-down"></i> 質問フォームへ
+                    <a href="#question-form" class="cta-button" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
+                        <i class="fas fa-arrow-down"></i>&nbsp; 質問フォームへ
                     </a>
                 </div>
             </div>
@@ -413,23 +719,24 @@
 
         <!-- Contact Forms -->
         <section id="contact" class="section">
+
             <!-- Work Request Form -->
             <div id="work-form" class="contact-form">
-                <h2><i class="fas fa-briefcase"></i> 仕事のご依頼フォーム</h2>
-                <p style="color: var(--slate-gray); margin-bottom: 2rem;">以下のフォームに必要事項をご記入ください。24時間以内にご返信いたします。</p>
+                <h2><i class="fas fa-briefcase" style="font-size:1.4rem; -webkit-text-fill-color: var(--accent-cyan); background: none;"></i> 仕事のご依頼フォーム</h2>
+                <p class="form-subtitle">以下のフォームに必要事項をご記入ください。<span style="color:var(--accent-cyan)">24時間以内</span>にご返信いたします。</p>
                 
-                <form id="workForm" class="contact-form-content">
+                <form id="workForm" class="contact-form-content" novalidate>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="workName">お名前<span class="required">*</span></label>
-                            <input type="text" id="workName" name="name" class="form-control" required>
-                            <div class="form-error" id="workNameError">お名前を入力してください</div>
+                            <input type="text" id="workName" name="name" class="form-control" placeholder="山田 太郎" required>
+                            <div class="form-error" id="workNameError"><i class="fas fa-exclamation-circle"></i> お名前を入力してください</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="workEmail">メールアドレス<span class="required">*</span></label>
-                            <input type="email" id="workEmail" name="email" class="form-control" required>
-                            <div class="form-error" id="workEmailError">有効なメールアドレスを入力してください</div>
+                            <input type="email" id="workEmail" name="email" class="form-control" placeholder="example@email.com" required>
+                            <div class="form-error" id="workEmailError"><i class="fas fa-exclamation-circle"></i> 有効なメールアドレスを入力してください</div>
                         </div>
                     </div>
                     
@@ -442,30 +749,29 @@
                             <option value="web-content">Webコンテンツ</option>
                             <option value="other">その他</option>
                         </select>
-                        <div class="form-error" id="workTypeError">依頼の種類を選択してください</div>
+                        <div class="form-error" id="workTypeError"><i class="fas fa-exclamation-circle"></i> 依頼の種類を選択してください</div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="workSubject">件名<span class="required">*</span></label>
-                        <input type="text" id="workSubject" name="subject" class="form-control" required>
-                        <div class="form-error" id="workSubjectError">件名を入力してください</div>
+                        <input type="text" id="workSubject" name="subject" class="form-control" placeholder="件名を入力してください" required>
+                        <div class="form-error" id="workSubjectError"><i class="fas fa-exclamation-circle"></i> 件名を入力してください</div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="workContent">依頼内容<span class="required">*</span></label>
                         <textarea id="workContent" name="content" class="form-control form-textarea" required
                                   placeholder="具体的な依頼内容、希望納期、予算などをご記入ください"></textarea>
-                        <div class="form-error" id="workContentError">依頼内容を入力してください</div>
+                        <div class="form-error" id="workContentError"><i class="fas fa-exclamation-circle"></i> 依頼内容を入力してください</div>
                     </div>
                     
                     <div class="privacy-note">
                         <i class="fas fa-shield-alt"></i>
-                        <strong>プライバシーポリシー</strong><br>
-                        お客様の個人情報は、お問い合わせへの対応のみに使用し、第三者に提供することはありません。
+                        <span><strong>プライバシーポリシー：</strong>お客様の個人情報は、お問い合わせへの対応のみに使用し、第三者に提供することはありません。</span>
                     </div>
                     
                     <button type="submit" class="form-submit" id="workSubmit">
-                        <i class="fas fa-paper-plane"></i> 依頼を送信する
+                        <i class="fas fa-paper-plane"></i>&nbsp; 依頼を送信する
                     </button>
                 </form>
                 
@@ -476,23 +782,27 @@
                 </div>
             </div>
 
+            <div class="section-divider">
+                <span>OR</span>
+            </div>
+
             <!-- Question Form -->
             <div id="question-form" class="contact-form">
-                <h2><i class="fas fa-question-circle"></i> ご質問・相談フォーム</h2>
-                <p style="color: var(--slate-gray); margin-bottom: 2rem;">在宅ワークやWebライティングについて、何でもお聞きください。</p>
+                <h2><i class="fas fa-comments" style="font-size:1.4rem; -webkit-text-fill-color: var(--accent-purple); background: none;"></i> ご質問・相談フォーム</h2>
+                <p class="form-subtitle">ITスクール体験やプログラミング学習について、何でもお気軽にご質問ください。</p>
                 
-                <form id="questionForm" class="contact-form-content">
+                <form id="questionForm" class="contact-form-content" novalidate>
                     <div class="form-row">
                         <div class="form-group">
                             <label class="form-label" for="questionName">お名前<span class="required">*</span></label>
-                            <input type="text" id="questionName" name="name" class="form-control" required>
-                            <div class="form-error" id="questionNameError">お名前を入力してください</div>
+                            <input type="text" id="questionName" name="name" class="form-control" placeholder="山田 太郎" required>
+                            <div class="form-error" id="questionNameError"><i class="fas fa-exclamation-circle"></i> お名前を入力してください</div>
                         </div>
                         
                         <div class="form-group">
                             <label class="form-label" for="questionEmail">メールアドレス<span class="required">*</span></label>
-                            <input type="email" id="questionEmail" name="email" class="form-control" required>
-                            <div class="form-error" id="questionEmailError">有効なメールアドレスを入力してください</div>
+                            <input type="email" id="questionEmail" name="email" class="form-control" placeholder="example@email.com" required>
+                            <div class="form-error" id="questionEmailError"><i class="fas fa-exclamation-circle"></i> 有効なメールアドレスを入力してください</div>
                         </div>
                     </div>
                     
@@ -505,30 +815,29 @@
                             <option value="lifestyle">ライフスタイル</option>
                             <option value="other">その他</option>
                         </select>
-                        <div class="form-error" id="questionTypeError">質問の種類を選択してください</div>
+                        <div class="form-error" id="questionTypeError"><i class="fas fa-exclamation-circle"></i> 質問の種類を選択してください</div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="questionSubject">件名<span class="required">*</span></label>
-                        <input type="text" id="questionSubject" name="subject" class="form-control" required>
-                        <div class="form-error" id="questionSubjectError">件名を入力してください</div>
+                        <input type="text" id="questionSubject" name="subject" class="form-control" placeholder="件名を入力してください" required>
+                        <div class="form-error" id="questionSubjectError"><i class="fas fa-exclamation-circle"></i> 件名を入力してください</div>
                     </div>
                     
                     <div class="form-group">
                         <label class="form-label" for="questionContent">質問内容<span class="required">*</span></label>
                         <textarea id="questionContent" name="content" class="form-control form-textarea" required
                                   placeholder="具体的な質問内容をご記入ください"></textarea>
-                        <div class="form-error" id="questionContentError">質問内容を入力してください</div>
+                        <div class="form-error" id="questionContentError"><i class="fas fa-exclamation-circle"></i> 質問内容を入力してください</div>
                     </div>
                     
                     <div class="privacy-note">
                         <i class="fas fa-shield-alt"></i>
-                        <strong>プライバシーポリシー</strong><br>
-                        お客様の個人情報は、お問い合わせへの対応のみに使用し、第三者に提供することはありません。
+                        <span><strong>プライバシーポリシー：</strong>お客様の個人情報は、お問い合わせへの対応のみに使用し、第三者に提供することはありません。</span>
                     </div>
                     
-                    <button type="submit" class="form-submit" id="questionSubmit">
-                        <i class="fas fa-paper-plane"></i> 質問を送信する
+                    <button type="submit" class="form-submit" id="questionSubmit" style="background: linear-gradient(135deg, #8b5cf6 0%, #ec4899 100%);">
+                        <i class="fas fa-paper-plane"></i>&nbsp; 質問を送信する
                     </button>
                 </form>
                 
@@ -542,21 +851,27 @@
 
         <!-- Contact Info -->
         <section class="section">
-            <div class="contact-info">
-                <h3><i class="fas fa-info-circle"></i> お問い合わせについて</h3>
+            <div class="contact-info-section">
+                <h3><i class="fas fa-info-circle" style="font-size:1.2rem; -webkit-text-fill-color: var(--accent-cyan); background: none;"></i> お問い合わせについて</h3>
                 <p>通常24時間以内にご返信いたします。土日祝日を除く営業日の対応となります。</p>
                 
                 <div class="contact-methods">
                     <div class="contact-method">
-                        <i class="fas fa-envelope"></i>
-                        <p>メールでのお問い合わせ</p>
+                        <div class="contact-method-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <p>メールで対応</p>
                     </div>
                     <div class="contact-method">
-                        <i class="fas fa-clock"></i>
+                        <div class="contact-method-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
                         <p>24時間以内に返信</p>
                     </div>
                     <div class="contact-method">
-                        <i class="fas fa-calendar-alt"></i>
+                        <div class="contact-method-icon">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
                         <p>営業日対応</p>
                     </div>
                 </div>
@@ -575,135 +890,106 @@
     <script src="assets/js/main.js"></script>
     <script src="assets/js/header-scroll.js"></script>
     <script>
-        // Contact form functionality
         document.addEventListener('DOMContentLoaded', function() {
-            // Work form handling
-            const workForm = document.getElementById('workForm');
-            const workSubmit = document.getElementById('workSubmit');
-            const workSuccess = document.getElementById('workSuccess');
-
-            // Question form handling
-            const questionForm = document.getElementById('questionForm');
-            const questionSubmit = document.getElementById('questionSubmit');
+            const workForm      = document.getElementById('workForm');
+            const workSubmit    = document.getElementById('workSubmit');
+            const workSuccess   = document.getElementById('workSuccess');
+            const questionForm  = document.getElementById('questionForm');
+            const questionSubmit= document.getElementById('questionSubmit');
             const questionSuccess = document.getElementById('questionSuccess');
 
-            // Form validation and submission
+            /* ---- Validation helpers ---- */
+            function isValidEmail(email) {
+                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+            }
+
+            function showFieldError(field, errorEl) {
+                field.classList.add('error');
+                if (errorEl) errorEl.classList.add('show');
+            }
+
+            function hideFieldError(field, errorEl) {
+                field.classList.remove('error');
+                if (errorEl) errorEl.classList.remove('show');
+            }
+
+            function validateForm(form) {
+                let valid = true;
+                form.querySelectorAll('[required]').forEach(field => {
+                    const errorEl = document.getElementById(field.id + 'Error');
+                    if (!field.value.trim()) {
+                        showFieldError(field, errorEl); valid = false;
+                    } else if (field.type === 'email' && !isValidEmail(field.value)) {
+                        showFieldError(field, errorEl); valid = false;
+                    } else {
+                        hideFieldError(field, errorEl);
+                    }
+                });
+                return valid;
+            }
+
+            /* ---- Real-time validation ---- */
+            function setupRealTime(form) {
+                form.querySelectorAll('input, select, textarea').forEach(input => {
+                    input.addEventListener('blur', function() {
+                        const errorEl = document.getElementById(this.id + 'Error');
+                        if (this.hasAttribute('required') && !this.value.trim()) {
+                            showFieldError(this, errorEl);
+                        } else if (this.type === 'email' && this.value && !isValidEmail(this.value)) {
+                            showFieldError(this, errorEl);
+                        } else {
+                            hideFieldError(this, errorEl);
+                        }
+                    });
+                    input.addEventListener('input', function() {
+                        const errorEl = document.getElementById(this.id + 'Error');
+                        if (this.classList.contains('error')) hideFieldError(this, errorEl);
+                    });
+                });
+            }
+
+            /* ---- Form submission ---- */
             function setupForm(form, submitBtn, successMsg) {
                 form.addEventListener('submit', function(e) {
                     e.preventDefault();
-                    
-                    if (validateForm(form)) {
-                        submitForm(form, submitBtn, successMsg);
-                    }
+                    if (!validateForm(form)) return;
+
+                    submitBtn.disabled = true;
+                    submitBtn.classList.add('loading');
+
+                    setTimeout(() => {
+                        form.style.display = 'none';
+                        successMsg.classList.add('show');
+                        successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 1800);
                 });
             }
 
-            // Form validation
-            function validateForm(form) {
-                let isValid = true;
-                const requiredFields = form.querySelectorAll('[required]');
-                
-                requiredFields.forEach(field => {
-                    const errorElement = document.getElementById(field.id + 'Error');
-                    
-                    if (!field.value.trim()) {
-                        showFieldError(field, errorElement);
-                        isValid = false;
-                    } else if (field.type === 'email' && !isValidEmail(field.value)) {
-                        showFieldError(field, errorElement);
-                        isValid = false;
-                    } else {
-                        hideFieldError(field, errorElement);
-                    }
-                });
-                
-                return isValid;
-            }
-
-            // Show field error
-            function showFieldError(field, errorElement) {
-                field.classList.add('error');
-                if (errorElement) {
-                    errorElement.classList.add('show');
-                }
-            }
-
-            // Hide field error
-            function hideFieldError(field, errorElement) {
-                field.classList.remove('error');
-                if (errorElement) {
-                    errorElement.classList.remove('show');
-                }
-            }
-
-            // Email validation
-            function isValidEmail(email) {
-                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-                return emailRegex.test(email);
-            }
-
-            // Form submission
-            function submitForm(form, submitBtn, successMsg) {
-                // Show loading state
-                submitBtn.disabled = true;
-                submitBtn.classList.add('loading');
-                
-                // Simulate form submission
-                setTimeout(() => {
-                    // Hide form and show success message
-                    form.style.display = 'none';
-                    successMsg.classList.add('show');
-                    
-                    // Scroll to success message
-                    successMsg.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    
-                    console.log('フォーム送信完了:', form.id);
-                }, 2000);
-            }
-
-            // Real-time validation
-            function setupRealTimeValidation(form) {
-                const inputs = form.querySelectorAll('input, select, textarea');
-                inputs.forEach(input => {
-                    input.addEventListener('blur', function() {
-                        const errorElement = document.getElementById(this.id + 'Error');
-                        if (this.hasAttribute('required') && !this.value.trim()) {
-                            showFieldError(this, errorElement);
-                        } else if (this.type === 'email' && this.value && !isValidEmail(this.value)) {
-                            showFieldError(this, errorElement);
-                        } else {
-                            hideFieldError(this, errorElement);
-                        }
-                    });
-                    
-                    input.addEventListener('input', function() {
-                        const errorElement = document.getElementById(this.id + 'Error');
-                        if (this.classList.contains('error')) {
-                            hideFieldError(this, errorElement);
-                        }
-                    });
-                });
-            }
-
-            // Setup forms
             setupForm(workForm, workSubmit, workSuccess);
             setupForm(questionForm, questionSubmit, questionSuccess);
-            
-            // Setup real-time validation
-            setupRealTimeValidation(workForm);
-            setupRealTimeValidation(questionForm);
+            setupRealTime(workForm);
+            setupRealTime(questionForm);
 
-            // Auto-select form based on URL parameter
-            const urlParams = new URLSearchParams(window.location.search);
-            const formType = urlParams.get('type');
-            
-            if (formType === 'work') {
-                document.getElementById('work-form').scrollIntoView({ behavior: 'smooth' });
-            } else if (formType === 'question') {
-                document.getElementById('question-form').scrollIntoView({ behavior: 'smooth' });
+            /* ---- Smooth scroll for CTA buttons ---- */
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        e.preventDefault();
+                        const headerH = document.querySelector('header')?.offsetHeight || 80;
+                        const top = target.getBoundingClientRect().top + window.pageYOffset - headerH - 24;
+                        window.scrollTo({ top, behavior: 'smooth' });
+                    }
+                });
+            });
+
+            /* ---- Auto-select form from URL param ---- */
+            const param = new URLSearchParams(window.location.search).get('type');
+            if (param === 'work' || param === 'consultation') {
+                document.getElementById('work-form')?.scrollIntoView({ behavior: 'smooth' });
+            } else if (param === 'question') {
+                document.getElementById('question-form')?.scrollIntoView({ behavior: 'smooth' });
             }
-
-            console.log('お問い合わせフォーム初期化完了');
         });
     </script>
 </body>
