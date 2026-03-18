@@ -246,6 +246,22 @@
             color: var(--primary-bg);
             margin-bottom: 2rem;
         }
+
+        /* ローディングスピナー */
+        .loading-spinner {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--slate-gray);
+        }
+        .loading-spinner i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         
         @media (max-width: 768px) {
             .category-filter {
@@ -528,7 +544,6 @@
     <!-- ===== /構造化データ ===== -->
 
     <!-- ===== Google Analytics 4 ===== -->
-    <!-- ↓ GA4 測定ID（例: G-ABCDE12345）に差し替えてください -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBW5E6N8M4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -539,7 +554,6 @@
     <!-- ===== /Google Analytics 4 ===== -->
 
     <!-- ===== Microsoft Clarity ===== -->
-    <!-- ↓ Clarity プロジェクトID（例: abcde12345）に差し替えてください -->
     <script type="text/javascript">
         (function(c,l,a,r,i,t,y){
             c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -612,10 +626,12 @@
 
         <!-- Articles Grid -->
         <section id="blog" class="section">
+            <!-- [FIX] 初期ローディング表示を追加 -->
             <div class="articles-grid" id="articlesGrid">
-                <!-- ここは Cloudflare Workers が microCMS から生成して差し込みます -->
-
-
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner"></i>
+                    <p>記事を読み込んでいます...</p>
+                </div>
             </div>
 
             <!-- No Results Message -->
@@ -629,9 +645,9 @@
         <!-- Popular Articles Section -->
         <section class="popular-articles">
             <h3><i class="fas fa-fire" aria-hidden="true"></i> 人気の記事</h3>
-            <div class=\"articles-grid\" id=\"popularGrid\">
-                <!-- ここは Cloudflare Workers が microCMS から生成して差し込みます -->
-            </div>
+            <!-- [FIX] \"..\" のエスケープ文字バグを修正 → 正しいダブルクォート -->
+            <div class="articles-grid" id="popularGrid">
+                <!-- JS により動的に挿入 -->
             </div>
         </section>
     </main>
@@ -672,10 +688,10 @@
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/header-scroll.js" defer></script>
     <script>
-        // Blog functionality
-        document.addEventListener('DOMContentLoaded', function() {
+        // Blog functionality（カテゴリ絞り込み・検索）
+        // ※ 記事カードは下の fetch スクリプトが DOM に追加した後に動作する
+        function initBlogFilters() {
             const categoryButtons = document.querySelectorAll('.category-btn');
-            const articleCards = document.querySelectorAll('#articlesGrid .article-card');
             const searchInput = document.getElementById('searchInput');
             const noResults = document.getElementById('noResults');
             let currentCategory = 'all';
@@ -684,11 +700,8 @@
             categoryButtons.forEach(button => {
                 button.addEventListener('click', function() {
                     const category = this.dataset.category;
-                    
-                    // Update active button
                     categoryButtons.forEach(btn => btn.classList.remove('active'));
                     this.classList.add('active');
-                    
                     currentCategory = category;
                     filterArticles();
                 });
@@ -701,21 +714,24 @@
 
             // Filter articles based on category and search
             function filterArticles() {
+                const articleCards = document.querySelectorAll('#articlesGrid .article-card');
                 const searchTerm = searchInput.value.toLowerCase();
                 let visibleCount = 0;
 
                 articleCards.forEach(card => {
-                    const title = card.querySelector('h3').textContent.toLowerCase();
-                    const excerpt = card.querySelector('.article-excerpt').textContent.toLowerCase();
-                    const tags = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
-                    
-                    const matchesSearch = title.includes(searchTerm) || 
-                                        excerpt.includes(searchTerm) ||
-                                        tags.some(tag => tag.includes(searchTerm));
-                    
-                    const matchesCategory = currentCategory === 'all' || 
-                                          card.dataset.category.includes(currentCategory);
-                    
+                    const titleEl  = card.querySelector('h3');
+                    const excerptEl = card.querySelector('.article-excerpt');
+                    const title    = titleEl  ? titleEl.textContent.toLowerCase()   : '';
+                    const excerpt  = excerptEl ? excerptEl.textContent.toLowerCase() : '';
+                    const tags     = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+
+                    const matchesSearch = title.includes(searchTerm) ||
+                                         excerpt.includes(searchTerm) ||
+                                         tags.some(tag => tag.includes(searchTerm));
+
+                    const matchesCategory = currentCategory === 'all' ||
+                                            (card.dataset.category || '').includes(currentCategory);
+
                     if (matchesSearch && matchesCategory) {
                         card.style.display = 'block';
                         card.classList.remove('hidden');
@@ -726,29 +742,9 @@
                     }
                 });
 
-                // Show/hide no results message
-                if (visibleCount === 0) {
-                    noResults.style.display = 'block';
-                } else {
-                    noResults.style.display = 'none';
-                }
+                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
             }
-
-            // Article card click handlers
-            articleCards.forEach(card => {
-                card.addEventListener('click', function(e) {
-                    // Don't trigger if clicking on links
-                    if (e.target.tagName === 'A' || e.target.closest('a')) {
-                        return;
-                    }
-                    
-                    const readMoreLink = card.querySelector('.read-more');
-                    if (readMoreLink) {
-                        readMoreLink.click();
-                    }
-                });
-            });
-        });
+        }
     </script>
 
 
@@ -785,23 +781,19 @@
         if (overlay) {
             overlay.addEventListener('click', closeMenu);
         }
-        // Escキーで閉じる
         document.addEventListener('keydown', function (e) {
             if (e.key === 'Escape') closeMenu();
         });
-        /* ---- ナビリンク クリック処理（メニューを閉じる＋ジャンプ） ---- */
+
         if (navList) {
             navList.querySelectorAll('a').forEach(function (a) {
                 a.addEventListener('click', function (e) {
                     var href = this.getAttribute('href');
-
-                    /* ページ内アンカー（#home, #about, #blog, #contact など）の場合 */
                     if (href && href.charAt(0) === '#' && href.length > 1) {
                         var target = document.querySelector(href);
                         if (target) {
-                            e.preventDefault();   /* ブラウザデフォルトのジャンプを止める */
-                            closeMenu();          /* メニューを閉じて overflow:hidden を解除 */
-                            /* overflow 解除が反映されてからスクロール */
+                            e.preventDefault();
+                            closeMenu();
                             setTimeout(function () {
                                 var header  = document.querySelector('header');
                                 var headerH = header ? header.offsetHeight : 0;
@@ -816,9 +808,6 @@
                         }
                         return;
                     }
-
-                    /* 外部ページリンク（index.html, about.html, blog.html, contact.html など）の場合 */
-                    /* → closeMenu でメニューを閉じ、e.preventDefault() を呼ばないのでページ遷移が発生する */
                     closeMenu();
                 });
             });
@@ -831,15 +820,12 @@
             navList.querySelectorAll('a').forEach(function (a) {
                 var href = a.getAttribute('href');
                 if (!href) return;
-                // ページ内アンカーは除外
                 if (href.startsWith('#')) return;
                 var linkFile = href.split('/').pop().split('?')[0].split('#')[0];
                 var isCurrent = (linkFile === currentPath) ||
                     (currentPath === 'index.html' && (linkFile === '' || linkFile === 'index.html'));
                 if (isCurrent) {
-                    // 既存インラインスタイルを保持しつつクラス付与
                     a.classList.add('nav-active');
-                    // インラインスタイルが未設定の場合のみ色を付与
                     if (!a.style.color) {
                         a.style.color = 'var(--accent-cyan, #22d3ee)';
                     }
@@ -850,55 +836,142 @@
     </script>
     <!-- ===== /Nav: Hamburger + Active highlight ===== -->
 
-    <!-- ===== Smooth Scroll ===== -->
+
+    <!-- ===== [FIX] 記事フェッチ（修正版） ===== -->
     <script>
-    document.addEventListener('DOMContentLoaded', async function() {
+    document.addEventListener('DOMContentLoaded', async function () {
+
         const articlesGrid = document.getElementById('articlesGrid');
+        const popularGrid  = document.getElementById('popularGrid');
+
+        // ---- [FIX 1] APIエンドポイント（末尾スラッシュなし統一） ----
         const API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
 
+        // ---- ヘルパー: 記事カードの HTML を生成 ----
+        function buildArticleCard(post) {
+            const dateStr = post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString('ja-JP')
+                : '';
+            const eyecatchHtml = post.eyecatch
+                ? `<img src="${post.eyecatch.url}" alt="${escapeHtml(post.title)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+                : '<i class="fas fa-code"></i>';
+            const rawText = post.content
+                ? post.content.replace(/<[^>]*>?/gm, '')
+                : '';
+            const excerpt = rawText.length > 80
+                ? rawText.substring(0, 80) + '...'
+                : rawText || '記事の詳細は「続きを読む」からご確認ください。';
+
+            return `
+                <article class="article-card card" data-category="experience">
+                    <div class="article-header">
+                        <div class="article-title">
+                            <p class="meta">
+                                <span class="date"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
+                            </p>
+                            <h3>${escapeHtml(post.title)}</h3>
+                        </div>
+                        <div class="article-image">${eyecatchHtml}</div>
+                    </div>
+                    <p class="article-excerpt">${escapeHtml(excerpt)}</p>
+                    <div class="article-tags">
+                        <span class="tag">#ITスクール</span>
+                        <span class="tag">#未経験</span>
+                    </div>
+                    <a href="post.html?id=${encodeURIComponent(post.id)}" class="read-more">
+                        続きを読む <i class="fas fa-arrow-right"></i>
+                    </a>
+                </article>`;
+        }
+
+        // ---- ヘルパー: XSS 対策 ----
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ---- ヘルパー: カード クリックで続きを読む ----
+        function attachCardClickHandlers(grid) {
+            grid.querySelectorAll('.article-card').forEach(card => {
+                card.addEventListener('click', function (e) {
+                    if (e.target.tagName === 'A' || e.target.closest('a')) return;
+                    const link = card.querySelector('.read-more');
+                    if (link) link.click();
+                });
+            });
+        }
+
         try {
-            // 1. Workers からデータを取得
-            const response = await fetch(API_URL);
-            const data = await response.json();
-
-            // 2. 記事一覧（articlesGrid）を一度空にする
-            articlesGrid.innerHTML = '';
-
-            // 3. 取得した記事を一つずつ画面に作る
-            data.contents.forEach(post => {
-                const articleHtml = `
-                    <article class="article-card card" data-category="experience">
-                        <div class="article-header">
-                            <div class="article-title">
-                                <p class="meta">
-                                    <span class="date"><i class="far fa-calendar-alt"></i> ${new Date(post.createdAt).toLocaleDateString()}</span>
-                                </p>
-                                <h3>${post.title}</h3>
-                            </div>
-                            <div class="article-image">
-                                ${post.eyecatch ? `<img src="${post.eyecatch.url}" alt="${post.title}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">` : '<i class="fas fa-code"></i>'}
-                            </div>
-                        </div>
-                        <p class="article-excerpt">
-                            ${post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...' : '記事の詳細は「続きを読む」からご確認ください。'}
-                        </p>
-                        <div class="article-tags">
-                            <span class="tag">#ITスクール</span>
-                            <span class="tag">#未経験</span>
-                        </div>
-                        <a href="post.html?id=${post.id}" class="read-more">
-                            続きを読む <i class="fas fa-arrow-right"></i>
-                        </a>
-                    </article>
-                `;
-                articlesGrid.innerHTML += articleHtml;
+            // ---- [FIX 2] fetch に CORS モード・Accept ヘッダを明示 ----
+            const response = await fetch(API_URL, {
+                method:  'GET',
+                mode:    'cors',
+                headers: { 'Accept': 'application/json' }
             });
 
+            // ---- [FIX 3] HTTP エラーを明示的に検出 ----
+            if (!response.ok) {
+                throw new Error(`サーバーエラー: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            // ---- [FIX 4] レスポンス構造を検証 ----
+            if (!data || !Array.isArray(data.contents)) {
+                throw new Error('APIレスポンスの形式が想定と異なります（contents 配列が見つかりません）');
+            }
+
+            // ---- 記事グリッドをクリアして差し込む ----
+            articlesGrid.innerHTML = '';
+
+            if (data.contents.length === 0) {
+                articlesGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-inbox" aria-hidden="true"></i>
+                        <h3>記事がまだありません</h3>
+                        <p>最初の記事を公開しましょう！</p>
+                    </div>`;
+            } else {
+                data.contents.forEach(post => {
+                    articlesGrid.innerHTML += buildArticleCard(post);
+                });
+                attachCardClickHandlers(articlesGrid);
+            }
+
+            // ---- [FIX 5] popularGrid にも記事を反映（先頭3件） ----
+            if (popularGrid) {
+                popularGrid.innerHTML = '';
+                const popular = data.contents.slice(0, 3);
+                popular.forEach(post => {
+                    popularGrid.innerHTML += buildArticleCard(post);
+                });
+                attachCardClickHandlers(popularGrid);
+            }
+
+            // ---- フィルター機能を初期化（DOM 挿入後に呼ぶ） ----
+            if (typeof initBlogFilters === 'function') initBlogFilters();
+
         } catch (error) {
-            console.error('Error fetching blog:', error);
-            articlesGrid.innerHTML = '<p class="no-results">記事の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+            // ---- [FIX 6] エラー詳細をページに表示してデバッグを容易に ----
+            console.error('[CodeRoute90] 記事取得エラー:', error);
+
+            articlesGrid.innerHTML = `
+                <div class="no-results">
+                    <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;" aria-hidden="true"></i>
+                    <h3>記事の読み込みに失敗しました</h3>
+                    <p>時間をおいて再度お試しください。</p>
+                    <p style="font-size:0.78rem;color:#999;margin-top:0.75rem;word-break:break-all;">
+                        詳細: ${escapeHtml(error.message)}
+                    </p>
+                </div>`;
         }
     });
-</script>
+    </script>
+    <!-- ===== /[FIX] 記事フェッチ ===== -->
+
 </body>
 </html>
