@@ -1,63 +1,32 @@
-// Main JavaScript
+export default {
+  async fetch(request, env) {
+    // 1. microCMSからデータを取得するための設定
+    const MICROCMS_URL = "https://coderoute90.microcms.io/api/v1/blog";
+    const API_KEY = "n0P7BLqdjzGt8HJuAPeqNmYHf8Ho44i8nfG1";
 
-// Smooth scrolling for navigation links
-document.addEventListener('DOMContentLoaded', function() {
-    // Smooth scrolling for anchor links
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
-            const target = document.querySelector(this.getAttribute('href'));
-            if (target) {
-                target.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
-        });
-    });
+    try {
+      const response = await fetch(MICROCMS_URL, {
+        headers: {
+          "X-MICROCMS-API-KEY": API_KEY,
+        },
+      });
 
-    // Add scroll effect to CTA buttons
-    const ctaButtons = document.querySelectorAll('.cta-button');
-    ctaButtons.forEach(button => {
-        button.addEventListener('mouseenter', function() {
-            this.style.transform = 'translateY(-2px)';
-        });
-        
-        button.addEventListener('mouseleave', function() {
-            this.style.transform = 'translateY(0)';
-        });
-    });
+      if (!response.ok) {
+        return new Response(`Error: ${response.status}`, { status: response.status });
+      }
 
-    // Intersection Observer for fade-in animations
-    const observerOptions = {
-        threshold: 0.1,
-        rootMargin: '0px 0px -50px 0px'
-    };
+      const data = await response.json();
 
-    const observer = new IntersectionObserver(function(entries) {
-        entries.forEach(entry => {
-            if (entry.isIntersecting) {
-                entry.target.style.opacity = '1';
-                entry.target.style.transform = 'translateY(0)';
-            }
-        });
-    }, observerOptions);
-
-    // Observe article cards and sections
-    document.querySelectorAll('.article-card, .section').forEach(el => {
-        el.style.opacity = '0';
-        el.style.transform = 'translateY(30px)';
-        el.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
-        observer.observe(el);
-    });
-
-    // Mobile menu toggle (if needed in future)
-    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-    if (mobileMenuToggle) {
-        mobileMenuToggle.addEventListener('click', function() {
-            document.querySelector('.nav-links').classList.toggle('active');
-        });
+      // 2. ブラウザからのアクセスを許可（CORS設定）してデータを返す
+      return new Response(JSON.stringify(data), {
+        headers: {
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*", // どのドメインからもアクセス可能にする
+          "Access-Control-Allow-Methods": "GET",
+        },
+      });
+    } catch (error) {
+      return new Response("Internal Server Error", { status: 500 });
     }
-
-    console.log('しろみやWebサイト - メインスクリプト読み込み完了');
-});
+  },
+};
