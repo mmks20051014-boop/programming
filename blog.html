@@ -852,36 +852,53 @@
 
     <!-- ===== Smooth Scroll ===== -->
     <script>
-    (function () {
-        'use strict';
+    document.addEventListener('DOMContentLoaded', async function() {
+        const articlesGrid = document.getElementById('articlesGrid');
+        const API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
 
-        // ① CSS レベルのスムーススクロール（最低限の保険）
-        document.documentElement.style.scrollBehavior = 'smooth';
+        try {
+            // 1. Workers からデータを取得
+            const response = await fetch(API_URL);
+            const data = await response.json();
 
-        // ② JS レベル：ヘッダー高さを考慮した精密スクロール
-        document.addEventListener('DOMContentLoaded', function () {
-            document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-                /* #navLinks 内のリンクはハンバーガースクリプトで制御済み → スキップ */
-                if (anchor.closest('#navLinks')) return;
-                anchor.addEventListener('click', function (e) {
-                    var href = this.getAttribute('href');
-                    if (!href || href === '#') return;
-                    var target = document.querySelector(href);
-                    if (!target) return;
-                    e.preventDefault();
-                    var header = document.querySelector('header');
-                    var headerH = header ? header.offsetHeight : 0;
-                    var OFFSET = 16; // ヘッダー下の余白
-                    var top =
-                        target.getBoundingClientRect().top +
-                        window.pageYOffset -
-                        headerH -
-                        OFFSET;
-                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-                });
+            // 2. 記事一覧（articlesGrid）を一度空にする
+            articlesGrid.innerHTML = '';
+
+            // 3. 取得した記事を一つずつ画面に作る
+            data.contents.forEach(post => {
+                const articleHtml = `
+                    <article class="article-card card" data-category="experience">
+                        <div class="article-header">
+                            <div class="article-title">
+                                <p class="meta">
+                                    <span class="date"><i class="far fa-calendar-alt"></i> ${new Date(post.createdAt).toLocaleDateString()}</span>
+                                </p>
+                                <h3>${post.title}</h3>
+                            </div>
+                            <div class="article-image">
+                                ${post.eyecatch ? `<img src="${post.eyecatch.url}" alt="${post.title}" style="width:100%; height:100%; object-fit:cover; border-radius:8px;">` : '<i class="fas fa-code"></i>'}
+                            </div>
+                        </div>
+                        <p class="article-excerpt">
+                            ${post.content ? post.content.replace(/<[^>]*>?/gm, '').substring(0, 80) + '...' : '記事の詳細は「続きを読む」からご確認ください。'}
+                        </p>
+                        <div class="article-tags">
+                            <span class="tag">#ITスクール</span>
+                            <span class="tag">#未経験</span>
+                        </div>
+                        <a href="post.html?id=${post.id}" class="read-more">
+                            続きを読む <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </article>
+                `;
+                articlesGrid.innerHTML += articleHtml;
             });
-        });
-    })();
-    </script>
+
+        } catch (error) {
+            console.error('Error fetching blog:', error);
+            articlesGrid.innerHTML = '<p class="no-results">記事の読み込みに失敗しました。時間をおいて再度お試しください。</p>';
+        }
+    });
+</script>
 </body>
 </html>
