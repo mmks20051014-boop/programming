@@ -1004,6 +1004,14 @@
                 padding: 1rem 0;
                 font-size: 1rem;
                 width: 100%;
+                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
+                color: var(--text-primary, #e2e8f0) !important;
+                text-decoration: none;
+                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
+                pointer-events: auto !important;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                cursor: pointer;
             }
             .contact-hero { padding: 8rem 1.5rem 4rem; }
             .contact-form { padding: 2rem 1.25rem; border-radius: 16px; }

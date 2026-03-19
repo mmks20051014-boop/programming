@@ -177,6 +177,14 @@
                 padding: 1rem 0.5rem;
                 font-size: 1rem;
                 width: 100%;
+                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
+                color: var(--text-primary, #e2e8f0) !important;
+                text-decoration: none;
+                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
+                pointer-events: auto !important;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                cursor: pointer;
             }
         }
         /* ===== /Hamburger Menu ===== */
@@ -524,24 +532,12 @@
         var navList = document.getElementById('navLinks');
         var overlay = document.getElementById('navOverlay');
 
-        // ===== FIX: iOS Safari 等でも確実に背景スクロールを止める（position:fixed方式） =====
-        var lockedScrollY = 0;
+        // ===== FIX: overflow:hidden 方式でスクロールをロック（iOS Safari 互換） =====
         function lockBodyScroll() {
-            lockedScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
-            document.body.style.position = 'fixed';
-            document.body.style.top = (-lockedScrollY) + 'px';
-            document.body.style.left = '0';
-            document.body.style.right = '0';
-            document.body.style.width = '100%';
+            document.body.style.overflow = 'hidden';
         }
         function unlockBodyScroll() {
-            // 先にスタイルを戻してから scrollTo
-            document.body.style.position = '';
-            document.body.style.top = '';
-            document.body.style.left = '';
-            document.body.style.right = '';
-            document.body.style.width = '';
-            window.scrollTo(0, lockedScrollY);
+            document.body.style.overflow = '';
         }
 
         function isOpen() {

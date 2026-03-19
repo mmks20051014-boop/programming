@@ -417,6 +417,14 @@
                 padding: 1rem 0.5rem;
                 font-size: 1rem;
                 width: 100%;
+                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
+                color: var(--text-primary, #e2e8f0) !important;
+                text-decoration: none;
+                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
+                pointer-events: auto !important;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                cursor: pointer;
             }
         }
         /* ===== /Hamburger Menu ===== */
