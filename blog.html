@@ -371,53 +371,39 @@
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
         /* モバイル用オーバーレイ */
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 1000;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-        .nav-overlay.active { opacity: 1; }
+        .nav-overlay { display: none !important; }
 
         @media (max-width: 768px) {
-            .hamburger { display: flex; }
-            .nav-overlay { display: block; pointer-events: none; }
-            .nav-overlay.active { pointer-events: auto; }
+            .hamburger { display: none !important; }
+            .nav-overlay { display: none !important; }
 
             nav {
                 position: relative;
             }
             .nav-links {
-                position: fixed;
-                top: 0;
-                right: -100%;
-                width: min(280px, 80vw);
-                height: 100vh;
-                background: var(--bg-secondary, #0f172a);
-                border-left: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
-                flex-direction: column;
-                align-items: flex-start;
-                padding: 80px 2rem 2rem;
-                gap: 0;
-                z-index: 1050;
-                transition: right 0.35s cubic-bezier(0.4,0,0.2,1);
-                box-shadow: -8px 0 32px rgba(0,0,0,0.4);
+                display: flex !important;
+                position: static !important;
+                top: auto !important;
+                right: auto !important;
+                width: auto !important;
+                height: auto !important;
+                background: transparent !important;
+                border-left: none !important;
+                flex-direction: row !important;
+                align-items: center !important;
+                padding: 0 !important;
+                gap: 0.75rem !important;
+                z-index: auto !important;
+                transition: none !important;
+                box-shadow: none !important;
+                overflow: visible !important;
             }
-            .nav-links.open { right: 0; }
-            .nav-links li {
-                width: 100%;
-                border-bottom: 1px solid var(--border-subtle, rgba(255,255,255,0.06));
-            }
-            .nav-links li:last-child { border-bottom: none; }
-            .nav-links li a {
-                display: block;
-                padding: 1rem 0.5rem;
-                font-size: 1rem;
-                width: 100%;
-                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
+            .nav-links.open { right: auto !important; }
+            .nav-links li { width: auto; border-bottom: none !important; }
+            .nav-links li a { display: inline-block; padding: 0.4rem 0.6rem; font-size: 0.95rem; width: auto; }
+        }
+
+        /* ===== /Hamburger Menu ===== */
                 color: var(--text-primary, #e2e8f0) !important;
                 text-decoration: none;
                 /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
@@ -584,14 +570,8 @@
                 <li><a href="blog.html">ブログ</a></li>
                 <li><a href="contact.html">お問い合わせ</a></li>
             </ul>
-            <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="navLinks">
-                <span></span>
-                <span></span>
-                <span></span>
-            </button>
         </nav>
     </header>
-    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
 
     <!-- ===== Breadcrumb ===== -->
@@ -756,101 +736,6 @@
     </script>
 
 
-    <!-- ===== Nav: Hamburger + Active highlight ===== -->
-    <script>
-    (function () {
-        'use strict';
-
-        /* ---- ① Hamburger Menu ---- */
-        var btn     = document.getElementById('hamburgerBtn');
-        var navList = document.getElementById('navLinks');
-        var overlay = document.getElementById('navOverlay');
-
-        function openMenu() {
-            if (!navList) return;
-            navList.classList.add('open');
-            if (overlay) overlay.classList.add('active');
-            if (btn) btn.classList.add('open');
-            if (btn) btn.setAttribute('aria-expanded', 'true');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeMenu() {
-            if (!navList) return;
-            navList.classList.remove('open');
-            if (overlay) overlay.classList.remove('active');
-            if (btn) btn.classList.remove('open');
-            if (btn) btn.setAttribute('aria-expanded', 'false');
-            document.body.style.overflow = '';
-        }
-
-        if (btn && navList) {
-            btn.addEventListener('click', function (e) {
-                e.stopPropagation();
-                navList.classList.contains('open') ? closeMenu() : openMenu();
-            });
-        }
-        if (overlay) {
-            overlay.addEventListener('click', function (e) {
-                e.stopPropagation();
-                closeMenu();
-            });
-        }
-        document.addEventListener('keydown', function (e) {
-            if (e.key === 'Escape' && navList && navList.classList.contains('open')) {
-                closeMenu();
-            }
-        });
-
-        if (navList) {
-            navList.querySelectorAll('a').forEach(function (a) {
-                a.addEventListener('click', function (e) {
-                    var href = this.getAttribute('href');
-                    if (href && href.charAt(0) === '#' && href.length > 1) {
-                        var target = document.querySelector(href);
-                        if (target) {
-                            e.preventDefault();
-                            closeMenu();
-                            setTimeout(function () {
-                                var header  = document.querySelector('header');
-                                var headerH = header ? header.offsetHeight : 0;
-                                var OFFSET  = 16;
-                                var top =
-                                    target.getBoundingClientRect().top +
-                                    window.pageYOffset -
-                                    headerH -
-                                    OFFSET;
-                                window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-                            }, 50);
-                        }
-                        return;
-                    }
-                    closeMenu();
-                });
-            });
-        }
-
-        /* ---- ② Active Nav Highlight ---- */
-        var currentPath = window.location.pathname.split('/').pop() || 'index.html';
-        if (currentPath === '') currentPath = 'index.html';
-        if (navList) {
-            navList.querySelectorAll('a').forEach(function (a) {
-                var href = a.getAttribute('href');
-                if (!href) return;
-                if (href.startsWith('#')) return;
-                var linkFile = href.split('/').pop().split('?')[0].split('#')[0];
-                var isCurrent = (linkFile === currentPath) ||
-                    (currentPath === 'index.html' && (linkFile === '' || linkFile === 'index.html'));
-                if (isCurrent) {
-                    a.classList.add('nav-active');
-                    if (!a.style.color) {
-                        a.style.color = 'var(--accent-cyan, #22d3ee)';
-                    }
-                }
-            });
-        }
-    })();
-    </script>
-    <!-- ===== /Nav: Hamburger + Active highlight ===== -->
 
 
     <!-- ===== [FIX] 記事フェッチ（修正版） ===== -->
