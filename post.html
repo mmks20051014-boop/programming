@@ -202,13 +202,14 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
         }
-        .nav-overlay.active { opacity: 1; }
+        .nav-overlay.active { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 768px) {
             /* モバイル: ハンバーガーを表示 */
             .hamburger { display: flex !important; }
-            .nav-overlay { display: block; }
+            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
 
             nav {
                 position: relative;
@@ -1633,10 +1634,30 @@
                 overlay.addEventListener('click', closeMenu);
             }
 
-            /* メニューリンククリックで閉じる */
+            /* メニューリンククリックで閉じる＋ナビゲーション */
             nav.querySelectorAll('a').forEach(function (link) {
-                link.addEventListener('click', function () {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var href = link.getAttribute('href');
                     closeMenu();
+                    if (!href || href === '#') return;
+                    if (href.charAt(0) === '#') {
+                        /* 同一ページ内アンカースクロール */
+                        setTimeout(function () {
+                            var target = document.querySelector(href);
+                            if (target) {
+                                var headerEl = document.querySelector('header');
+                                var offset = headerEl ? headerEl.offsetHeight + 16 : 80;
+                                var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                                window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                            }
+                        }, 350);
+                    } else {
+                        /* 別ページへ遷移 */
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 50);
+                    }
                 });
             });
 
