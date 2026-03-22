@@ -1537,6 +1537,61 @@
     }
 
     /* ============================================================
+       API Response Helpers
+    ============================================================ */
+    function normalizePostPayload(raw, preferredId) {
+        if (!raw || typeof raw !== 'object') return null;
+
+        if (raw.id) return raw;
+
+        if (Array.isArray(raw.contents)) {
+            if (preferredId) {
+                var matched = raw.contents.find(function (item) {
+                    return item && (item.id === preferredId || item.contentid === preferredId);
+                });
+                if (matched) return matched;
+            }
+
+            if (raw.contents.length === 1 && raw.contents[0] && raw.contents[0].id) {
+                return raw.contents[0];
+            }
+        }
+
+        return null;
+    }
+
+    function getPostEyecatchUrl(post) {
+        if (!post || typeof post !== 'object') return null;
+
+        if (post.eyecatch) {
+            if (typeof post.eyecatch === 'string') return post.eyecatch;
+            if (post.eyecatch.url) return post.eyecatch.url;
+        }
+
+        if (post.thumbnail) {
+            if (typeof post.thumbnail === 'string') return post.thumbnail;
+            if (post.thumbnail.url) return post.thumbnail.url;
+        }
+
+        return null;
+    }
+
+    async function fetchPostsFallbackList(API_URL) {
+        var listRes = await fetch(API_URL + '?limit=100&orders=-publishedAt', {
+            method: 'GET',
+            mode: 'cors',
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (!listRes.ok) {
+            throw new Error('フォールバック一覧取得失敗: HTTP ' + listRes.status + ' ' + listRes.statusText);
+        }
+
+        var listData = await listRes.json();
+        return (listData && Array.isArray(listData.contents)) ? listData.contents : [];
+    }
+
+    /* ============================================================
        Internal Link Card Enricher
        本文中の内部リンク (post.html?id=XXX / ?id=XXX) を
        タイトル・eyecatch画像付きリッチカードに変換する
@@ -1544,11 +1599,9 @@
     async function enrichInternalLinks(contentEl, API_URL) {
         if (!contentEl || !API_URL) return;
 
-        /* --- 内部リンクを収集 --- */
         var allLinks = Array.from(contentEl.querySelectorAll('a[href]'));
         var internalLinks = allLinks.filter(function (a) {
             var href = a.getAttribute('href') || '';
-            /* post.html?id=XXX または ?id=XXX のリンク */
             return /[?&]id=([\w-]+)/.test(href) &&
                    (href.includes('post.html') || href.startsWith('?') || href.startsWith('./?'));
         });
@@ -1560,7 +1613,6 @@
 
         console.log('[CodeRoute90] enrichInternalLinks: 内部リンク ' + internalLinks.length + '件検出');
 
-        /* --- 重複を除いたID一覧を作成 --- */
         var idToLinks = {};
         internalLinks.forEach(function (a) {
             var href = a.getAttribute('href') || '';
@@ -1572,42 +1624,57 @@
             }
         });
 
-        /* --- 各IDの記事データを並列取得 --- */
         var ids = Object.keys(idToLinks);
+        var fallbackPostsPromise = null;
+
+        async function getFallbackPostById(id) {
+            if (!fallbackPostsPromise) {
+                fallbackPostsPromise = fetchPostsFallbackList(API_URL).catch(function (err) {
+                    console.warn('[CodeRoute90] enrichInternalLinks: フォールバック一覧取得失敗', err);
+                    return [];
+                });
+            }
+
+            var posts = await fallbackPostsPromise;
+            return posts.find(function (item) {
+                return item && (item.id === id || item.contentid === id);
+            }) || null;
+        }
 
         await Promise.all(ids.map(async function (id) {
             var postData = null;
+
             try {
                 var res = await fetch(API_URL + '/' + id, {
-                    method: 'GET', mode: 'cors',
+                    method: 'GET',
+                    mode: 'cors',
                     headers: { 'Accept': 'application/json' }
                 });
+
                 if (res.ok) {
                     var raw = await res.json();
-                    if (raw && raw.id) postData = raw;
+                    postData = normalizePostPayload(raw, id);
                 }
             } catch (e) {
                 console.warn('[CodeRoute90] enrichInternalLinks: fetch失敗 id=' + id, e);
             }
 
-            /* --- 各リンクをカードに置換 --- */
+            if (!postData) {
+                postData = await getFallbackPostById(id);
+            }
+
             idToLinks[id].forEach(function (a) {
-                /* すでに変換済みならスキップ */
                 if (a.classList.contains('internal-link-card')) return;
 
-                var title    = postData ? postData.title : null;
-                var eyecatch = postData && postData.eyecatch ? postData.eyecatch.url : null;
-                var href     = a.getAttribute('href');
-
-                /* タイトルが取れなかった場合は元のテキストを使用 */
+                var title = postData ? postData.title : null;
+                var eyecatch = getPostEyecatchUrl(postData);
+                var href = a.getAttribute('href');
                 var displayTitle = title || a.textContent.trim() || 'CodeRoute 90 記事';
 
-                /* サムネイル HTML */
                 var thumbHtml = eyecatch
                     ? '<div class="internal-link-card__thumb"><img src="' + escHtml(eyecatch) + '" alt="' + escHtml(displayTitle) + '" loading="lazy" decoding="async"></div>'
                     : '<div class="internal-link-card__thumb"><div class="internal-link-card__thumb-placeholder">📝</div></div>';
 
-                /* カード HTML */
                 var cardHtml =
                     '<a href="' + escHtml(href) + '" class="internal-link-card" aria-label="' + escHtml(displayTitle) + '">' +
                         '<div class="internal-link-card__body">' +
@@ -1621,12 +1688,10 @@
                         thumbHtml +
                     '</a>';
 
-                /* 元の <a> をカード要素に差替え */
                 var wrapper = document.createElement('div');
                 wrapper.innerHTML = cardHtml;
                 var cardEl = wrapper.firstElementChild;
                 if (cardEl && a.parentNode) {
-                    /* ブロック要素に包まれている場合はそのまま差替、さもなくば <p> 外に出す */
                     var parent = a.parentNode;
                     if (parent.tagName === 'P' && parent.children.length === 1 && parent.textContent.trim() === a.textContent.trim()) {
                         parent.replaceWith(cardEl);
@@ -1695,9 +1760,8 @@
             if (res.ok) {
                 var raw = await res.json();
                 console.log('[CodeRoute90] 一次レスポンス:', raw);
-                if (raw && typeof raw === 'object' && raw.id) {
-                    post = raw;
-                } else {
+                post = normalizePostPayload(raw, postId);
+                if (!post) {
                     console.warn('[CodeRoute90] 一次レスポンス構造が想定外 → フォールバックへ', raw);
                 }
             } else {
@@ -1709,25 +1773,12 @@
             /* --- Fallback: list endpoint --- */
             if (!post) {
                 console.log('[CodeRoute90] フォールバック: 一覧取得');
-                var listRes = await fetch(API_URL + '?limit=100&orders=-publishedAt', {
-                    method: 'GET',
-                    mode:   'cors',
-                    headers: { 'Accept': 'application/json' }
-                });
-
-                if (!listRes.ok) {
-                    throw new Error('フォールバック一覧取得失敗: HTTP ' + listRes.status + ' ' + listRes.statusText);
-                }
-
-                var listData = await listRes.json();
-                console.log('[CodeRoute90] 一覧件数:', listData && listData.contents && listData.contents.length);
-
-                if (listData && Array.isArray(listData.contents)) {
-                    post = listData.contents.find(function (item) { return item.id === postId; }) || null;
-                    if (!post) console.warn('[CodeRoute90] フォールバックでもID一致なし postId =', postId);
-                } else {
-                    throw new Error('フォールバック一覧: contents 配列が見つかりません');
-                }
+                var fallbackPosts = await fetchPostsFallbackList(API_URL);
+                console.log('[CodeRoute90] 一覧件数:', fallbackPosts.length);
+                post = fallbackPosts.find(function (item) {
+                    return item && (item.id === postId || item.contentid === postId);
+                }) || null;
+                if (!post) console.warn('[CodeRoute90] フォールバックでもID一致なし postId =', postId);
             }
 
             /* --- Render --- */
