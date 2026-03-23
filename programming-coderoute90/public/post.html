@@ -1,0 +1,2193 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>記事詳細 - CodeRoute 90</title>
+    <meta name="description" content="CodeRoute 90 - 40歳・文系から90日でエンジニア転職した運営者が、最短ルートを事実ベースで公開するメディア。">
+    <link rel="canonical" href="https://programming.coderoute90.workers.dev/post.html">
+
+    <!-- OGP / Twitter -->
+    <meta property="og:title" content="記事詳細 - CodeRoute 90">
+    <meta property="og:description" content="CodeRoute 90 - 40歳・文系から90日でエンジニア転職した運営者が、最短ルートを事実ベースで公開するメディア。">
+    <meta property="og:type" content="article">
+    <meta property="og:url" content="https://programming.coderoute90.workers.dev/post.html">
+    <meta property="og:image" content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+    <meta property="og:site_name" content="CodeRoute 90">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="記事詳細 - CodeRoute 90">
+    <meta name="twitter:description" content="CodeRoute 90 - 40歳・文系から90日でエンジニア転職した運営者が、最短ルートを事実ベースで公開するメディア。">
+    <meta name="twitter:image" content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+
+    <script>
+    (function () {
+        'use strict';
+
+        var API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
+        var DEFAULT_TITLE = '記事詳細 - CodeRoute 90';
+        var DEFAULT_DESCRIPTION = 'CodeRoute 90 - 40歳・文系から90日でエンジニア転職した運営者が、最短ルートを事実ベースで公開するメディア。';
+        var DEFAULT_IMAGE = 'https://programming.coderoute90.workers.dev/assets/images/ogp.png';
+        var SITE_NAME = 'CodeRoute 90';
+
+        function normalizePostPayload(raw, preferredId) {
+            if (!raw || typeof raw !== 'object') return null;
+            if (raw.id) return raw;
+
+            if (Array.isArray(raw.contents)) {
+                if (preferredId) {
+                    var matched = raw.contents.find(function (item) {
+                        return item && (item.id === preferredId || item.contentid === preferredId);
+                    });
+                    if (matched) return matched;
+                }
+                if (raw.contents.length === 1 && raw.contents[0] && raw.contents[0].id) {
+                    return raw.contents[0];
+                }
+            }
+            return null;
+        }
+
+        function getPostEyecatchUrl(post) {
+            if (!post || typeof post !== 'object') return null;
+            if (post.eyecatch) {
+                if (typeof post.eyecatch === 'string') return post.eyecatch;
+                if (post.eyecatch.url) return post.eyecatch.url;
+            }
+            if (post.thumbnail) {
+                if (typeof post.thumbnail === 'string') return post.thumbnail;
+                if (post.thumbnail.url) return post.thumbnail.url;
+            }
+            return null;
+        }
+
+        function htmlToPlainText(html) {
+            if (!html) return '';
+            var tmp = document.createElement('div');
+            tmp.innerHTML = html;
+            return (tmp.textContent || tmp.innerText || '').replace(/\s+/g, ' ').trim();
+        }
+
+        function getPostDescription(post) {
+            var text = htmlToPlainText(post && post.content ? post.content : '');
+            return text ? text.slice(0, 120) : DEFAULT_DESCRIPTION;
+        }
+
+        function upsertMeta(selector, attrName, attrValue, content) {
+            var el = document.head.querySelector(selector);
+            if (!el) {
+                el = document.createElement('meta');
+                el.setAttribute(attrName, attrValue);
+                document.head.appendChild(el);
+            }
+            el.setAttribute('content', content);
+            return el;
+        }
+
+        function upsertCanonical(href) {
+            var el = document.head.querySelector('link[rel="canonical"]');
+            if (!el) {
+                el = document.createElement('link');
+                el.setAttribute('rel', 'canonical');
+                document.head.appendChild(el);
+            }
+            el.setAttribute('href', href);
+            return el;
+        }
+
+        function buildPostUrl(postId) {
+            var url = new URL(window.location.href);
+            if (postId) {
+                url.searchParams.set('id', postId);
+            }
+            return url.toString();
+        }
+
+        function applyPostMeta(post, postId) {
+            if (!post) return;
+            var postTitle = (post.title && typeof post.title === 'string') ? post.title : '記事詳細';
+            var fullTitle = postTitle + ' - ' + SITE_NAME;
+            var description = getPostDescription(post);
+            var image = getPostEyecatchUrl(post) || DEFAULT_IMAGE;
+            var url = buildPostUrl(postId || post.id || post.contentid || '');
+
+            document.title = fullTitle;
+            upsertCanonical(url);
+            upsertMeta('meta[name="description"]', 'name', 'description', description);
+            upsertMeta('meta[property="og:title"]', 'property', 'og:title', fullTitle);
+            upsertMeta('meta[property="og:description"]', 'property', 'og:description', description);
+            upsertMeta('meta[property="og:type"]', 'property', 'og:type', 'article');
+            upsertMeta('meta[property="og:url"]', 'property', 'og:url', url);
+            upsertMeta('meta[property="og:image"]', 'property', 'og:image', image);
+            upsertMeta('meta[property="og:site_name"]', 'property', 'og:site_name', SITE_NAME);
+            upsertMeta('meta[name="twitter:card"]', 'name', 'twitter:card', 'summary_large_image');
+            upsertMeta('meta[name="twitter:title"]', 'name', 'twitter:title', fullTitle);
+            upsertMeta('meta[name="twitter:description"]', 'name', 'twitter:description', description);
+            upsertMeta('meta[name="twitter:image"]', 'name', 'twitter:image', image);
+        }
+
+        async function fetchPostsFallbackList() {
+            var res = await fetch(API_URL + '?limit=100&orders=-publishedAt', {
+                method: 'GET',
+                mode: 'cors',
+                headers: { 'Accept': 'application/json' }
+            });
+            if (!res.ok) {
+                throw new Error('一覧取得失敗: HTTP ' + res.status + ' ' + res.statusText);
+            }
+            var data = await res.json();
+            return (data && Array.isArray(data.contents)) ? data.contents : [];
+        }
+
+        async function fetchPostForHead(postId) {
+            if (!postId) return null;
+
+            try {
+                var res = await fetch(API_URL + '/' + postId, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (res.ok) {
+                    var raw = await res.json();
+                    var normalized = normalizePostPayload(raw, postId);
+                    if (normalized) return normalized;
+                }
+            } catch (err) {
+                console.warn('[CodeRoute90] head meta fetch failed:', err);
+            }
+
+            var posts = await fetchPostsFallbackList();
+            return posts.find(function (item) {
+                return item && (item.id === postId || item.contentid === postId);
+            }) || null;
+        }
+
+        var params = new URLSearchParams(window.location.search);
+        var postId = params.get('id');
+
+        document.title = DEFAULT_TITLE;
+        if (postId) {
+            window.__cr90PostHead = {
+                normalizePostPayload: normalizePostPayload,
+                getPostEyecatchUrl: getPostEyecatchUrl,
+                applyPostMeta: applyPostMeta,
+                fetchPostsFallbackList: fetchPostsFallbackList
+            };
+
+            window.__cr90PostHeadPrefetchPromise = fetchPostForHead(postId)
+                .then(function (post) {
+                    if (post) {
+                        applyPostMeta(post, postId);
+                    }
+                    return post;
+                })
+                .catch(function (err) {
+                    console.warn('[CodeRoute90] head prefetch failed:', err);
+                    return null;
+                });
+        }
+    })();
+    </script>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+JP:wght@300;400;500;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Site CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* ============================================================
+           CSS Variables Fallback
+           (style.css が定義するものを補完。style.css ロード済みなら上書き不要)
+        ============================================================ */
+        :root {
+            --bg-primary:       #0a0a0f;
+            --bg-secondary:     #0f172a;
+            --bg-card:          rgba(15, 23, 42, 0.8);
+            --bg-card-hover:    rgba(20, 30, 55, 0.95);
+
+            --accent-cyan:      #00d4ff;
+            --accent-purple:    #8b5cf6;
+            --accent-pink:      #ec4899;
+
+            --text-primary:     #e2e8f0;
+            --text-secondary:   #94a3b8;
+            --text-muted:       #64748b;
+
+            --border-subtle:    rgba(255, 255, 255, 0.06);
+            --border-glow:      rgba(0, 212, 255, 0.3);
+
+            --gradient-primary: linear-gradient(135deg, #00d4ff 0%, #8b5cf6 50%, #ec4899 100%);
+            --gradient-text:    linear-gradient(135deg, #00d4ff 0%, #8b5cf6 60%, #ec4899 100%);
+            --gradient-dark:    linear-gradient(180deg, #0a0a0f 0%, #0d1117 100%);
+            --gradient-hero:    linear-gradient(135deg, #0a0a1a 0%, #0f172a 50%, #0a1a1a 100%);
+            --gradient-cta:     linear-gradient(135deg, #00d4ff, #8b5cf6);
+
+            --shadow-glow:      0 0 20px rgba(0, 212, 255, 0.3);
+            --shadow-card:      0 4px 24px rgba(0, 0, 0, 0.4);
+
+            --radius-sm:  6px;
+            --radius-md:  12px;
+            --radius-lg:  20px;
+
+            --font-primary:   'Inter', sans-serif;
+            --font-secondary: 'Noto Sans JP', sans-serif;
+            --font-mono:      'JetBrains Mono', monospace;
+        }
+
+        /* ============================================================
+           Base Reset / Body
+        ============================================================ */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--font-secondary), var(--font-primary);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: inherit; text-decoration: none; }
+        img { max-width: 100%; height: auto; display: block; }
+
+        /* ============================================================
+           Reading Progress Bar
+        ============================================================ */
+        #reading-progress {
+            position: fixed;
+            top: 0; left: 0;
+            width: 0%;
+            height: 3px;
+            background: var(--gradient-primary);
+            z-index: 9999;
+            transition: width 0.1s linear;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.7);
+        }
+
+        /* ============================================================
+           Header / Navigation
+        ============================================================ */
+        header {
+            position: fixed;
+            top: 0; left: 0; right: 0;
+            z-index: 1000;
+            background: rgba(10, 10, 15, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border-subtle);
+            height: 68px;
+            transition: background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        header.scrolled {
+            background: rgba(10, 10, 15, 0.97);
+            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+        }
+
+        header nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: var(--font-primary);
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            white-space: nowrap;
+        }
+
+        .logo i { -webkit-text-fill-color: var(--accent-cyan); }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            padding: 0.5rem 0.9rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            transition: color 0.25s ease, background 0.25s ease;
+            text-decoration: none;
+        }
+
+        .nav-links a:hover,
+        .nav-links a.nav-active {
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.07);
+        }
+
+        /* Hamburger */
+        /* ===== Hamburger Menu ===== */
+        .hamburger {
+            display: none;   /* デスクトップでは非表示 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 10001;
+            flex-shrink: 0;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary, #e2e8f0);
+            border-radius: 2px;
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1),
+                        opacity   0.25s ease,
+                        width     0.25s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* モバイル用オーバーレイ */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
+        }
+        .nav-overlay.active { opacity: 1; pointer-events: auto; }
+
+        @media (max-width: 768px) {
+            /* モバイル: ハンバーガーを表示 */
+            .hamburger { display: flex !important; }
+            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
+
+            nav {
+                position: relative;
+            }
+            /* モバイル: メニューは右からスライドするドロワー */
+            .nav-links {
+                display: flex !important;
+                position: fixed !important;
+                top: 0 !important;
+                right: -100% !important;
+                width: 75vw !important;
+                max-width: 300px !important;
+                height: 100dvh !important;
+                height: 100vh !important;
+                background: var(--bg-card, #1e293b) !important;
+                border-left: 1px solid rgba(255,255,255,0.08) !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 5rem 1.5rem 2rem !important;
+                gap: 0 !important;
+                z-index: 9999 !important;
+                /* [FIX] body portal でも overlay より上に表示 */
+                transition: right 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+                box-shadow: -4px 0 24px rgba(0,0,0,0.4) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .nav-links.open { right: 0 !important; }
+            .nav-links li {
+                width: 100% !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            }
+            .nav-links li:last-child { border-bottom: none !important; }
+            .nav-links li a {
+                display: block !important;
+                padding: 1rem 0.5rem !important;
+                font-size: 1rem !important;
+                width: 100% !important;
+                color: var(--text-primary, #e2e8f0) !important;
+            }
+        }
+        /* ===== /Hamburger Menu ===== */
+
+        /* ============================================================
+           Post Page Wrapper
+        ============================================================ */
+        .post-wrapper a {
+                display: block;
+                padding: 1rem 0.5rem;
+                font-size: 1rem;
+                width: 100%;
+                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
+                color: var(--text-primary, #e2e8f0) !important;
+                text-decoration: none;
+                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
+                pointer-events: auto !important;
+                -webkit-tap-highlight-color: transparent;
+                touch-action: manipulation;
+                cursor: pointer;
+            }
+        
+
+        /* ============================================================
+           Post Page Wrapper
+        ============================================================ */
+        .post-page {
+            padding-top: 68px;
+            min-height: 100vh;
+            background: var(--bg-primary);
+        }
+
+        /* ============================================================
+           Post Hero
+        ============================================================ */
+        .post-hero {
+            position: relative;
+            padding: 5rem 2rem 4.5rem;
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-subtle);
+            background:
+                radial-gradient(ellipse 80% 60% at 10% 40%, rgba(0, 212, 255, 0.07) 0%, transparent 60%),
+                radial-gradient(ellipse 70% 50% at 85% 20%, rgba(139, 92, 246, 0.08) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 50% 90%, rgba(236, 72, 153, 0.04) 0%, transparent 60%),
+                linear-gradient(180deg, #0d1117 0%, #080c14 100%);
+        }
+
+        /* animated glow orbs */
+        .post-hero::before,
+        .post-hero::after {
+            content: '';
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            animation: heroOrb 8s ease-in-out infinite alternate;
+        }
+
+        .post-hero::before {
+            width: 400px; height: 400px;
+            top: -100px; left: -80px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.12), transparent 70%);
+            animation-delay: 0s;
+        }
+
+        .post-hero::after {
+            width: 350px; height: 350px;
+            bottom: -80px; right: -60px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 70%);
+            animation-delay: -4s;
+        }
+
+        @keyframes heroOrb {
+            0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            100% { transform: translate(30px, 20px) scale(1.1); opacity: 1; }
+        }
+
+        .post-hero-inner {
+            max-width: 860px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Breadcrumb */
+        .post-breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .post-breadcrumb a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .post-breadcrumb a:hover { color: var(--accent-cyan); }
+
+        .post-breadcrumb .sep {
+            color: var(--text-muted);
+            opacity: 0.5;
+            font-size: 0.75rem;
+        }
+
+        .post-breadcrumb .current {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+            max-width: 320px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* Category badge */
+        .post-category-badge {
+            display: none;
+            background: rgba(0, 212, 255, 0.1);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            padding: 0.3rem 1rem;
+            border-radius: 999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-bottom: 1.4rem;
+        }
+
+        /* Post title */
+        #post-title {
+            font-size: clamp(1.8rem, 4vw, 2.8rem);
+            font-weight: 700;
+            line-height: 1.25;
+            letter-spacing: -0.03em;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1.75rem;
+        }
+
+        #post-title.loading-text {
+            background: none;
+            -webkit-text-fill-color: var(--text-muted);
+            color: var(--text-muted);
+        }
+
+        /* Post meta bar */
+        .post-meta-bar {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+        }
+
+        .post-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+
+        .post-meta-item svg { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; }
+
+        .post-meta-divider {
+            width: 1px;
+            height: 14px;
+            background: var(--border-subtle);
+        }
+
+        /* Glow separator */
+        .glow-line {
+            height: 1px;
+            background: var(--gradient-primary);
+            opacity: 0.25;
+        }
+
+        /* ============================================================
+           Main Layout
+        ============================================================ */
+        .post-layout {
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 3.5rem 2rem 6rem;
+            display: grid;
+            grid-template-columns: 1fr 288px;
+            gap: 3.5rem;
+            align-items: start;
+        }
+
+        /* ============================================================
+           Article
+        ============================================================ */
+        .post-article { min-width: 0; }
+
+        /* Loading / Error */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 5rem 2rem;
+            gap: 1.2rem;
+            color: var(--text-muted);
+        }
+
+        .loading-spinner {
+            width: 44px; height: 44px;
+            border: 3px solid var(--border-subtle);
+            border-top-color: var(--accent-cyan);
+            border-radius: 50%;
+            animation: spin 0.85s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-state p { font-size: 0.92rem; letter-spacing: 0.02em; }
+
+        .error-state {
+            text-align: center;
+            padding: 5rem 2rem;
+        }
+
+        .error-icon { font-size: 3.5rem; margin-bottom: 1.2rem; opacity: 0.5; }
+
+        .error-state h2 {
+            font-size: 1.4rem;
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+        }
+
+        .error-state p { color: var(--text-muted); font-size: 0.95rem; }
+
+        .error-state .back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.75rem;
+            padding: 0.65rem 1.5rem;
+            border-radius: 999px;
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+
+        .error-state .back-btn:hover {
+            background: rgba(0, 212, 255, 0.15);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
+        }
+
+        /* ============================================================
+           Article Content (Rich Text from CMS)
+        ============================================================ */
+        .post-content {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.85;
+        }
+
+        .post-content h1,
+        .post-content h2,
+        .post-content h3,
+        .post-content h4 {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-top: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .post-content h2 {
+            font-size: 1.5rem;
+            padding-bottom: 0.6rem;
+            border-bottom: 1px solid var(--border-subtle);
+            position: relative;
+        }
+
+        .post-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -1px; left: 0;
+            width: 56px; height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        .post-content h3 { font-size: 1.2rem; }
+        .post-content h4 { font-size: 1.05rem; }
+
+        .post-content p {
+            margin-bottom: 1.4rem;
+            color: var(--text-secondary);
+        }
+
+        .post-content a {
+            color: var(--accent-cyan);
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            text-decoration-color: rgba(0, 212, 255, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .post-content a:hover {
+            color: var(--accent-purple);
+            text-decoration-color: var(--accent-purple);
+        }
+
+        /* ============================================================
+           Internal Link Card (引用リンクカード)
+        ============================================================ */
+        .internal-link-card {
+            display: flex;
+            align-items: stretch;
+            background: rgba(15, 23, 42, 0.75);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            overflow: hidden;
+            margin: 1.75rem 0;
+            text-decoration: none !important;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+            cursor: pointer;
+            color: inherit;
+            box-shadow: var(--shadow-card);
+        }
+
+        .internal-link-card:hover {
+            border-color: rgba(0, 212, 255, 0.35);
+            box-shadow: 0 6px 28px rgba(0, 212, 255, 0.12);
+            transform: translateY(-2px);
+            text-decoration: none !important;
+        }
+
+        .internal-link-card__body {
+            flex: 1;
+            padding: 1.1rem 1.3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 0.4rem;
+            min-width: 0;
+        }
+
+        .internal-link-card__label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            opacity: 0.85;
+        }
+
+        .internal-link-card__title {
+            font-size: 0.97rem;
+            font-weight: 600;
+            line-height: 1.45;
+            color: var(--text-primary);
+            background: none !important;
+            -webkit-text-fill-color: var(--text-primary) !important;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+
+        .internal-link-card__site {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .internal-link-card__thumb {
+            flex-shrink: 0;
+            width: 140px;
+            min-height: 88px;
+            max-height: 130px;
+            overflow: hidden;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .internal-link-card__thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 0 !important;
+            border: none !important;
+            margin: 0 !important;
+            box-shadow: none !important;
+        }
+
+        .internal-link-card__thumb-placeholder {
+            width: 100%;
+            height: 100%;
+            min-height: 88px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(139,92,246,0.1));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: rgba(0,212,255,0.3);
+        }
+
+        @media (max-width: 520px) {
+            .internal-link-card__thumb { width: 100px; min-height: 72px; }
+            .internal-link-card__title { font-size: 0.88rem; }
+        }
+
+        .post-content img {
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+            margin: 1.75rem 0;
+            box-shadow: var(--shadow-card);
+        }
+
+        .post-content ul, .post-content ol {
+            padding-left: 1.5rem;
+            margin-bottom: 1.4rem;
+        }
+
+        .post-content li {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 0.5rem;
+        }
+
+        .post-content ul li::marker { color: var(--accent-cyan); }
+        .post-content ol li::marker { color: var(--accent-purple); font-weight: 600; }
+
+        .post-content blockquote {
+            border-left: 3px solid var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.04);
+            padding: 1.2rem 1.5rem;
+            margin: 1.75rem 0;
+            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+
+        .post-content code {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--accent-cyan);
+            padding: 0.2em 0.5em;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+            font-size: 0.88em;
+            border: 1px solid rgba(0, 212, 255, 0.15);
+        }
+
+        .post-content pre {
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.5rem;
+            overflow-x: auto;
+            margin: 1.75rem 0;
+            position: relative;
+        }
+
+        .post-content pre code {
+            background: none;
+            color: #e2e8f0;
+            padding: 0;
+            border: none;
+            font-size: 0.88rem;
+            line-height: 1.7;
+        }
+
+        .post-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.75rem 0;
+            font-size: 0.93rem;
+            border-radius: var(--radius-sm);
+            overflow: hidden;
+        }
+
+        .post-content th {
+            background: rgba(0, 212, 255, 0.07);
+            color: var(--accent-cyan);
+            padding: 0.8rem 1rem;
+            text-align: left;
+            font-weight: 600;
+            border-bottom: 1px solid var(--border-glow);
+        }
+
+        .post-content td {
+            padding: 0.8rem 1rem;
+            border-bottom: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+        }
+
+        .post-content tr:hover td { background: rgba(255,255,255,0.02); }
+
+        .post-content hr {
+            border: none;
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 2.5rem 0;
+        }
+
+        /* Code copy button */
+        .code-wrapper { position: relative; }
+
+        .code-copy-btn {
+            position: absolute;
+            top: 0.6rem; right: 0.6rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid var(--border-subtle);
+            color: var(--text-muted);
+            padding: 0.3rem 0.75rem;
+            border-radius: var(--radius-sm);
+            font-size: 0.73rem;
+            font-family: var(--font-primary);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .code-copy-btn:hover, .code-copy-btn.copied {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        /* ============================================================
+           Post Footer
+        ============================================================ */
+        .post-footer {
+            margin-top: 3.5rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .post-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .post-tags .tag {
+            background: rgba(139, 92, 246, 0.08);
+            color: var(--accent-purple);
+            padding: 0.3rem 0.95rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 500;
+            border: 1px solid rgba(139, 92, 246, 0.2);
+            transition: all 0.2s ease;
+        }
+
+        .post-tags .tag:hover {
+            background: rgba(139, 92, 246, 0.15);
+            border-color: var(--accent-purple);
+        }
+
+        /* Share section */
+        .share-section {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex-wrap: wrap;
+            margin-bottom: 2rem;
+        }
+
+        .share-label {
+            font-size: 0.82rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        .share-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            padding: 0.5rem 1.2rem;
+            border-radius: 999px;
+            font-size: 0.8rem;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.25s ease;
+            cursor: pointer;
+            border: none;
+            font-family: var(--font-primary);
+        }
+
+        .share-btn-x {
+            background: rgba(255,255,255,0.05);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+
+        .share-btn-x:hover {
+            background: rgba(255,255,255,0.1);
+            color: var(--text-primary);
+            transform: translateY(-2px);
+        }
+
+        .share-btn-copy {
+            background: rgba(0, 212, 255, 0.07);
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+        }
+
+        .share-btn-copy:hover {
+            background: rgba(0, 212, 255, 0.14);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.18);
+        }
+
+        /* Back to blog button */
+        .back-to-blog {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.75rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.04);
+            color: var(--text-secondary);
+            border: 1px solid var(--border-subtle);
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.25s ease;
+        }
+
+        .back-to-blog:hover {
+            background: rgba(0, 212, 255, 0.08);
+            color: var(--accent-cyan);
+            border-color: rgba(0, 212, 255, 0.3);
+            transform: translateX(-4px);
+        }
+
+        /* ============================================================
+           Sidebar
+        ============================================================ */
+        .post-sidebar {
+            position: sticky;
+            top: 88px;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .sidebar-card {
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-md);
+            padding: 1.4rem 1.3rem;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: border-color 0.3s ease;
+        }
+
+        .sidebar-card:hover { border-color: rgba(0, 212, 255, 0.15); }
+
+        .sidebar-card-title {
+            font-size: 0.78rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 1rem;
+            padding-bottom: 0.7rem;
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        /* TOC */
+        #toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        #toc-list a {
+            display: block;
+            padding: 0.42rem 0.7rem;
+            font-size: 0.83rem;
+            color: var(--text-muted);
+            border-radius: var(--radius-sm);
+            border-left: 2px solid transparent;
+            line-height: 1.45;
+            transition: all 0.2s ease;
+        }
+
+        #toc-list a:hover,
+        #toc-list a.active {
+            color: var(--accent-cyan);
+            background: rgba(0, 212, 255, 0.05);
+            border-left-color: var(--accent-cyan);
+        }
+
+        #toc-list .toc-h3 a { padding-left: 1.5rem; font-size: 0.78rem; }
+        .toc-empty { font-size: 0.82rem; color: var(--text-muted); font-style: italic; padding: 0.4rem 0.7rem; }
+
+        /* Profile card */
+        .sidebar-avatar {
+            width: 80px; height: 80px;
+            border-radius: 50%;
+            background: var(--gradient-cta);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.75rem;
+            font-size: 1.6rem;
+            overflow: hidden;
+            flex-shrink: 0;
+            border: 2px solid rgba(0, 212, 255, 0.35);
+            box-shadow: 0 0 14px rgba(0, 212, 255, 0.2);
+        }
+
+        /* 著者写真 */
+        .sidebar-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+            border-radius: 50%;
+            display: block;
+        }
+
+        /* 写真が読み込めない場合のフォールバック絵文字 */
+        .sidebar-avatar .avatar-fallback {
+            font-size: 1.6rem;
+            line-height: 1;
+        }
+
+        .sidebar-profile { text-align: center; }
+
+        .sidebar-profile-name {
+            font-size: 0.92rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 0.4rem;
+        }
+
+        .sidebar-profile-bio {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            line-height: 1.55;
+        }
+
+        /* Nav CTA button */
+        .sidebar-cta {
+            display: block;
+            width: 100%;
+            text-align: center;
+            padding: 0.75rem 1rem;
+            border-radius: var(--radius-md);
+            background: var(--gradient-primary);
+            color: #fff;
+            font-size: 0.88rem;
+            font-weight: 600;
+            letter-spacing: 0.02em;
+            transition: opacity 0.2s ease, transform 0.2s ease;
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+        }
+
+        .sidebar-cta:hover {
+            opacity: 0.88;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 22px rgba(0, 212, 255, 0.28);
+        }
+
+        /* ============================================================
+           Footer
+        ============================================================ */
+        footer {
+            background: rgba(8, 8, 14, 0.95);
+            color: var(--text-secondary);
+            padding: 4rem 2rem 2.5rem;
+            border-top: 1px solid var(--border-subtle);
+        }
+
+        .footer-inner {
+            max-width: 1180px;
+            margin: 0 auto;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr;
+            gap: 3rem;
+            margin-bottom: 3rem;
+        }
+
+        .footer-brand .logo {
+            margin-bottom: 0.9rem;
+            display: inline-block;
+        }
+
+        .footer-brand p {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.65;
+        }
+
+        .footer-col-title {
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            margin-bottom: 1rem;
+        }
+
+        .footer-nav-list { list-style: none; }
+
+        .footer-nav-list li { margin-bottom: 0.55rem; }
+
+        .footer-nav-list a {
+            color: var(--text-muted);
+            font-size: 0.86rem;
+            transition: color 0.2s ease;
+        }
+
+        .footer-nav-list a:hover { color: var(--accent-cyan); }
+
+        .footer-social {
+            display: flex;
+            gap: 0.7rem;
+            margin-top: 0.5rem;
+        }
+
+        .footer-social a {
+            width: 38px; height: 38px;
+            border-radius: var(--radius-sm);
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-secondary);
+            font-size: 1rem;
+            transition: all 0.25s ease;
+        }
+
+        .footer-social a:hover {
+            color: var(--accent-cyan);
+            background: rgba(0,212,255,0.08);
+            border-color: rgba(0,212,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .footer-bottom {
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-subtle);
+            text-align: center;
+            font-size: 0.82rem;
+            color: var(--text-muted);
+        }
+
+        /* ============================================================
+           Animations
+        ============================================================ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-in { animation: fadeInUp 0.5s cubic-bezier(0.4,0,0.2,1) both; }
+        .anim-d1 { animation-delay: 0.08s; }
+        .anim-d2 { animation-delay: 0.16s; }
+        .anim-d3 { animation-delay: 0.24s; }
+        .anim-d4 { animation-delay: 0.32s; }
+
+        /* ============================================================
+           Responsive
+        ============================================================ */
+        @media (max-width: 960px) {
+            .post-layout {
+                grid-template-columns: 1fr;
+                padding: 2.5rem 1.5rem 4rem;
+            }
+
+            /* [FIX] スマホ・タブレット: 目次を本文より上に表示 */
+            .post-article { order: 2; }
+
+            .post-sidebar {
+                order: 1;
+                position: static;
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+            }
+
+            .footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+            .footer-brand { grid-column: 1 / -1; }
+        }
+
+        @media (max-width: 640px) {
+            .post-hero { padding: 4rem 1.25rem 3rem; }
+
+            #post-title { font-size: 1.65rem; }
+
+            .post-sidebar { grid-template-columns: 1fr; }
+
+            .share-section { flex-direction: column; align-items: flex-start; }
+
+            .footer-grid { grid-template-columns: 1fr; }
+
+            header nav { padding: 0 1.25rem; }
+
+            .post-layout { padding: 2rem 1.25rem 3rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Reading Progress Bar -->
+    <div id="reading-progress" role="progressbar" aria-label="読了進捗"></div>
+
+    <!-- ===== Header ===== -->
+    <header id="site-header">
+        <nav>
+            <a href="index.html" class="logo">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="about.html">CodeRoute 90について</a></li>
+                <li><a href="profile.html">about me</a></li>
+                <li><a href="blog.html">ブログ</a></li>
+                <li><a href="contact.html">お問い合わせ</a></li>
+            </ul>
+            <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="navLinks">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+    <!-- ===== Post Page ===== -->
+    <div class="post-page">
+
+        <!-- Post Hero -->
+        <section class="post-hero">
+            <div class="post-hero-inner">
+
+                <!-- Breadcrumb -->
+                <nav class="post-breadcrumb animate-in" aria-label="パンくずリスト">
+                    <a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a>
+                    <span class="sep"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+                    <a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> ブログ</a>
+                    <span class="sep"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
+                    <span class="current" id="breadcrumb-title">記事を読み込み中...</span>
+                </nav>
+
+                <!-- Category badge -->
+                <div id="post-category-badge" class="post-category-badge animate-in anim-d1"></div>
+
+                <!-- Title -->
+                <h1 id="post-title" class="loading-text animate-in anim-d1">
+                    読み込み中...
+                </h1>
+
+                <!-- Meta -->
+                <div class="post-meta-bar animate-in anim-d2">
+                    <div class="post-meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+                            <line x1="16" y1="2" x2="16" y2="6"/>
+                            <line x1="8"  y1="2" x2="8"  y2="6"/>
+                            <line x1="3"  y1="10" x2="21" y2="10"/>
+                        </svg>
+                        <span id="post-date">--</span>
+                    </div>
+                    <div class="post-meta-divider"></div>
+                    <div class="post-meta-item">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="10"/>
+                            <polyline points="12 6 12 12 16 14"/>
+                        </svg>
+                       
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <div class="glow-line"></div>
+
+        <!-- ===== Article Body ===== -->
+        <div class="post-layout">
+
+            <!-- Main Article -->
+            <article class="post-article animate-in anim-d2">
+
+                <!-- Loading state -->
+                <div id="loading-state" class="loading-state">
+                    <div class="loading-spinner"></div>
+                    <p>記事を読み込んでいます...</p>
+                </div>
+
+                <!-- Error state -->
+                <div id="error-state" class="error-state" style="display:none;">
+                    <div class="error-icon">😔</div>
+                    <h2>記事が見つかりません</h2>
+                    <p>お探しの記事は存在しないか、削除された可能性があります。</p>
+                    <a href="blog.html" class="back-btn">
+                        <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                        記事一覧に戻る
+                    </a>
+                </div>
+
+                <!-- Article content (hidden until loaded) -->
+                <div id="article-content-wrapper" style="display:none;">
+
+                    <div id="post-content" class="post-content"></div>
+    
+    <div class="my-ad-container">
+        </div>
+
+    <div class="post-footer">
+
+                    <!-- Post Footer -->
+                    <div class="post-footer">
+
+                        <!-- Tags -->
+                        <div class="post-tags" id="post-tags"></div>
+
+                        <!-- Share -->
+                        <div class="share-section">
+                            <span class="share-label"><i class="fas fa-share-alt" aria-hidden="true"></i> シェアする：</span>
+                            <a id="share-x" href="#" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-x">
+                                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                                </svg>
+                                X でシェア
+                            </a>
+                            <button id="copy-link-btn" class="share-btn share-btn-copy" type="button">
+                                <i class="fas fa-link" aria-hidden="true"></i>
+                                URLをコピー
+                            </button>
+                        </div>
+
+                        <!-- Back link -->
+                        <a href="blog.html" class="back-to-blog">
+                            <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                            記事一覧に戻る
+                        </a>
+
+                    </div>
+                </div>
+
+            </article>
+
+            <!-- Sidebar -->
+            <aside class="post-sidebar animate-in anim-d3">
+
+                <!-- Table of Contents -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-title">📋 目次</div>
+                    <ul id="toc-list">
+                        <li class="toc-empty">読み込み中...</li>
+                    </ul>
+                </div>
+
+                <!-- Author Profile -->
+                <div class="sidebar-card">
+                    <div class="sidebar-card-title">✍️ 著者について</div>
+                    <div class="sidebar-profile">
+                        <div class="sidebar-avatar">
+                            <!-- ★ 著者写真: src の画像パスを実際のファイルに変更してください -->
+                            <img
+                                src="assets/images/author.jpg"
+                                alt="CodeRoute 90 著者"
+                                onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+                            />
+                            <span class="avatar-fallback" aria-hidden="true" style="display:none;">🎓</span>
+                        </div>
+                        <div class="sidebar-profile-name">CodeRoute 90</div>
+                        <div class="sidebar-profile-bio">40歳・文系営業職から90日でエンジニア転職。最短ルートを事実ベースで公開するメディア。</div>
+                    </div>
+                </div>
+
+                <!-- Navigation CTA -->
+                <div class="sidebar-card" style="text-align:center;">
+                    <div class="sidebar-card-title">🔗 ナビゲーション</div>
+                    <a href="blog.html" class="sidebar-cta">
+                        <i class="fas fa-list" aria-hidden="true"></i> 記事一覧を見る
+                    </a>
+                </div>
+
+            </aside>
+        </div>
+    </div>
+
+    <!-- ===== Footer ===== -->
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-grid">
+
+                <div class="footer-brand">
+                    <a href="index.html" class="logo">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+                    </a>
+                    <p>40歳・文系から90日でエンジニア転職した運営者が、<br>再現可能な最短ルートを事実ベースで公開するメディアです。</p>
+                </div>
+
+                <div>
+                    <div class="footer-col-title">メニュー</div>
+                    <ul class="footer-nav-list">
+                        <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a></li>
+                        <li><a href="about.html"><i class="fas fa-info-circle" aria-hidden="true"></i> CodeRoute 90について</a></li>
+                        <li><a href="profile.html"><i class="fas fa-user" aria-hidden="true"></i> about me</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> ブログ</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> お問い合わせ</a></li>
+                    </ul>
+                </div>
+
+                <div>
+                    <div class="footer-col-title">SNS</div>
+                    <div class="footer-social">
+                        <a href="#" title="X (Twitter)" aria-label="X (Twitter)">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.744l7.737-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                            </svg>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+            <div class="footer-bottom">
+                <p>© 2026 CodeRoute 90 — 最短距離で「未経験」を脱却する攻略ログ</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ===== Scripts ===== -->
+    <script src="assets/js/header-scroll.js" defer></script>
+
+    <script>
+    /* ============================================================
+       Reading Progress Bar
+    ============================================================ */
+    function updateReadingProgress() {
+        const el = document.getElementById('reading-progress');
+        if (!el) return;
+        const scrollTop = window.scrollY || document.documentElement.scrollTop;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        el.style.width = (docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0) + '%';
+    }
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+
+    /* ============================================================
+       Header: scroll shadow
+    ============================================================ */
+    (function () {
+        var header = document.getElementById('site-header');
+        if (!header) return;
+        window.addEventListener('scroll', function () {
+            header.classList.toggle('scrolled', window.scrollY > 20);
+        }, { passive: true });
+    })();
+
+    /* ============================================================
+       Estimated Read Time
+    ============================================================ */
+    function estimateReadTime(text) {
+        var words   = (text || '').trim().split(/\s+/).length;
+        var minutes = Math.max(1, Math.round(words / 400));
+        return minutes;
+    }
+
+    /* ============================================================
+       Table of Contents Builder
+    ============================================================ */
+    function buildTOC(contentEl) {
+        var tocList = document.getElementById('toc-list');
+        if (!tocList) return;
+        var headings = contentEl.querySelectorAll('h2, h3');
+
+        if (headings.length === 0) {
+            tocList.innerHTML = '<li class="toc-empty">目次なし</li>';
+            return;
+        }
+
+        tocList.innerHTML = '';
+        headings.forEach(function (h, i) {
+            if (!h.id) h.id = 'heading-' + i;
+            var li = document.createElement('li');
+            li.className = h.tagName === 'H3' ? 'toc-h3' : '';
+            var a = document.createElement('a');
+            a.href = '#' + h.id;
+            a.textContent = h.textContent;
+            a.addEventListener('click', function (e) {
+                e.preventDefault();
+                h.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+            li.appendChild(a);
+            tocList.appendChild(li);
+        });
+
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                var link = tocList.querySelector('a[href="#' + entry.target.id + '"]');
+                if (link && entry.isIntersecting) {
+                    tocList.querySelectorAll('a').forEach(function (a) { a.classList.remove('active'); });
+                    link.classList.add('active');
+                }
+            });
+        }, { rootMargin: '-80px 0px -60% 0px' });
+
+        headings.forEach(function (h) { observer.observe(h); });
+    }
+
+    /* ============================================================
+       Code Block Copy Buttons
+    ============================================================ */
+    function addCodeCopyButtons(contentEl) {
+        contentEl.querySelectorAll('pre').forEach(function (pre) {
+            var wrapper = document.createElement('div');
+            wrapper.className = 'code-wrapper';
+            pre.parentNode.insertBefore(wrapper, pre);
+            wrapper.appendChild(pre);
+
+            var btn = document.createElement('button');
+            btn.className = 'code-copy-btn';
+            btn.type = 'button';
+            btn.textContent = 'コピー';
+            btn.addEventListener('click', function () {
+                var code = pre.querySelector('code');
+                var text = code ? code.textContent : pre.textContent;
+                navigator.clipboard.writeText(text).then(function () {
+                    btn.textContent = '✓ コピー済み';
+                    btn.classList.add('copied');
+                    setTimeout(function () {
+                        btn.textContent = 'コピー';
+                        btn.classList.remove('copied');
+                    }, 2000);
+                }).catch(function (err) {
+                    console.warn('[CodeRoute90] clipboard copy failed:', err);
+                });
+            });
+            wrapper.appendChild(btn);
+        });
+    }
+
+    /* ============================================================
+       Helper: Execute <script> tags injected via innerHTML
+       (Browsers do not execute scripts when inserted via innerHTML)
+    ============================================================ */
+    function executeInjectedScripts(container) {
+        if (!container) return;
+
+        container.querySelectorAll('script').forEach(function (oldScript) {
+            var newScript = document.createElement('script');
+
+            // preserve attributes (e.g. src, async, type)
+            Array.from(oldScript.attributes).forEach(function (attr) {
+                newScript.setAttribute(attr.name, attr.value);
+            });
+
+            // preserve inline script content
+            if (oldScript.textContent) {
+                newScript.textContent = oldScript.textContent;
+            }
+
+            oldScript.parentNode.replaceChild(newScript, oldScript);
+        });
+    }
+
+    /* ============================================================
+       API Response Helpers
+    ============================================================ */
+    var postHeadHelpers = window.__cr90PostHead || {};
+
+    function normalizePostPayload(raw, preferredId) {
+        if (postHeadHelpers.normalizePostPayload) {
+            return postHeadHelpers.normalizePostPayload(raw, preferredId);
+        }
+        if (!raw || typeof raw !== 'object') return null;
+        if (raw.id) return raw;
+        if (Array.isArray(raw.contents)) {
+            if (preferredId) {
+                var matched = raw.contents.find(function (item) {
+                    return item && (item.id === preferredId || item.contentid === preferredId);
+                });
+                if (matched) return matched;
+            }
+            if (raw.contents.length === 1 && raw.contents[0] && raw.contents[0].id) {
+                return raw.contents[0];
+            }
+        }
+        return null;
+    }
+
+    function getPostEyecatchUrl(post) {
+        if (postHeadHelpers.getPostEyecatchUrl) {
+            return postHeadHelpers.getPostEyecatchUrl(post);
+        }
+        if (!post || typeof post !== 'object') return null;
+        if (post.eyecatch) {
+            if (typeof post.eyecatch === 'string') return post.eyecatch;
+            if (post.eyecatch.url) return post.eyecatch.url;
+        }
+        if (post.thumbnail) {
+            if (typeof post.thumbnail === 'string') return post.thumbnail;
+            if (post.thumbnail.url) return post.thumbnail.url;
+        }
+        return null;
+    }
+
+    async function fetchPostsFallbackList(API_URL) {
+        if (postHeadHelpers.fetchPostsFallbackList) {
+            return postHeadHelpers.fetchPostsFallbackList(API_URL);
+        }
+        var listRes = await fetch(API_URL + '?limit=100&orders=-publishedAt', {
+            method: 'GET',
+            mode: 'cors',
+            headers: { 'Accept': 'application/json' }
+        });
+        if (!listRes.ok) {
+            throw new Error('フォールバック一覧取得失敗: HTTP ' + listRes.status + ' ' + listRes.statusText);
+        }
+        var listData = await listRes.json();
+        return (listData && Array.isArray(listData.contents)) ? listData.contents : [];
+    }
+
+    /* ============================================================
+       Internal Link Card Enricher
+       本文中の内部リンク (post.html?id=XXX / ?id=XXX) を
+       タイトル・eyecatch画像付きリッチカードに変換する
+    ============================================================ */
+    async function enrichInternalLinks(contentEl, API_URL) {
+        if (!contentEl || !API_URL) return;
+
+        var allLinks = Array.from(contentEl.querySelectorAll('a[href]'));
+        var internalLinks = allLinks.filter(function (a) {
+            var href = a.getAttribute('href') || '';
+            return /[?&]id=([\w-]+)/.test(href) &&
+                   (href.includes('post.html') || href.startsWith('?') || href.startsWith('./?'));
+        });
+
+        if (internalLinks.length === 0) {
+            console.log('[CodeRoute90] enrichInternalLinks: 内部リンクなし');
+            return;
+        }
+
+        console.log('[CodeRoute90] enrichInternalLinks: 内部リンク ' + internalLinks.length + '件検出');
+
+        var idToLinks = {};
+        internalLinks.forEach(function (a) {
+            var href = a.getAttribute('href') || '';
+            var m = href.match(/[?&]id=([\w-]+)/);
+            if (m) {
+                var id = m[1];
+                if (!idToLinks[id]) idToLinks[id] = [];
+                idToLinks[id].push(a);
+            }
+        });
+
+        var ids = Object.keys(idToLinks);
+        var fallbackPostsPromise = null;
+
+        async function getFallbackPostById(id) {
+            if (!fallbackPostsPromise) {
+                fallbackPostsPromise = fetchPostsFallbackList(API_URL).catch(function (err) {
+                    console.warn('[CodeRoute90] enrichInternalLinks: フォールバック一覧取得失敗', err);
+                    return [];
+                });
+            }
+
+            var posts = await fallbackPostsPromise;
+            return posts.find(function (item) {
+                return item && (item.id === id || item.contentid === id);
+            }) || null;
+        }
+
+        await Promise.all(ids.map(async function (id) {
+            var postData = null;
+
+            try {
+                var res = await fetch(API_URL + '/' + id, {
+                    method: 'GET',
+                    mode: 'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
+
+                if (res.ok) {
+                    var raw = await res.json();
+                    postData = normalizePostPayload(raw, id);
+                }
+            } catch (e) {
+                console.warn('[CodeRoute90] enrichInternalLinks: fetch失敗 id=' + id, e);
+            }
+
+            if (!postData) {
+                postData = await getFallbackPostById(id);
+            }
+
+            idToLinks[id].forEach(function (a) {
+                if (a.classList.contains('internal-link-card')) return;
+
+                var title = postData ? postData.title : null;
+                var eyecatch = getPostEyecatchUrl(postData);
+                var href = a.getAttribute('href');
+                var displayTitle = title || a.textContent.trim() || 'CodeRoute 90 記事';
+
+                var thumbHtml = eyecatch
+                    ? '<div class="internal-link-card__thumb"><img src="' + escHtml(eyecatch) + '" alt="' + escHtml(displayTitle) + '" loading="lazy" decoding="async"></div>'
+                    : '<div class="internal-link-card__thumb"><div class="internal-link-card__thumb-placeholder">📝</div></div>';
+
+                var cardHtml =
+                    '<a href="' + escHtml(href) + '" class="internal-link-card" aria-label="' + escHtml(displayTitle) + '">' +
+                        '<div class="internal-link-card__body">' +
+                            '<span class="internal-link-card__label">📋 関連記事</span>' +
+                            '<p class="internal-link-card__title">' + escHtml(displayTitle) + '</p>' +
+                            '<span class="internal-link-card__site">' +
+                                '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>' +
+                                'CodeRoute 90' +
+                            '</span>' +
+                        '</div>' +
+                        thumbHtml +
+                    '</a>';
+
+                var wrapper = document.createElement('div');
+                wrapper.innerHTML = cardHtml;
+                var cardEl = wrapper.firstElementChild;
+                if (cardEl && a.parentNode) {
+                    var parent = a.parentNode;
+                    if (parent.tagName === 'P' && parent.children.length === 1 && parent.textContent.trim() === a.textContent.trim()) {
+                        parent.replaceWith(cardEl);
+                    } else {
+                        a.replaceWith(cardEl);
+                    }
+                }
+            });
+        }));
+
+        console.log('[CodeRoute90] enrichInternalLinks: 変換完了');
+    }
+
+    /* HTMLエスケープ ユーティリティ */
+    function escHtml(str) {
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    /* ============================================================
+       Main: Fetch & Render Post
+    ============================================================ */
+    async function fetchPost() {
+        var urlParams    = new URLSearchParams(window.location.search);
+        var postId       = urlParams.get('id');
+        var API_URL      = 'https://coderoute90-api.coderoute90.workers.dev';
+
+        var loadingState   = document.getElementById('loading-state');
+        var errorState     = document.getElementById('error-state');
+        var contentWrapper = document.getElementById('article-content-wrapper');
+        var titleEl        = document.getElementById('post-title');
+
+        /* DOM guard */
+        if (!loadingState || !errorState || !contentWrapper || !titleEl) {
+            console.error('[CodeRoute90] fetchPost: 必要なDOM要素が見つかりません。');
+            return;
+        }
+
+        /* No postId */
+        if (!postId) {
+            console.warn('[CodeRoute90] fetchPost: URLパラメータ ?id が見つかりません。');
+            loadingState.style.display = 'none';
+            errorState.style.display   = 'block';
+            titleEl.textContent = '記事が見つかりません';
+            titleEl.classList.remove('loading-text');
+            return;
+        }
+
+        console.log('[CodeRoute90] fetchPost: 記事取得開始 postId =', postId);
+
+        try {
+            /* --- 1st attempt: individual endpoint --- */
+            console.log('[CodeRoute90] 一次リクエスト:', API_URL + '/' + postId);
+            var post = null;
+
+            if (window.__cr90PostHeadPrefetchPromise) {
+                try {
+                    var prefetchedPost = await window.__cr90PostHeadPrefetchPromise;
+                    if (prefetchedPost && (prefetchedPost.id === postId || prefetchedPost.contentid === postId)) {
+                        post = prefetchedPost;
+                    }
+                } catch (e) {
+                    console.warn('[CodeRoute90] head prefetch promise failed:', e);
+                }
+            }
+
+            var res = null;
+            if (!post) {
+                res = await fetch(API_URL + '/' + postId, {
+                    method: 'GET',
+                    mode:   'cors',
+                    headers: { 'Accept': 'application/json' }
+                });
+            }
+
+            if (res && res.ok) {
+                var raw = await res.json();
+                console.log('[CodeRoute90] 一次レスポンス:', raw);
+                post = normalizePostPayload(raw, postId);
+                if (!post) {
+                    console.warn('[CodeRoute90] 一次レスポンス構造が想定外 → フォールバックへ', raw);
+                }
+            } else if (res) {
+                console.warn('[CodeRoute90] 一次リクエスト失敗 HTTP', res.status, res.statusText);
+            }
+            
+        
+
+            /* --- Fallback: list endpoint --- */
+            if (!post) {
+                console.log('[CodeRoute90] フォールバック: 一覧取得');
+                var fallbackPosts = await fetchPostsFallbackList(API_URL);
+                console.log('[CodeRoute90] 一覧件数:', fallbackPosts.length);
+                post = fallbackPosts.find(function (item) {
+                    return item && (item.id === postId || item.contentid === postId);
+                }) || null;
+                if (!post) console.warn('[CodeRoute90] フォールバックでもID一致なし postId =', postId);
+            }
+
+            /* --- Render --- */
+            if (post) {
+                console.log('[CodeRoute90] 記事取得成功:', post);
+
+                /* Safe title */
+                var postTitle = (post.title && typeof post.title === 'string') ? post.title : '(タイトルなし)';
+
+                /* Title */
+                titleEl.textContent = postTitle;
+                titleEl.classList.remove('loading-text');
+                if (window.__cr90PostHead && typeof window.__cr90PostHead.applyPostMeta === 'function') {
+                    window.__cr90PostHead.applyPostMeta(post, postId);
+                } else {
+                    document.title = postTitle + ' - CodeRoute 90';
+                }
+
+                /* Breadcrumb */
+                var bcTitle = document.getElementById('breadcrumb-title');
+                if (bcTitle) {
+                    bcTitle.textContent = (postTitle.length > 30) ? postTitle.slice(0, 30) + '…' : postTitle;
+                }
+
+                /* Date */
+                var dateEl = document.getElementById('post-date');
+                if (dateEl && post.publishedAt) {
+                    try {
+                        var d = new Date(post.publishedAt);
+                        dateEl.textContent = d.toLocaleDateString('ja-JP', { year: 'numeric', month: 'long', day: 'numeric' });
+                    } catch (e) {
+                        console.warn('[CodeRoute90] 日付変換エラー:', e);
+                    }
+                }
+
+                /* Category badge */
+                var badge = document.getElementById('post-category-badge');
+                if (badge && post.category) {
+                    badge.textContent = post.category.name || post.category;
+                    badge.style.display = 'inline-block';
+                }
+
+                /* Tags */
+                var tagsEl = document.getElementById('post-tags');
+                if (tagsEl && post.tags && Array.isArray(post.tags) && post.tags.length > 0) {
+                    post.tags.forEach(function (tag) {
+                        var span = document.createElement('span');
+                        span.className = 'tag';
+                        span.textContent = '#' + (tag.name || tag);
+                        tagsEl.appendChild(span);
+                    });
+                }
+
+                /* Content */
+                var contentEl = document.getElementById('post-content');
+                if (contentEl) {
+                    contentEl.innerHTML = post.content || '<p>本文がありません。</p>';
+                    executeInjectedScripts(contentEl);
+
+                    /* Read time */
+                    var rtEl = document.getElementById('read-time');
+
+                    buildTOC(contentEl);
+                    addCodeCopyButtons(contentEl);
+
+                    /* Internal link cards: タイトル・画像付きリッチカードに変換 */
+                    enrichInternalLinks(contentEl, API_URL);
+                }
+
+                /* Share X */
+                var shareX = document.getElementById('share-x');
+                if (shareX) {
+                    shareX.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(postTitle + ' | CodeRoute 90\n' + window.location.href);
+                }
+
+                /* Copy URL */
+                var copyBtn = document.getElementById('copy-link-btn');
+                if (copyBtn) {
+                    copyBtn.addEventListener('click', function () {
+                        navigator.clipboard.writeText(window.location.href).then(function () {
+                            copyBtn.innerHTML = '<i class="fas fa-check" aria-hidden="true"></i> コピー済み！';
+                            copyBtn.classList.add('copied');
+                            setTimeout(function () {
+                                copyBtn.innerHTML = '<i class="fas fa-link" aria-hidden="true"></i> URLをコピー';
+                                copyBtn.classList.remove('copied');
+                            }, 2500);
+                        }).catch(function (e) {
+                            console.warn('[CodeRoute90] clipboard copy failed:', e);
+                        });
+                    });
+                }
+
+                /* Show content */
+                loadingState.style.display = 'none';
+                contentWrapper.style.display = 'block';
+
+            } else {
+                console.error('[CodeRoute90] postId に一致する記事なし postId =', postId);
+                throw new Error('記事が見つかりません (id: ' + postId + ')');
+            }
+
+        } catch (err) {
+            console.error('[CodeRoute90] fetchPost エラー', { message: err.message, stack: err.stack, postId: postId });
+            loadingState.style.display = 'none';
+            errorState.style.display   = 'block';
+            titleEl.textContent = '読み込みエラー';
+            titleEl.classList.remove('loading-text');
+
+            /* Append detail for debugging */
+            if (!errorState.querySelector('.error-detail')) {
+                var detail = document.createElement('p');
+                detail.className = 'error-detail';
+                detail.style.cssText = 'font-size:0.76rem;color:#666;margin-top:1rem;word-break:break-all;';
+                detail.textContent = '詳細: ' + err.message;
+                errorState.appendChild(detail);
+            }
+        }
+    }
+
+    fetchPost();
+    </script>
+
+    <!-- ===== Hamburger Menu Script ===== -->
+    <script>
+    (function () {
+        'use strict';
+        document.addEventListener('DOMContentLoaded', function () {
+            var btn     = document.getElementById('hamburgerBtn');
+            var nav     = document.getElementById('navLinks');
+            var overlay = document.getElementById('navOverlay');
+            if (!btn || !nav) return;
+
+            if (typeof window.__relocateMobileNav === 'function') {
+                window.__relocateMobileNav();
+            }
+
+            function openMenu() {
+                btn.classList.add('open');
+                nav.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.setAttribute('aria-label', 'メニューを閉じる');
+                if (overlay) { overlay.style.display = 'block'; setTimeout(function(){ overlay.classList.add('active'); }, 10); }
+                /* スクロールロック */
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                btn.classList.remove('open');
+                nav.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-label', 'メニューを開く');
+                if (overlay) { overlay.classList.remove('active'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
+                /* スクロールロック解除 */
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
+            });
+
+            /* オーバーレイクリックで閉じる */
+            if (overlay) {
+                overlay.addEventListener('click', closeMenu);
+            }
+
+            /* メニューリンククリックで閉じる＋ナビゲーション */
+            nav.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var href = link.getAttribute('href');
+                    closeMenu();
+                    if (!href || href === '#') return;
+                    if (href.charAt(0) === '#') {
+                        /* 同一ページ内アンカースクロール */
+                        setTimeout(function () {
+                            var target = document.querySelector(href);
+                            if (target) {
+                                var headerEl = document.querySelector('header');
+                                var offset = headerEl ? headerEl.offsetHeight + 16 : 80;
+                                var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                                window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                            }
+                        }, 350);
+                    } else {
+                        /* 別ページへ遷移 */
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 50);
+                    }
+                });
+            });
+
+            /* ESCキーで閉じる */
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
+            });
+
+            /* リサイズ時にメニューをリセット */
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768 && nav.classList.contains('open')) {
+                    closeMenu();
+                }
+                if (typeof window.__relocateMobileNav === 'function') {
+                    window.__relocateMobileNav();
+                }
+            });
+        });
+    })();
+    </script>
+    <!-- ===== /Hamburger Menu Script ===== -->
+</body>
+</html>

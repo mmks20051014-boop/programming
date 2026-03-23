@@ -1,0 +1,1018 @@
+<!DOCTYPE html>
+<html lang="ja" data-theme="light" style=""><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeRoute 90 ITスクール体験記 ウェブサイト構築要件書（拡張版）</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&amp;family=Noto+Sans+JP:wght@400;500;700&amp;family=Noto+Serif+JP:wght@400;600&amp;display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+      :root {
+        /* Color Palette */
+        --primary-bg: #0f1923;
+        --secondary-bg: #1a2a3a;
+        --accent-blue: #64b4ff;
+        --slate-gray: #7a8b9a;
+        --text-dark: #1e2d3d;
+        --text-light: #ffffff;
+        --border-color: #e2e8f0;
+        --code-bg: #1e1e1e;
+        --table-header-bg: #f1f5f9;
+        --table-stripe-bg: #f8fafc;
+
+        /* Gradients */
+        --gradient-header: linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%);
+        --gradient-body: linear-gradient(180deg, #f8fafc 0%, #eef5ff 100%);
+      }
+
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      body {
+        font-family: 'Noto Serif JP', serif;
+        line-height: 1.8;
+        color: var(--text-dark);
+        background: var(--gradient-body);
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 40px 20px;
+      }
+
+      /* Typography */
+      h1,
+      h2,
+      h3,
+      h4 {
+        font-family: 'Noto Sans JP', sans-serif;
+        color: var(--text-dark);
+        margin-bottom: 1rem;
+        line-height: 1.4;
+      }
+
+      h1 {
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 0.5rem;
+        color: var(--primary-bg);
+      }
+
+      h2 {
+        font-size: 1.75rem;
+        border-bottom: 2px solid var(--accent-blue);
+        padding-bottom: 0.5rem;
+        margin-top: 3rem;
+        margin-bottom: 1.5rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      h3 {
+        font-size: 1.4rem;
+        margin-top: 2rem;
+        margin-bottom: 1rem;
+        color: var(--secondary-bg);
+        border-left: 4px solid var(--accent-blue);
+        padding-left: 0.75rem;
+      }
+
+      h4 {
+        font-size: 1.1rem;
+        margin-top: 1.5rem;
+        font-weight: 700;
+        color: var(--slate-gray);
+      }
+
+      p {
+        margin-bottom: 1.2rem;
+        text-align: justify;
+      }
+
+      a {
+        color: #3182ce;
+        text-decoration: none;
+        border-bottom: 1px dotted #3182ce;
+      }
+
+      a:hover {
+        color: #2c5282;
+        border-bottom: 1px solid #2c5282;
+      }
+
+      ul,
+      ol {
+        margin-bottom: 1.5rem;
+        padding-left: 1.5rem;
+      }
+
+      li {
+        margin-bottom: 0.5rem;
+      }
+
+      /* Header Section */
+      .document-header {
+        background: var(--gradient-header);
+        color: white;
+        padding: 3rem 2rem;
+        border-radius: 12px;
+        margin-bottom: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+
+      .document-header h1 {
+        color: white;
+        font-size: 2.2rem;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .document-header .subtitle {
+        font-family: 'Noto Sans JP', sans-serif;
+        color: var(--accent-blue);
+        font-weight: 500;
+        margin-bottom: 1.5rem;
+        display: block;
+      }
+
+      .meta-info {
+        display: flex;
+        justify-content: center;
+        gap: 2rem;
+        font-size: 0.9rem;
+        color: var(--slate-gray);
+        margin-top: 1rem;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      /* Tables */
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 2rem;
+        background: white;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+        font-family: 'Noto Sans JP', sans-serif;
+        font-size: 0.95rem;
+      }
+
+      th,
+      td {
+        padding: 1rem;
+        text-align: left;
+        border-bottom: 1px solid var(--border-color);
+      }
+
+      th {
+        background-color: var(--table-header-bg);
+        color: var(--text-dark);
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      tr:nth-child(even) {
+        background-color: var(--table-stripe-bg);
+      }
+
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      /* Code Blocks */
+      pre {
+        background-color: var(--code-bg);
+        color: #e0e0e0;
+        padding: 1.5rem;
+        border-radius: 8px;
+        overflow-x: auto;
+        margin-bottom: 2rem;
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.9rem;
+        line-height: 1.5;
+        position: relative;
+      }
+
+      pre::before {
+        content: 'CODE';
+        position: absolute;
+        top: 0;
+        right: 0;
+        background: #333;
+        color: #888;
+        font-size: 0.7rem;
+        padding: 4px 8px;
+        border-bottom-left-radius: 4px;
+      }
+
+      code {
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      p code {
+        background-color: #eff6ff;
+        color: #2b6cb0;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-size: 0.9em;
+      }
+
+      /* Utility */
+      .badge {
+        display: inline-block;
+        padding: 4px 8px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 700;
+      }
+      .badge-essential {
+        background: #fee2e2;
+        color: #991b1b;
+      }
+      .badge-high {
+        background: #ffedd5;
+        color: #9a3412;
+      }
+      .badge-medium {
+        background: #e0f2fe;
+        color: #075985;
+      }
+
+      .file-tree {
+        font-family: 'JetBrains Mono', monospace;
+        background: white;
+        padding: 1.5rem;
+        border-radius: 8px;
+        border: 1px solid var(--border-color);
+        margin-bottom: 2rem;
+      }
+
+      /* Print styles */
+      @media print {
+        body {
+          background: white;
+          color: black;
+          width: 100%;
+          margin: 0;
+          padding: 0;
+        }
+        .document-header {
+          background: none;
+          color: black;
+          box-shadow: none;
+          border-bottom: 2px solid #000;
+          padding: 1rem 0;
+          margin-bottom: 2rem;
+        }
+        .document-header h1 {
+          color: black;
+          text-shadow: none;
+        }
+        .document-header .subtitle {
+          color: #444;
+        }
+        pre {
+          background: #f5f5f5;
+          color: black;
+          border: 1px solid #ddd;
+        }
+        h1,
+        h2,
+        h3 {
+          page-break-after: avoid;
+        }
+        table {
+          page-break-inside: avoid;
+        }
+      }
+    </style>
+  </head>
+  <body style="">
+    <!-- Header -->
+    <header class="document-header">
+      <h1>CodeRoute 90 ITスクール体験記 ウェブサイト構築要件書（拡張版）</h1>
+      <span class="subtitle">neoai.jp デザインスタイル採用 | モダンUI・パーティクルアニメーション実装</span>
+      <div class="meta-info">
+        <span><i class="far fa-calendar-alt"></i> 2026年3月</span>
+        <span><i class="fas fa-code-branch"></i> UIエフェクト仕様追加版</span>
+      </div>
+    </header>
+
+    <!-- Section 1 -->
+    <section>
+      <h2><i class="fas fa-project-diagram"></i> セクション1: プロジェクト概要</h2>
+
+      <h3>🌸 基本情報</h3>
+      <table>
+        <tbody><tr>
+          <th width="30%">項目</th>
+          <th>内容</th>
+        </tr>
+        <tr>
+          <td>プロジェクト名</td>
+          <td>CodeRoute 90 ITスクール体験記 - ITスクールでプログラミングを学ぶ記録</td>
+        </tr>
+        <tr>
+          <td>作成者</td>
+          <td>CodeRoute 90（ITスクール受講生）</td>
+        </tr>
+        <tr>
+          <td>目的</td>
+          <td>外部メディアからの導線強化・学習記録・コミュニティ構築</td>
+        </tr>
+        <tr>
+          <td>ターゲット</td>
+          <td>プログラミング初心者・ITスクール検討中の方</td>
+        </tr>
+        <tr>
+          <td>デザイン参考</td>
+          <td>https://neoai.jp/ （生成AIスタートアップサイト）</td>
+        </tr>
+      </tbody></table>
+    </section>
+
+    <!-- Section 2 -->
+    <section>
+      <h2><i class="fas fa-home"></i> セクション2: ページ構成</h2>
+
+      <h3>2-1. ホームページ（index.html）</h3>
+      <p><strong>セクション構成：</strong></p>
+      <ul>
+        <li>ヒーローエリア「ITスクールで3ヶ月でプログラミングを使いこなせるようになるまで」</li>
+        <li>自己紹介「CodeRoute 90」とは</li>
+        <li>最新記事表示（3-5件）</li>
+        <li>ソーシャルリンク（外部メディア）</li>
+      </ul>
+
+      <p><strong>必須HTML実装例：</strong></p>
+      <pre><code>&lt;section class="hero"&gt;
+  &lt;canvas id="hero-canvas"&gt;&lt;/canvas&gt; &lt;!-- パーティクル/3Dアニメーション用 --&gt;
+  &lt;div class="hero-content"&gt;
+    &lt;h1&gt;ITスクールで3ヶ月でプログラミングを使いこなせるようになるまで&lt;/h1&gt;
+    &lt;p&gt;家事・育児の合間に1時間から始められるプログラミング学習でスキル習得&lt;/p&gt;
+    &lt;a href="#about" class="cta-button"&gt;私の話を聞いてみる&lt;/a&gt;
+  &lt;/div&gt;
+&lt;/section&gt;</code></pre>
+
+      <h3>2-2. Aboutページ（about.html）</h3>
+      <p><strong>コンテンツ：</strong></p>
+      <ul>
+        <li>プロフィール詳細（初心者・ITスクール受講生・学習歴3ヶ月）</li>
+        <li>ITスクールを選んだ経緯</li>
+        <li>活動時間（子どもの昼寝・寝かしつけ後の1時間学習時間）</li>
+        <li>これまでの実績（月100,000円達成）</li>
+        <li>得意ジャンル（Webライティング・プログラミング）</li>
+      </ul>
+
+      <h3>2-3. ブログ記事一覧（blog.html）</h3>
+
+      <h4>📂 在宅ワークカテゴリー</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>ファイル名</th>
+            <th>タイトル</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>work-home-3months.html</td>
+            <td>【体験談】主婦が在宅ワークを始めて3ヶ月経過</td>
+          </tr>
+          <tr>
+            <td>find-1hour.html</td>
+            <td>子育て中でも確保できる「1時間」の見つけ方</td>
+          </tr>
+          <tr>
+            <td>web-writer-30k.html</td>
+            <td>Webライター未経験スタートから月3万円達成まで</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h4>💻 Webライティングカテゴリー</h4>
+      <table>
+        <thead>
+          <tr>
+            <th>ファイル名</th>
+            <th>タイトル</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>character-rate.html</td>
+            <td>1文字0.5円から始めて現在に至るまで</td>
+          </tr>
+          <tr>
+            <td>beginner-writing-jobs.html</td>
+            <td>初心者が最初に取り組むべきライティング案件</td>
+          </tr>
+          <tr>
+            <td>improve-writing.html</td>
+            <td>文章力を向上させる練習方法</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>2-4. 📊 売上実績ダッシュボードモックアップ（dashboard.html）</h3>
+      <p>サイト利用者の売上実績を可視化するダッシュボードページ。</p>
+
+      <h3>2-5. ✉️ お問い合わせ（contact.html）</h3>
+      <ul>
+        <li>仕事の依頼フォーム</li>
+        <li>読者からの質問フォーム</li>
+        <li>返信先メールアドレス入力欄</li>
+      </ul>
+    </section>
+
+    <!-- Section 3 -->
+    <section>
+      <h2><i class="fas fa-magic"></i> セクション3: UIエフェクト・アニメーション仕様【neoai.jp参考】</h2>
+
+      <h3>3-1. ヒーローエリア パーティクル・3Dアニメーション</h3>
+      <p>
+        <strong>デザインコンセプト：</strong><br>neoai.jpのようなテック系スタートアップサイトのビジュアル表現を採用
+      </p>
+
+      <p><strong>実装仕様 (CSS)：</strong></p>
+      <pre><code>/* ヒーローエリア レイアウト */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: linear-gradient(135deg, #0f1923 0%, #1a2a3a 50%, #0d1b2a 100%);
+}
+
+/* キャンバス（Three.js / Particles.js 描画エリア） */
+#hero-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+/* テキストコンテンツは前面に */
+.hero-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  padding: 2rem;
+}
+
+.hero h1 {
+  font-size: clamp(2rem, 5vw, 4rem);
+  font-weight: 700;
+  color: #ffffff;
+  text-shadow: 0 0 40px rgba(100, 180, 255, 0.4);
+  letter-spacing: 0.02em;
+  margin-bottom: 1.5rem;
+}</code></pre>
+
+      <p><strong>JavaScript アニメーション実装仕様：</strong></p>
+      <pre><code>const heroAnimation = {
+  type: "particles_3d",        // パーティクル + 3Dメッシュ
+  particleCount: 120,          // パーティクル数
+  connectionLines: true,       // 粒子間の接続線
+  floatingGeometry: true,      // 浮遊する抽象ジオメトリ
+  colorPalette: ["#64b4ff", "#8ab4d4", "#ffffff"],
+  opacity: 0.6,
+  speed: 0.3,
+  mouseInteraction: true
+};</code></pre>
+
+      <p><strong>推奨ライブラリ：</strong></p>
+      <ul>
+        <li><code>three.js</code> ＋ カスタムシェーダー（最高品質・重め）</li>
+        <li><code>tsParticles</code> （軽量・スマホ対応・推奨★）</li>
+        <li><code>vanta.js</code>（NET / WAVES エフェクト）</li>
+      </ul>
+
+      <p><strong>モバイル対応：</strong></p>
+      <pre><code>@media (prefers-reduced-motion: reduce) {
+  #hero-canvas { display: none; }
+  .hero { background: linear-gradient(135deg, #0f1923, #1a2a3a); }
+}</code></pre>
+      <p>スマホではパーティクル数を 60 以下に削減</p>
+
+      <h3>3-2. スクロール連動ヘッダー（Glassmorphism）</h3>
+      <p><strong>neoai.jp参考：</strong> スクロール時に背景が半透明＋ぼかし効果（backdrop-filter）</p>
+
+      <pre><code>/* デフォルト状態（ページトップ） */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+  padding: 1.2rem 2rem;
+  background: transparent;
+  transition: background 0.4s ease, backdrop-filter 0.4s ease,
+              box-shadow 0.4s ease;
+}
+
+/* スクロール後（.scrolled クラスをJSで付与） */
+header.scrolled {
+  background: rgba(15, 25, 35, 0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow: 0 1px 24px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(100, 180, 255, 0.1);
+}</code></pre>
+
+      <p><strong>JavaScript実装：</strong></p>
+      <pre><code>const header = document.querySelector('header');
+window.addEventListener('scroll', () =&gt; {
+  if (window.scrollY &gt; 80) {
+    header.classList.add('scrolled');
+  } else {
+    header.classList.remove('scrolled');
+  }
+}, { passive: true });</code></pre>
+
+      <h3>3-3. 記事カードホバーエフェクト</h3>
+      <p><strong>光る枠線 ＋ グラデーション移動</strong></p>
+
+      <pre><code>.article-card {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  border: 1px solid rgba(100, 180, 255, 0.15);
+  background-size: 200% 200%;
+  background-position: 0% 50%;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.article-card:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 8px 32px rgba(100, 180, 255, 0.2),
+    0 0 0 1px rgba(100, 180, 255, 0.4),
+    inset 0 0 20px rgba(100, 180, 255, 0.05);
+  background-position: 100% 50%;
+}
+
+.article-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  padding: 1px;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(100, 180, 255, 0) 40%,
+    rgba(100, 180, 255, 0.6) 50%,
+    rgba(100, 180, 255, 0) 60%,
+    transparent 100%
+  );
+  background-size: 300% 300%;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.article-card:hover::before {
+  opacity: 1;
+  animation: borderGlow 1.5s ease infinite;
+}
+
+@keyframes borderGlow {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}</code></pre>
+    </section>
+
+    <!-- Section 4 -->
+    <section>
+      <h2><i class="fas fa-palette"></i> セクション4: デザインシステム</h2>
+
+      <h3>4-1. カラーパレット</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>役割</th>
+            <th>カラーコード</th>
+            <th>使用箇所</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>プライマリ背景（ダーク）</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #0f1923;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#0f1923
+            </td>
+            <td>ヒーロー・ヘッダー背景</td>
+          </tr>
+          <tr>
+            <td>セカンダリ背景</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #1a2a3a;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#1a2a3a
+            </td>
+            <td>ダークセクション</td>
+          </tr>
+          <tr>
+            <td>コンテンツ背景</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #f8fafc;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#f8fafc
+            </td>
+            <td>メインコンテンツエリア</td>
+          </tr>
+          <tr>
+            <td>アクセント</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #64b4ff;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#64b4ff
+            </td>
+            <td>ボタン・リンク・発光効果</td>
+          </tr>
+          <tr>
+            <td>スレートグレー</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #7a8b9a;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#7a8b9a
+            </td>
+            <td>サブテキスト</td>
+          </tr>
+          <tr>
+            <td>テキスト（ライト）</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #ffffff;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#ffffff
+            </td>
+            <td>ダーク背景上のテキスト</td>
+          </tr>
+          <tr>
+            <td>テキスト（ダーク）</td>
+            <td>
+              <span style="
+                  display: inline-block;
+                  width: 12px;
+                  height: 12px;
+                  background: #1e2d3d;
+                  border: 1px solid #ccc;
+                  margin-right: 5px;
+                "></span>#1e2d3d
+            </td>
+            <td>ライト背景上のテキスト</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>4-2. グラデーション定義</h3>
+      <pre><code>:root {
+  --gradient-hero: linear-gradient(135deg, #0f1923 0%, #1a2a3a 50%, #0d1b2a 100%);
+  --gradient-cta: linear-gradient(135deg, #64b4ff 0%, #3a7ec4 100%);
+  --gradient-card: linear-gradient(135deg, #ffffff 0%, #e8f4ff 100%);
+  --gradient-section: linear-gradient(180deg, #f8fafc 0%, #eef5ff 100%);
+}</code></pre>
+
+      <h3>4-3. タイポグラフィ</h3>
+      <pre><code>/* 見出し：Noto Sans JP / モダン・視認性重視 */
+h1, h2, h3 {
+  font-family: 'Noto Sans JP', sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 本文：Noto Serif JP / 親しみやすさ・読みやすさ */
+body, p, li {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 400;
+  line-height: 1.9;
+}
+
+/* レスポンシブサイズ */
+h1 { font-size: clamp(1.8rem, 4vw, 3.5rem); }
+h2 { font-size: clamp(1.4rem, 3vw, 2.2rem); }
+h3 { font-size: clamp(1.1rem, 2vw, 1.5rem); }
+p  { font-size: clamp(0.95rem, 1.5vw, 1.1rem); }</code></pre>
+    </section>
+
+    <!-- Section 5 -->
+    <section>
+      <h2><i class="fas fa-coins"></i> セクション5: アフェリエイト実装</h2>
+
+      <h3>5-1. メイン商品</h3>
+      <p><strong>【あなたのライターキャリア講座】</strong></p>
+      <pre><code>&lt;p&gt;
+  実際に私も受講して効果を実感した
+  &lt;a href="[アフェリエイトURL]" class="affiliate-link"&gt;
+    【あなたのライターキャリア講座】
+  &lt;/a&gt;では...
+&lt;/p&gt;
+
+&lt;a href="[アフェリエイトURL]" class="cta-button cta-glow"&gt;
+  今すぐキャリアを始める ✨
+&lt;/a&gt;</code></pre>
+
+      <p><strong>発光するCTAボタン：</strong></p>
+      <pre><code>.cta-glow {
+  background: var(--gradient-cta);
+  color: #ffffff;
+  padding: 1rem 2.5rem;
+  border-radius: 50px;
+  font-weight: 700;
+  box-shadow: 0 4px 20px rgba(100, 180, 255, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cta-glow:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(100, 180, 255, 0.6);
+}</code></pre>
+
+      <h3>5-2. AI・データサイエンス学習プログラム</h3>
+      <pre><code>&lt;p&gt;
+  私が実際に学んだ
+  &lt;a href="[アフェリエイトURL]" class="affiliate-link"&gt;AI学習プログラム&lt;/a&gt;
+  では...
+&lt;/p&gt;</code></pre>
+
+      <h3>5-3. 配置場所</h3>
+      <ul>
+        <li><strong>記事内：</strong> 自然な流れで紹介</li>
+        <li><strong>サイドバー：</strong> 適切なバナー広告</li>
+        <li><strong>CTAセクション：</strong> 目立つ場所にボタン（.cta-glow 適用）</li>
+      </ul>
+    </section>
+
+    <!-- Section 6 -->
+    <section>
+      <h2><i class="fas fa-chart-line"></i> セクション6: 目標数値</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>期間</th>
+            <th>月間PV</th>
+            <th>アフェリエイト収益</th>
+            <th>問い合わせ件数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>3ヶ月目</td>
+            <td>5,000 PV</td>
+            <td>月15,000円</td>
+            <td>月2件</td>
+          </tr>
+          <tr>
+            <td>6ヶ月目</td>
+            <td>15,000 PV</td>
+            <td>月30,000円</td>
+            <td>月5件</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Section 7 -->
+    <section>
+      <h2><i class="fas fa-tools"></i> セクション7: 技術仕様</h2>
+
+      <h3>7-1. 基本構成フロー</h3>
+      <div style="
+          background: white;
+          padding: 1.5rem;
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+          font-family: 'JetBrains Mono', monospace;
+          text-align: center;
+        ">
+        HTML5 + CSS3 + JavaScript (Vanilla / 最小限のライブラリ)<br>
+        ↓<br>
+        レスポンシブデザイン（モバイルファースト）<br>
+        ↓<br>
+        SEO対策（メタタグ・OGP・構造化データ・サイトマップ）<br>
+        ↓<br>
+        Core Web Vitals 最適化（LCP / CLS / INP）<br>
+        ↓<br>
+        アニメーション最適化（GPU描画 / will-change / requestAnimationFrame）
+      </div>
+
+      <h3>7-2. アニメーション最適化方針</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>要素</th>
+            <th>最適化手法</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>パーティクルCanvas</td>
+            <td>requestAnimationFrame でループ / offscreenCanvas 検討</td>
+          </tr>
+          <tr>
+            <td>CSS アニメーション</td>
+            <td>transform / opacity のみ使用（レイアウトシフト回避）</td>
+          </tr>
+          <tr>
+            <td>スクロールイベント</td>
+            <td>passive: true オプション付与</td>
+          </tr>
+          <tr>
+            <td>backdrop-filter</td>
+            <td>GPU加速を前提にパフォーマンス計測必須</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>7-3. 必須機能チェックリスト</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>機能</th>
+            <th>優先度</th>
+            <th>備考</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>✅ モバイル対応（スマホ・タブレット）</td>
+            <td><span class="badge badge-essential">必須</span></td>
+            <td>モバイルファースト設計</td>
+          </tr>
+          <tr>
+            <td>✅ パーティクルアニメーション（Hero）</td>
+            <td><span class="badge badge-high">高</span></td>
+            <td>モバイルは軽量版</td>
+          </tr>
+          <tr>
+            <td>✅ スクロール連動ヘッダー blur</td>
+            <td><span class="badge badge-high">高</span></td>
+            <td>backdrop-filter使用</td>
+          </tr>
+          <tr>
+            <td>✅ カードホバーエフェクト</td>
+            <td><span class="badge badge-high">高</span></td>
+            <td>枠線発光・グラデーション移動</td>
+          </tr>
+          <tr>
+            <td>✅ 検索機能（記事検索）</td>
+            <td><span class="badge badge-medium">中</span></td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>✅ お問い合わせフォーム（スパム対策付き）</td>
+            <td><span class="badge badge-essential">必須</span></td>
+            <td>reCAPTCHA推奨</td>
+          </tr>
+          <tr>
+            <td>✅ ソーシャルシェアボタン（X/Facebook）</td>
+            <td><span class="badge badge-medium">中</span></td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>✅ ページネーション（記事一覧）</td>
+            <td><span class="badge badge-medium">中</span></td>
+            <td>-</td>
+          </tr>
+          <tr>
+            <td>✅ prefers-reduced-motion 対応</td>
+            <td><span class="badge badge-essential">必須</span></td>
+            <td>アクセシビリティ配慮</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h3>7-4. セキュリティ対策フロー</h3>
+      <div style="
+          background: white;
+          padding: 1.5rem;
+          border-radius: 8px;
+          border: 1px solid var(--border-color);
+          font-family: 'JetBrains Mono', monospace;
+          text-align: center;
+        ">
+        SSL証明書（HTTPS化）<br>
+        ↓<br>
+        フォーム入力バリデーション（フロント + サーバーサイド）<br>
+        ↓<br>
+        reCAPTCHA v3 実装（スパムブロック）<br>
+        ↓<br>
+        CSPヘッダー設定（XSS対策）<br>
+        ↓<br>
+        定期的なバックアップ体制
+      </div>
+    </section>
+
+    <!-- Section 8 -->
+    <section>
+      <h2><i class="fas fa-book"></i> セクション8: 推奨ライブラリ一覧</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ライブラリ</th>
+            <th>用途</th>
+            <th>容量目安</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>tsParticles</td>
+            <td>ヒーローパーティクル</td>
+            <td>~50KB gzip</td>
+          </tr>
+          <tr>
+            <td>three.js (optional)</td>
+            <td>高品質3Dジオメトリ</td>
+            <td>~150KB gzip</td>
+          </tr>
+          <tr>
+            <td>AOS.js</td>
+            <td>スクロールフェードイン</td>
+            <td>~13KB gzip</td>
+          </tr>
+          <tr>
+            <td>Google Fonts API</td>
+            <td>Noto Sans/Serif JP</td>
+            <td>CDN</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Section 9 -->
+    <section>
+      <h2><i class="fas fa-folder-open"></i> セクション9: ファイル構成</h2>
+      <div class="file-tree">
+        shiromiya-website/<br>
+        ├── index.html <span style="color: #7a8b9a"># ホームページ</span><br>
+        ├── about.html <span style="color: #7a8b9a"># Aboutページ</span><br>
+        ├── blog.html <span style="color: #7a8b9a"># ブログ一覧</span><br>
+        ├── contact.html <span style="color: #7a8b9a"># お問い合わせ</span><br>
+        ├── dashboard.html <span style="color: #7a8b9a"># 売上ダッシュボードモックアップ</span><br>
+        ├── articles/<br>
+        │ ├── work-home-3months.html<br>
+        │ ├── find-1hour.html<br>
+        │ ├── web-writer-30k.html<br>
+        │ ├── character-rate.html<br>
+        │ ├── beginner-writing-jobs.html<br>
+        │ └── improve-writing.html<br>
+        ├── assets/<br>
+        │ ├── css/<br>
+        │ │ ├── style.css <span style="color: #7a8b9a"># メインCSS</span><br>
+        │ │ ├── hero.css <span style="color: #7a8b9a"># ヒーローエフェクト</span><br>
+        │ │ └── components.css <span style="color: #7a8b9a"># UIコンポーネント</span><br>
+        │ ├── js/<br>
+        │ │ ├── hero-animation.js <span style="color: #7a8b9a"># パーティクル/3Dアニメーション</span><br>
+        │ │ ├── header-scroll.js <span style="color: #7a8b9a"># スクロール連動ヘッダー</span><br>
+        │ │ └── main.js <span style="color: #7a8b9a"># 共通JS</span><br>
+        │ └── images/<br>
+        └── sitemap.xml
+      </div>
+    </section>
+  
+
+</body></html>

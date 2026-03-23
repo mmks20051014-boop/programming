@@ -1,0 +1,19 @@
+{
+  "name": "programming-coderoute90",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CodeRoute 90 フロントエンド Workers（OGP動的差し込み対応版）",
+  "scripts": {
+    "dev": "wrangler dev --port 8787",
+    "deploy": "wrangler deploy",
+    "tail": "wrangler tail"
+  },
+  "devDependencies": {
+    "latest": "^0.2.0",
+    "the": "^1.0.2",
+    "to": "^0.2.9",
+    "update": "^0.7.4",
+    "version": "^0.1.2",
+    "wrangler": "^4.76.0"
+  }
+}

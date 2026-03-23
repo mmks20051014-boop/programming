@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学習進捗ダッシュボード - CodeRoute 90 ITスクール体験記</title>
+    <meta name="description" content="ITスクールでの学習進捗を可視化したダッシュボード。学習時間の推移やスキル習得状況、完了したプロジェクトをご覧いただけます。">
+    <meta name="keywords" content="学習進捗, ダッシュボード, ITスクール, プログラミング, スキル習得">
+    
+    <!-- OGP -->
+    <meta property="og:title" content="学習進捗ダッシュボード - CodeRoute 90">
+    <meta property="og:description" content="ITスクールでの学習進捗を可視化したダッシュボード">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://shiromiya.example.com/dashboard.html">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+    
+    <style>
+        .dashboard-hero {
+            background: var(--gradient-hero);
+            color: var(--text-light);
+            padding: 8rem 2rem 4rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .dashboard-hero h1 {
+            color: var(--text-light);
+            margin-bottom: 1rem;
+        }
+        
+        .dashboard-hero p {
+            font-size: 1.2rem;
+            color: var(--slate-gray);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-cta);
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(100, 180, 255, 0.2);
+            border-color: rgba(100, 180, 255, 0.3);
+        }
+        
+        .stat-icon {
+            font-size: 3rem;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-bg);
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+        
+        .stat-label {
+            color: var(--slate-gray);
+            font-size: 1.1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-change {
+            font-size: 0.9rem;
+            font-weight: 500;
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            display: inline-block;
+        }
+        
+        .stat-change.positive {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        
+        .stat-change.negative {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin: 3rem 0;
+            position: relative;
+        }
+        
+        .chart-title {
+            text-align: center;
+            color: var(--primary-bg);
+            margin-bottom: 2rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 400px;
+            margin: 2rem 0;
+        }
+        
+        .chart-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+        
+        .data-table {
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            margin: 3rem 0;
+        }
+        
+        .data-table table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0;
+        }
+        
+        .data-table th {
+            background: var(--gradient-header);
+            color: white;
+            padding: 1.5rem 1rem;
+            text-align: left;
+            font-weight: 600;
+        }
+        
+        .data-table td {
+            padding: 1.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        .data-table tr:hover {
+            background: rgba(100, 180, 255, 0.05);
+        }
+        
+        .data-table .amount {
+            font-weight: 700;
+            color: var(--primary-bg);
+        }
+        
+        .data-table .positive {
+            color: #38a169;
+        }
+        
+        .data-table .negative {
+            color: #e53e3e;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 3rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .filter-btn {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-dark);
+            padding: 0.8rem 1.5rem;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+        
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(100, 180, 255, 0.3);
+        }
+        
+        .time-range-selector {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin: 2rem 0;
+            flex-wrap: wrap;
+        }
+        
+        .time-btn {
+            background: var(--gradient-card);
+            border: 1px solid rgba(100, 180, 255, 0.3);
+            color: var(--primary-bg);
+            padding: 0.6rem 1.2rem;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .time-btn:hover,
+        .time-btn.active {
+            background: var(--accent-blue);
+            color: white;
+            border-color: var(--accent-blue);
+        }
+        
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+        
+        .summary-card {
+            background: linear-gradient(135deg, rgba(100, 180, 255, 0.1) 0%, rgba(100, 180, 255, 0.05) 100%);
+            padding: 2rem;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(100, 180, 255, 0.3);
+        }
+        
+        .summary-title {
+            color: var(--primary-bg);
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+        
+        .summary-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: block;
+        }
+        
+        .loading-spinner {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--slate-gray);
+        }
+        
+        .loading-spinner i {
+            font-size: 3rem;
+            animation: spin 1s linear infinite;
+            margin-bottom: 1rem;
+            display: block;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .chart-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .chart-wrapper {
+                height: 300px;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+            
+            .filter-buttons,
+            .time-range-selector {
+                gap: 0.5rem;
+            }
+            
+            .filter-btn,
+            .time-btn {
+                padding: 0.6rem 1rem;
+                font-size: 0.9rem;
+            }
+            
+            .data-table {
+                overflow-x: auto;
+            }
+            
+            .data-table table {
+                min-width: 600px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-graduation-cap"></i> CodeRoute 90
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="about.html">私について</a></li>
+                <li><a href="blog.html">ブログ</a></li>
+                <li><a href="contact.html">お問い合わせ</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Dashboard Hero Section -->
+    <section class="dashboard-hero">
+        <div class="container">
+            <h1><i class="fas fa-chart-line"></i> 学習進捗ダッシュボード</h1>
+            <p>ITスクールでの学習進捗を可視化</p>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Time Range Selector -->
+        <div class="time-range-selector">
+            <button class="time-btn active" data-range="6m">6ヶ月</button>
+            <button class="time-btn" data-range="1y">1年</button>
+            <button class="time-btn" data-range="all">すべて</button>
+        </div>
+
+        <!-- Key Metrics -->
+        <section class="section">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <span class="stat-number">120h</span>
+                    <div class="stat-label">今月の学習時間</div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +15.2%
+                    </span>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-code"></i>
+                    </div>
+                    <span class="stat-number">8</span>
+                    <div class="stat-label">完了プロジェクト数</div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +12.0%
+                    </span>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-trophy"></i>
+                    </div>
+                    <span class="stat-number">5</span>
+                    <div class="stat-label">取得スキル数</div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +9.1%
+                    </span>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <span class="stat-number">85%</span>
+                    <div class="stat-label">学習進捗率</div>
+                    <span class="stat-change positive">
+                        <i class="fas fa-arrow-up"></i> +2.1%
+                    </span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Charts Section -->
+        <section class="section">
+            <div class="chart-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">月次学習時間推移</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="studyTimeChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-container">
+                    <h3 class="chart-title">言語別学習時間</h3>
+                    <div class="chart-wrapper">
+                        <canvas id="languageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary Cards -->
+        <section class="section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-bg);">
+                <i class="fas fa-calculator"></i> 学習サマリー
+            </h2>
+            <div class="summary-cards">
+                <div class="summary-card">
+                    <div class="summary-title">平均学習時間</div>
+                    <span class="summary-value">4.2h</span>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">週あたりレッスン</div>
+                    <span class="summary-value">12</span>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">理解度スコア</div>
+                    <span class="summary-value">87%</span>
+                </div>
+                <div class="summary-card">
+                    <div class="summary-title">完了一率</div>
+                    <span class="summary-value">92%</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Data Table -->
+        <section class="section">
+            <h2 style="text-align: center; margin-bottom: 2rem; color: var(--primary-bg);">
+                <i class="fas fa-table"></i> 月次実績詳細
+            </h2>
+            <div class="data-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>月</th>
+                            <th>売上</th>
+                            <th>案件数</th>
+                            <th>平均単価</th>
+                            <th>前年比</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>2026年2月</td>
+                            <td class="amount">¥108,500</td>
+                            <td>25</td>
+                            <td>0.82円</td>
+                            <td class="positive">+22.1%</td>
+                        </tr>
+                        <tr>
+                            <td>2026年1月</td>
+                            <td class="amount">¥88,900</td>
+                            <td>22</td>
+                            <td>0.81円</td>
+                            <td class="positive">+18.5%</td>
+                        </tr>
+                        <tr>
+                            <td>2025年12月</td>
+                            <td class="amount">¥75,200</td>
+                            <td>19</td>
+                            <td>0.79円</td>
+                            <td class="positive">+15.3%</td>
+                        </tr>
+                        <tr>
+                            <td>2025年11月</td>
+                            <td class="amount">¥65,300</td>
+                            <td>17</td>
+                            <td>0.77円</td>
+                            <td class="positive">+12.8%</td>
+                        </tr>
+                        <tr>
+                            <td>2025年10月</td>
+                            <td class="amount">¥58,100</td>
+                            <td>15</td>
+                            <td>0.75円</td>
+                            <td class="positive">+8.2%</td>
+                        </tr>
+                        <tr>
+                            <td>2025年9月</td>
+                            <td class="amount">¥53,700</td>
+                            <td>14</td>
+                            <td>0.73円</td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <p>&copy; 2026 CodeRoute 90 - ITスクールでプログラミングを学ぶ記録</p>
+        </div>
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/header-scroll.js"></script>
+    <script>
+        // Dashboard functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chart.js default configuration
+            Chart.defaults.font.family = "'Noto Sans JP', sans-serif";
+            Chart.defaults.color = '#1e2d3d';
+            Chart.defaults.plugins.legend.labels.usePointStyle = true;
+            Chart.defaults.plugins.legend.labels.padding = 20;
+
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+            const revenueChart = new Chart(revenueCtx, {
+                type: 'line',
+                data: {
+                    labels: ['9月', '10月', '11月', '12月', '1月', '2月', '3月'],
+                    datasets: [{
+                        label: '売上 (千円)',
+                        data: [53.7, 58.1, 65.3, 75.2, 88.9, 108.5, 125.0],
+                        borderColor: '#64b4ff',
+                        backgroundColor: 'rgba(100, 180, 255, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#64b4ff',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.1)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '¥' + value + 'k';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    elements: {
+                        point: {
+                            hoverBackgroundColor: '#3a7ec4'
+                        }
+                    }
+                }
+            });
+
+            // Project Type Chart
+            const projectTypeCtx = document.getElementById('projectTypeChart').getContext('2d');
+            const projectTypeChart = new Chart(projectTypeCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['記事作成', 'ブログ記事', 'Webコンテンツ', 'その他'],
+                    datasets: [{
+                        data: [45, 30, 20, 5],
+                        backgroundColor: [
+                            '#64b4ff',
+                            '#8ab4d4',
+                            '#a8c8e8',
+                            '#c6dcec'
+                        ],
+                        borderWidth: 0,
+                        hoverOffset: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: false
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 20,
+                                usePointStyle: true,
+                                pointStyle: 'circle'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Time range selector
+            const timeButtons = document.querySelectorAll('.time-btn');
+            timeButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    timeButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Here you would typically update the charts with new data
+                    const range = this.dataset.range;
+                    updateCharts(range);
+                });
+            });
+
+            // Update charts based on time range
+            function updateCharts(range) {
+                // Simulate data update
+                console.log('Updating charts for range:', range);
+                
+                // In a real application, you would fetch new data and update the charts
+                // For now, we'll just log the action
+                setTimeout(() => {
+                    console.log('Charts updated for range:', range);
+                }, 500);
+            }
+
+            // Animate numbers on page load
+            function animateNumber(element, target, duration = 2000) {
+                const start = 0;
+                const increment = target / (duration / 16);
+                let current = start;
+                
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        current = target;
+                        clearInterval(timer);
+                    }
+                    element.textContent = Math.floor(current).toLocaleString();
+                }, 16);
+            }
+
+            // Animate stat numbers
+            const statNumbers = document.querySelectorAll('.stat-number');
+            statNumbers.forEach(stat => {
+                const text = stat.textContent;
+                const number = parseInt(text.replace(/[^\d]/g, ''));
+                if (!isNaN(number)) {
+                    stat.textContent = '0';
+                    setTimeout(() => {
+                        animateNumber(stat, number);
+                    }, 500);
+                }
+            });
+
+            console.log('ダッシュボード初期化完了');
+        });
+    </script>
+</body>
+</html>

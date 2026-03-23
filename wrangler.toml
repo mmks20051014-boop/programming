@@ -1,0 +1,9 @@
+name               = "programming-coderoute90"
+main               = "src/index.js"
+compatibility_date = "2026-03-22"
+
+[assets]
+directory          = "./public"
+binding            = "ASSETS"
+not_found_handling = "single-page-application"
+run_worker_first   = ["/post", "/post.html"]

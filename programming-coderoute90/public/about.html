@@ -1,0 +1,1493 @@
+<!DOCTYPE html>
+<html lang="ja" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>about me - CodeRoute 90 | 40歳・文系営業職がITスクール通い、転職した記録</title>
+    <meta name="description" content="40歳・文系の営業職。独学3日で挫折した未経験から、90日のITスクールでエンジニア転職。40代 文系 未経験 エンジニア転職 90日／営業職 プログラミング 挫折 回避のリアルを数字で公開。">
+    <meta name="keywords" content="CodeRoute 90, 40代 文系 未経験 エンジニア転職 90日, 営業職 プログラミング 挫折 回避, 40歳 未経験転職, ITスクール 体験談, 学習ロードマップ, 独学 挫折, メンター サポート, JavaScript 学習, Python 学習, エンジニア">
+
+    <!-- OGP -->
+    <meta property="og:title" content="about me - CodeRoute 90 | 40歳・文系営業職がITスクールで転職した記録">
+    <meta property="og:description" content="40歳・文系の営業職が独学3日で挫折。それでも90日のITスクールで未経験からエンジニア転職。遠回りしない学習ルートを数字で公開。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://programming.coderoute90.workers.dev/about.html">
+    <meta property="og:image"       content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+    <meta property="og:image:width"  content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale"      content="ja_JP">
+    <meta property="og:site_name"   content="CodeRoute 90">
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="about me - CodeRoute 90 | 40歳・文系営業職がITスクールで転職した記録">
+    <meta name="twitter:description" content="40歳・文系の営業職が独学3日で挫折。それでも90日のITスクールで未経験からエンジニア転職。遠回りしない学習ルートを公開。">
+    <meta name="twitter:image"       content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+    <!-- canonical -->
+    <link rel="canonical" href="https://programming.coderoute90.workers.dev/about.html">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        /* ========================================
+           About Page — ダークテーマ統一スタイル
+           style.css の CSS 変数のみ使用
+        ======================================== */
+
+        /* ---------- Breadcrumb ---------- */
+        .breadcrumb-nav {
+            background: rgba(10, 10, 10, 0.6);
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 0.75rem 2rem;
+            margin-top: 72px;
+        }
+
+        .breadcrumb-list {
+            list-style: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            font-size: 0.85rem;
+        }
+
+        .breadcrumb-list li {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            color: var(--text-muted);
+        }
+
+        .breadcrumb-list li a {
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.35rem;
+        }
+
+        .breadcrumb-list li a:hover {
+            color: var(--accent-cyan);
+            text-shadow: var(--shadow-glow);
+        }
+
+        .breadcrumb-list .separator {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+        }
+
+        .breadcrumb-list .current {
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: 600;
+        }
+
+        /* ---------- About Hero ---------- */
+        .about-hero {
+            position: relative;
+            padding: 6rem 2rem 5rem;
+            text-align: center;
+            overflow: hidden;
+            background: var(--gradient-hero);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .about-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 60%, rgba(0, 212, 255, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.12) 0%, transparent 50%),
+                radial-gradient(circle at 50% 100%, rgba(236, 72, 153, 0.07) 0%, transparent 45%);
+            pointer-events: none;
+        }
+
+        .about-hero::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            opacity: 0.6;
+        }
+
+        .about-hero .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(0, 212, 255, 0.08);
+            border: 1px solid rgba(0, 212, 255, 0.25);
+            color: var(--accent-cyan);
+            padding: 0.4rem 1.2rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+            letter-spacing: 0.05em;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .about-hero h1 {
+            position: relative;
+            z-index: 1;
+            margin-bottom: 1rem;
+            font-size: clamp(2.8rem, 5vw, 4.5rem);
+        }
+
+        .about-hero .hero-sub {
+            position: relative;
+            z-index: 1;
+            font-size: clamp(1rem, 2vw, 1.2rem);
+            color: var(--text-secondary);
+            max-width: 620px;
+            margin: 0 auto;
+            line-height: 1.8;
+        }
+
+        /* ---------- Profile Section ---------- */
+        .about-content {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 4rem;
+            align-items: start;
+            margin-top: 3rem;
+        }
+
+        .profile-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2.5rem 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: sticky;
+            top: 100px;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .profile-card:hover {
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.8rem;
+            color: #fff;
+            box-shadow: var(--shadow-glow);
+            position: relative;
+        }
+
+        .profile-avatar::after {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            z-index: -1;
+            opacity: 0.4;
+            filter: blur(8px);
+        }
+
+        .profile-card .profile-name {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-card .profile-tagline {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .profile-tags {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-top: 1.5rem;
+        }
+
+        .profile-tag {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(0, 212, 255, 0.06);
+            border: 1px solid rgba(0, 212, 255, 0.15);
+            border-radius: var(--radius-sm);
+            padding: 0.5rem 0.8rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            transition: all 0.3s ease;
+        }
+
+        .profile-tag:hover {
+            background: rgba(0, 212, 255, 0.12);
+            border-color: rgba(0, 212, 255, 0.3);
+            color: var(--accent-cyan);
+        }
+
+        .profile-tag i {
+            color: var(--accent-cyan);
+            width: 16px;
+            text-align: center;
+        }
+
+        .profile-divider {
+            width: 100%;
+            height: 1px;
+            background: var(--border-subtle);
+            margin: 1.5rem 0;
+        }
+
+        .profile-info-block {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .info-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem 2.5rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-border);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .info-card:hover::before {
+            opacity: 1;
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .info-card-header {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-card-icon {
+            width: 38px;
+            height: 38px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: var(--radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent-cyan);
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .info-card h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .info-card p {
+            color: var(--text-secondary);
+            line-height: 1.9;
+            font-size: 0.97rem;
+        }
+
+        /* ---------- Timeline ---------- */
+        .timeline {
+            position: relative;
+            padding: 1rem 0 2rem;
+            margin-top: 3rem;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: var(--gradient-border);
+            opacity: 0.5;
+        }
+
+        .timeline-item {
+            display: flex;
+            justify-content: flex-end;
+            padding-right: calc(50% + 2.5rem);
+            margin-bottom: 2.5rem;
+            position: relative;
+        }
+
+        .timeline-item:nth-child(even) {
+            justify-content: flex-start;
+            padding-right: 0;
+            padding-left: calc(50% + 2.5rem);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            left: 50%;
+            top: 1.5rem;
+            transform: translateX(-50%);
+            width: 14px;
+            height: 14px;
+            background: var(--gradient-primary);
+            border-radius: 50%;
+            border: 2px solid var(--primary-dark);
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.5);
+            z-index: 1;
+        }
+
+        .timeline-content {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 1.8rem 2rem;
+            max-width: 420px;
+            width: 100%;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+        }
+
+        .timeline-content:hover {
+            transform: translateY(-4px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .timeline-date-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: 0.3rem 0.9rem;
+            border-radius: 50px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            margin-bottom: 0.9rem;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.03em;
+        }
+
+        .timeline-content h3 {
+            font-size: 1.05rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .timeline-content p {
+            font-size: 0.92rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ---------- Skills ---------- */
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 1.8rem;
+            margin-top: 3rem;
+        }
+
+        .skill-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.8rem;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .skill-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--gradient-border);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .skill-card:hover::before {
+            opacity: 1;
+        }
+
+        .skill-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .skill-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: rgba(0, 212, 255, 0.1);
+            border: 1px solid rgba(0, 212, 255, 0.2);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.2rem;
+            font-size: 1.5rem;
+            color: var(--accent-cyan);
+            transition: all 0.3s ease;
+        }
+
+        .skill-card:hover .skill-icon-wrapper {
+            background: rgba(0, 212, 255, 0.18);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .skill-card h3 {
+            font-size: 1.1rem;
+            margin-bottom: 0.7rem;
+        }
+
+        .skill-card p {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+        }
+
+        /* ---------- Achievements ---------- */
+        .achievement-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.8rem;
+            margin-top: 3rem;
+        }
+
+        .achievement-card {
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem 1.5rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .achievement-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60%;
+            height: 1px;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .achievement-card:hover::after {
+            opacity: 1;
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .achievement-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            display: block;
+            margin-bottom: 0.5rem;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+        }
+
+        .achievement-card h3 {
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-card p {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* ---------- Philosophy ---------- */
+        .philosophy-section {
+            background: var(--gradient-glass);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            padding: 4rem 3rem;
+            margin: 3rem 0;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .philosophy-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 10% 50%, rgba(0, 212, 255, 0.06) 0%, transparent 50%),
+                radial-gradient(circle at 90% 50%, rgba(139, 92, 246, 0.06) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .philosophy-section h2 {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .philosophy-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .philosophy-content p {
+            font-size: 1rem;
+            line-height: 1.9;
+            color: var(--text-secondary);
+            margin-bottom: 1.5rem;
+        }
+
+        .philosophy-content p:last-child {
+            margin-bottom: 0;
+        }
+
+        .quote-block {
+            border-left: 3px solid var(--accent-cyan);
+            padding-left: 1.5rem;
+            margin: 2rem 0;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-style: italic;
+            line-height: 1.7;
+        }
+
+        /* ---------- CTA ---------- */
+        .cta-section {
+            text-align: center;
+            padding: 5rem 2rem;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-xl);
+            margin: 3rem 0 4rem;
+            position: relative;
+            overflow: hidden;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .cta-section h2 {
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section p {
+            color: var(--text-secondary);
+            max-width: 580px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cta-section .cta-button {
+            position: relative;
+            z-index: 1;
+        }
+
+        /* ---------- Section Title Override ---------- */
+        .section-title-about {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-title-about .title-line {
+            width: 4px;
+            height: 2rem;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+        }
+
+        /* ---------- Responsive ---------- */
+        @media (max-width: 900px) {
+            .about-content {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .profile-card {
+                position: static;
+                max-width: 340px;
+                margin: 0 auto;
+            }
+
+            .timeline::before {
+                left: 24px;
+            }
+
+            .timeline-item,
+            .timeline-item:nth-child(even) {
+                padding-right: 0;
+                padding-left: 58px;
+                justify-content: flex-start;
+            }
+
+            .timeline-item::after {
+                left: 24px;
+            }
+
+            .timeline-content {
+                max-width: 100%;
+            }
+
+            .philosophy-section {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .breadcrumb-nav {
+                padding: 0.6rem 1rem;
+            }
+
+            .about-hero {
+                padding: 4rem 1rem 3rem;
+            }
+
+            .skills-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .achievement-grid {
+                grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            }
+
+            .cta-section {
+                padding: 3rem 1.5rem;
+            }
+        }
+    
+        /* ===== Hamburger Menu ===== */
+        .hamburger {
+            display: none;   /* デスクトップでは非表示 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 10001;
+            flex-shrink: 0;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary, #e2e8f0);
+            border-radius: 2px;
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1),
+                        opacity   0.25s ease,
+                        width     0.25s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* モバイル用オーバーレイ */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
+        }
+        .nav-overlay.active { opacity: 1; pointer-events: auto; }
+
+        @media (max-width: 768px) {
+            /* モバイル: ハンバーガーを表示 */
+            .hamburger { display: flex !important; }
+            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
+
+            nav {
+                position: relative;
+            }
+            /* モバイル: メニューは右からスライドするドロワー */
+            .nav-links {
+                display: flex !important;
+                position: fixed !important;
+                top: 0 !important;
+                right: -100% !important;
+                width: 75vw !important;
+                max-width: 300px !important;
+                height: 100dvh !important;
+                height: 100vh !important;
+                background: var(--bg-card, #1e293b) !important;
+                border-left: 1px solid rgba(255,255,255,0.08) !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 5rem 1.5rem 2rem !important;
+                gap: 0 !important;
+                z-index: 9999 !important;
+                /* [FIX] body portal でも overlay より上に表示 */
+                transition: right 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+                box-shadow: -4px 0 24px rgba(0,0,0,0.4) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .nav-links.open { right: 0 !important; }
+            .nav-links li {
+                width: 100% !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            }
+            .nav-links li:last-child { border-bottom: none !important; }
+            .nav-links li a {
+                display: block !important;
+                padding: 1rem 0.5rem !important;
+                font-size: 1rem !important;
+                width: 100% !important;
+                color: var(--text-primary, #e2e8f0) !important;
+            }
+        }
+        /* ===== /Hamburger Menu ===== */
+        /* ===== Active Nav Link ===== */
+        .nav-links a.nav-active {
+            color: var(--accent-cyan, #22d3ee) !important;
+            font-weight: 600;
+        }
+        .nav-links a.nav-active::after {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: var(--accent-cyan, #22d3ee);
+            border-radius: 1px;
+            margin-top: 2px;
+        }
+        /* ===== /Active Nav Link ===== */
+
+
+        /* ===== Footer Enhanced ===== */
+        footer {
+            background: var(--bg-secondary, #0f172a);
+            border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+            padding: 2.5rem 2rem 1.5rem;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .footer-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-cyan, #22d3ee);
+            margin-bottom: 0.4rem;
+        }
+        .footer-tagline {
+            font-size: 0.8rem;
+            color: var(--text-muted, #64748b);
+        }
+        .footer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .footer-nav a {
+            color: var(--text-secondary, #94a3b8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .footer-nav a:hover { color: var(--accent-cyan, #22d3ee); }
+        .footer-copy {
+            font-size: 0.85rem;
+            color: var(--text-muted, #64748b);
+            margin-bottom: 0.4rem;
+        }
+        .footer-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted, #64748b);
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .footer-nav ul { align-items: center; }
+            .footer-nav a { justify-content: center; }
+        }
+        /* ===== /Footer Enhanced ===== */
+
+        </style>
+
+    <!-- ===== 構造化データ (JSON-LD) ===== -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      "@id": "https://programming.coderoute90.workers.dev/about.html",
+      "url": "https://programming.coderoute90.workers.dev/about.html",
+      "name": "about me - CodeRoute 90",
+      "description": "40歳・文系営業職がITスクールで転職した実体験記。生存者バイアスなし、数字で語る90日間の攻略ログ。",
+      "inLanguage": "ja",
+      "isPartOf": { "@id": "https://programming.coderoute90.workers.dev/#website" },
+      "mainEntity": {
+        "@type": "Person",
+        "name": "CodeRoute 90 運営者",
+        "description": "40歳・文系営業職。独学3日で挫折したが、90日のITスクールでエンジニア転職を達成。",
+        "knowsAbout": ["ITスクール", "プログラミング学習", "エンジニア転職", "40代転職"]
+      }
+    }
+    </script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "BreadcrumbList",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "ホーム",
+          "item": "https://programming.coderoute90.workers.dev/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "私について",
+          "item": "https://programming.coderoute90.workers.dev/about.html"
+        }
+      ]
+    }
+    </script>
+    <!-- ===== /構造化データ ===== -->
+
+    <!-- ===== Google Analytics 4 ===== -->
+    <!-- ↓ GA4 測定ID（例: G-ABCDE12345）に差し替えてください -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBW5E6N8M4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FBW5E6N8M4');
+    </script>
+    <!-- ===== /Google Analytics 4 ===== -->
+
+    <!-- ===== Microsoft Clarity ===== -->
+    <!-- ↓ Clarity プロジェクトID（例: abcde12345）に差し替えてください -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "vwxei3913s");
+    </script>
+    <!-- ===== /Microsoft Clarity ===== -->
+</head>
+<body>
+
+    <!-- ===== Header ===== -->
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="index.html">ホーム</a></li>
+                <li><a href="about.html">about me</a></li>
+                <li><a href="blog.html">ブログ</a></li>
+                <li><a href="contact.html">お問い合わせ</a></li>
+            </ul>
+            <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="navLinks">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+
+    <!-- ===== Breadcrumb ===== -->
+    <nav class="breadcrumb-nav" aria-label="パンくずリスト">
+        <ol class="breadcrumb-list">
+            <li>
+                <a href="index.html">
+                    <i class="fas fa-home" aria-hidden="true"></i> ホーム
+                </a>
+            </li>
+            <li class="separator"><i class="fas fa-chevron-right" aria-hidden="true"></i></li>
+            <li class="current" aria-current="page">About me</li>
+        </ol>
+    </nav>
+
+    <!-- ===== About Hero ===== -->
+    <section class="about-hero">
+        <div class="hero-badge">
+            <i class="fas fa-code" aria-hidden="true"></i>
+            <span>// about me</span>
+        </div>
+        <h1>about me</h1>
+        <p class="hero-sub">
+            40歳・文系営業職。PCスキルなし。独学は3日で挫折。<br>0からのITスクール挑戦だった。<br>
+            それでも90日で技能習得、転職を達成し<br>現在エンジニアとして稼働しています。<br>
+            才能の話ではなく、ルートの話をします。
+        </p>
+    </section>
+
+    <!-- ===== Main ===== -->
+    <main role="main">
+
+        <!-- ── Profile ── -->
+        <section id="about" class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-heart" aria-hidden="true"></i> プロフィール</h2>
+                <p>スタート地点を、正直に書きます</p>
+            </div>
+
+            <div class="about-content">
+                <!-- Left: Profile Card -->
+                <aside>
+                    <div class="profile-card">
+                        <div class="profile-avatar">
+                            <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                        </div>
+                        <p class="profile-name">CodeRoute 90</p>
+                        <p class="profile-tagline">元・文系営業職 → エンジニア</p>
+                        <div class="profile-divider"></div>
+                        <div class="profile-tags">
+                            <div class="profile-tag">
+                                <i class="fas fa-calendar-alt" aria-hidden="true"></i>
+                                <span>40歳からプログラミング開始</span>
+                            </div>
+                            <div class="profile-tag">
+                                <i class="fas fa-briefcase" aria-hidden="true"></i>
+                                <span>文系営業職（前職7年）</span>
+                            </div>
+                            <div class="profile-tag">
+                                <i class="fas fa-file-alt" aria-hidden="true"></i>
+                                <span>リクルート → IT内定獲得</span>
+                            </div>
+                            <div class="profile-tag">
+                                <i class="fas fa-code" aria-hidden="true"></i>
+                                <span>IT内定獲得 → エンジニア</span>
+                            </div>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Right: Info Cards -->
+                <div class="profile-info-block">
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <div class="info-card-icon"><i class="fas fa-user" aria-hidden="true"></i></div>
+                            <h3>スタート地点</h3>
+                        </div>
+                        <p>
+                            40歳・文系営業職。スクール入学当時のPCスキルは「タイピングもあやふや」で、
+                            人に見せられるような速さではありませんでした。<br><br>
+                            このサイトの運営者は、ITの才能があったわけでも、
+                            若くして始めたわけでも、もともと数字に強かったわけでもありません。
+                            ただ、「正しいルートを通った」という一点だけで、
+                            90日後に別の景色を見ることができました。
+                            これは、そこに至るまでのプロセスを、数字で語る記録です。
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <div class="info-card-icon"><i class="fas fa-fire-alt" aria-hidden="true"></i></div>
+                            <h3>なぜスクールに課金したのか</h3>
+                        </div>
+                        <p>
+                            動機は、キャリアへの憧れではありませんでした。
+                            毎月40時間の残業が続き、手に職をつけてリモートで働きたい——
+                            それが本音であり、逃げでもありました。<br><br>
+                            最初は独学を試みました。
+                            ネットで調べてProgate（プログラミング学習サイト）を始めましたが、環境構築の段階でエラーが出続け、
+                            3日で手が止まりました。解決方法を調べても専門用語の意味がわからず、
+                            調べた先でまた別の用語に詰まる——この無限ループを経験した人も多いはずです。<br><br>
+                            そこで判断したのは、「独学で迷走するより、お金でプロのサポート＝時間を買う」こと。
+                            スクールへの投資は、時間の損失を最小化するための合理的な選択でした。
+                        </p>
+                    </div>
+
+                    <div class="info-card">
+                        <div class="info-card-header">
+                            <div class="info-card-icon"><i class="fas fa-chart-line" aria-hidden="true"></i></div>
+                            <h3>転職活動と、現在地</h3>
+                        </div>
+                        <p>
+                            リクルートを経てIT企業への内定を獲得し、
+                            エンジニアとしてキャリアをスタート。
+                            知識ゼロからスタートして90日。
+                            40歳の文系管理職が90日でITエンジニアになった。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Timeline ── -->
+        <section class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-route" aria-hidden="true"></i> 90日間の実録タイムライン</h2>
+                <p>美化せず、省略せず、起きたことをそのまま書きます</p>
+            </div>
+
+            <div class="timeline">
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-date-badge">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 2024年5月
+                        </span>
+                        <h3><i class="fas fa-times-circle" aria-hidden="true"></i> 独学、3日で終わる</h3>
+                        <p>
+                            Progateを開始。最初のHTML/CSSは問題なく進んだが、
+                            開発環境の構築でエラーが連発。
+                            エラー文を検索しても専門用語の連鎖で全く意味がわからず、
+                            3日で完全に手が止まった。
+                            「自分に才能がないのか」とすら思いかけた。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-date-badge">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 2024年6月
+                        </span>
+                        <h3><i class="fas fa-door-open" aria-hidden="true"></i> ITスクール入学&転職活動開始</h3>
+                        <p>
+                            独学に見切りをつけ、ITスクールへの入学を決意。
+                            当時のスキルはブラウザ検索のみ。
+                            タイピングの練習からカリキュラムが始まったことを今でも覚えている。
+                            「お金でプロのサポートを買う」という決断に後悔はなかった。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-date-badge">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 2024年7〜8月
+                        </span>
+                        <h3><i class="fas fa-skull" aria-hidden="true"></i> JavaScriptの壁</h3>
+                        <p>
+                            HTML/CSSを習得し、JavaScriptに入った途端に壁が来た。
+                            非同期処理（Promise・async/await）が全く頭に入らず、
+                            同じ質問をメンターに5回繰り返した。
+                            それでも毎回「どこから理解できていないか」を丁寧に切り分けてもらえた。
+                            独学では間違いなくここで終わっていた。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-date-badge">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 2024年9月
+                        </span>
+                        <h3><i class="fas fa-flag-checkered" aria-hidden="true"></i> スクール修了</h3>
+                        <p>
+                            90日間のカリキュラムを修了。
+                            転職活動も継続していた。
+                        </p>
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <span class="timeline-date-badge">
+                            <i class="fas fa-calendar-alt" aria-hidden="true"></i> 2024年9月
+                        </span>
+                        <h3><i class="fas fa-trophy" aria-hidden="true"></i> IT企業内定 </h3>
+                        <p>
+                            90日で
+                            エンジニアとしてIT企業への内定を獲得。
+                            40歳の文系営業職が、90日でエンジニアになった。
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ── Skills ── -->
+        <section class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-tools" aria-hidden="true"></i> 90日で身についたスキル</h2>
+                <p>「習得した」ではなく「使えるようになった」もののみ記載します</p>
+            </div>
+
+            <div class="skills-grid">
+                <div class="skill-card">
+                    <div class="skill-icon-wrapper">
+                        <i class="fas fa-code" aria-hidden="true"></i>
+                    </div>
+                    <h3>Web開発（HTML / CSS / JavaScript）</h3>
+                    <p>
+                        本サイトを含む複数のWebアプリを実際に自作。
+                        ReactやNode.jsの基礎も習得し、
+                        フロントエンドからバックエンドの連携まで一通り実装できる。
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon-wrapper">
+                        <i class="fab fa-python" aria-hidden="true"></i>
+                    </div>
+                    <h3>Pythonプログラミング</h3>
+                    <p>
+                        Pythonの基礎文法・データ処理・スクリプト自動化を習得。
+                        業務効率化のためのツール作成など、
+                        実務での即戦力になる範囲をカバー。
+                    </p>
+                </div>
+
+                <div class="skill-card">
+                    <div class="skill-icon-wrapper">
+                        <i class="fas fa-handshake" aria-hidden="true"></i>
+                    </div>
+                    <h3>営業力 × エンジニアリング</h3>
+                    <p>
+                        前職7年間の文系営業経験は、案件を獲得する場面で直接役立っている。
+                        技術力だけでなく、提案力・コミュニケーション力が
+                        エンジニアとしての差別化になっている。
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Achievements ── -->
+        <section class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-medal" aria-hidden="true"></i> 数字で見るリアル</h2>
+                <p>感想ではなく、事実だけ並べます</p>
+            </div>
+
+            <div class="achievement-grid">
+                <div class="achievement-card">
+                    <span class="achievement-number">40歳</span>
+                    <h3>プログラミング開始時の年齢</h3>
+                    <p>「遅すぎた」とは思わなかった。<br>正しいルートがあれば年齢は関係なかった。</p>
+                </div>
+
+                <div class="achievement-card">
+                    <span class="achievement-number">3日</span>
+                    <h3>独学で挫折するまでの日数</h3>
+                    <p>Progateの環境構築で詰まり、<br>独学を断念するまでの期間。</p>
+                </div>
+
+                <div class="achievement-card">
+                    <span class="achievement-number">90日</span>
+                    <h3>ITスクールでの学習期間</h3>
+                    <p>知識ゼロからWebアプリを自作し、<br>IT転職できるレベルに到達した期間。</p>
+                </div>
+
+                <div class="achievement-card">
+                    <span class="achievement-number">35万円</span>
+                    <h3>転職後の月収</h3>
+                    <p>未経験からIT企業の内定を獲得。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ── Philosophy ── -->
+        <section class="section philosophy-section">
+            <h2><i class="fas fa-lightbulb" aria-hidden="true"></i> このサイトを作った理由</h2>
+            <div class="philosophy-content">
+                <div class="quote-block">
+                    「才能の問題ではなかった。どのルートを通るかの問題だった。」
+                </div>
+                <p>
+                    40歳・文系営業職・タイピングも怪しい——そんな人間が3ヶ月でWebアプリを自作し、
+                    IT企業へ転職した。これは、特別な才能の話ではありません。
+                    再現性のある話です。
+                </p>
+                <p>
+                    ただし、条件があります。正しい環境で、正しい順序で学ぶこと。
+                    独学で3日で詰まった私が言うのですから、
+                    これは理想論ではなく、実証された事実です。
+                    スクールを選ぶかどうか、どのスクールを選ぶか——
+                    その判断一つで、90日間の密度は大きく変わります。
+                </p>
+                <p>
+                    このサイト「CodeRoute 90」では、私が実際に比較検討した複数のITスクールを、
+                    コスト・サポート体制・転職実績の観点から分析しています。
+                </p>
+            </div>
+        </section>
+
+        <!-- ── CTA ── -->
+        <section class="cta-section">
+            <h2><i class="fas fa-map-signs" aria-hidden="true"></i> スクール選びで迷っているなら、まずここを読んでほしい</h2>
+            <p>
+                私は「スクールへの投資は正しかった」と確信しています。
+                問題はスクールに通うかどうかではなく、<strong>どのスクールを選ぶか</strong>です。
+                私が実際に比較検討した内容を、一本の記事にまとめています。
+            </p>
+            <a href="blog.html" class="cta-button">
+                <i class="fas fa-search" aria-hidden="true"></i> ITスクール比較記事を読む
+            </a>
+        </section>
+
+    </main>
+
+    <!-- ===== Footer ===== -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <!-- Brand -->
+                <div>
+                    <p class="footer-logo">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+                    </p>
+                    <p class="footer-tagline">最短距離で「未経験」を脱却する攻略ログ</p>
+                </div>
+                <!-- Navigation -->
+                <nav class="footer-nav" aria-label="フッターナビゲーション">
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a></li>
+                        <li><a href="about.html"><i class="fas fa-user" aria-hidden="true"></i> about me</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> ブログ</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> お問い合わせ</a></li>
+                    </ul>
+                </nav>
+                <!-- Copy -->
+                <div>
+                    <p class="footer-copy">&copy; 2026 CodeRoute 90</p>
+                    <p class="footer-desc">
+                        40歳・文系から90日でエンジニア転職した運営者が、<br>
+                        再現可能な最短ルートを事実ベースで公開するメディアです。
+                    </p>
+                </div>
+            </div><!-- /.footer-grid -->
+        </div><!-- /.footer-content -->
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/header-scroll.js" defer></script>
+
+
+    <!-- ===== Smooth Scroll ===== -->
+    <script>
+    (function () {
+        'use strict';
+
+        // ① CSS レベルのスムーススクロール（最低限の保険）
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        // ② JS レベル：ヘッダー高さを考慮した精密スクロール
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+                /* #navLinks 内のリンクはハンバーガースクリプトで制御済み → スキップ */
+                if (anchor.closest('#navLinks')) return;
+                anchor.addEventListener('click', function (e) {
+                    var href = this.getAttribute('href');
+                    if (!href || href === '#') return;
+                    var target = document.querySelector(href);
+                    if (!target) return;
+                    e.preventDefault();
+                    var header = document.querySelector('header');
+                    var headerH = header ? header.offsetHeight : 0;
+                    var OFFSET = 16; // ヘッダー下の余白
+                    var top =
+                        target.getBoundingClientRect().top +
+                        window.pageYOffset -
+                        headerH -
+                        OFFSET;
+                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                });
+            });
+        });
+    })();
+    </script>
+    <!-- ===== Hamburger Menu Script ===== -->
+    <script>
+    (function () {
+        'use strict';
+        document.addEventListener('DOMContentLoaded', function () {
+            var btn     = document.getElementById('hamburgerBtn');
+            var nav     = document.getElementById('navLinks');
+            var overlay = document.getElementById('navOverlay');
+            if (!btn || !nav) return;
+
+            if (typeof window.__relocateMobileNav === 'function') {
+                window.__relocateMobileNav();
+            }
+
+            function openMenu() {
+                btn.classList.add('open');
+                nav.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.setAttribute('aria-label', 'メニューを閉じる');
+                if (overlay) { overlay.style.display = 'block'; setTimeout(function(){ overlay.classList.add('active'); }, 10); }
+                /* スクロールロック */
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                btn.classList.remove('open');
+                nav.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-label', 'メニューを開く');
+                if (overlay) { overlay.classList.remove('active'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
+                /* スクロールロック解除 */
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
+            });
+
+            /* オーバーレイクリックで閉じる */
+            if (overlay) {
+                overlay.addEventListener('click', closeMenu);
+            }
+
+            /* メニューリンククリックで閉じる＋ナビゲーション */
+            nav.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var href = link.getAttribute('href');
+                    closeMenu();
+                    if (!href || href === '#') return;
+                    if (href.charAt(0) === '#') {
+                        /* 同一ページ内アンカースクロール */
+                        setTimeout(function () {
+                            var target = document.querySelector(href);
+                            if (target) {
+                                var headerEl = document.querySelector('header');
+                                var offset = headerEl ? headerEl.offsetHeight + 16 : 80;
+                                var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                                window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                            }
+                        }, 350);
+                    } else {
+                        /* 別ページへ遷移 */
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 50);
+                    }
+                });
+            });
+
+            /* ESCキーで閉じる */
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
+            });
+
+            /* リサイズ時にメニューをリセット */
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768 && nav.classList.contains('open')) {
+                    closeMenu();
+                }
+                if (typeof window.__relocateMobileNav === 'function') {
+                    window.__relocateMobileNav();
+                }
+            });
+        });
+    })();
+    </script>
+    <!-- ===== /Hamburger Menu Script ===== -->
+</body>
+</html>

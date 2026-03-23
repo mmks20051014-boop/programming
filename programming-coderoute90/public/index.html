@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="ja" style="scroll-behavior: smooth;">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>CodeRoute 90｜最短距離で「未経験」を脱却する攻略ログ</title>
+    <meta name="description" content="CodeRoute 90は、40歳・文系から90日でエンジニア転職した運営者が、時間を最優先して結果を出すための転職活動・スクール活用術を事実ベースで共有するメディアです。独学の浪費を避け、最短で作って公開するまでのロードマップを公開。">
+    <meta name="keywords" content="ITスクール, プログラミング学習, 90日, 未経験, CodeRoute 90, エンジニア転職, 学習ロードマップ, スクール活用">
+
+    <!-- OGP -->
+    <meta property="og:title" content="CodeRoute 90｜最短距離で「未経験」を脱却する攻略ログ">
+    <meta property="og:description" content="時間を最優先し、最短で結果を出すための転職活動・スクール活用・詰まりどころを公開する、90日間の攻略ログ。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://programming.coderoute90.workers.dev/">
+    <meta property="og:image" content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+    <link rel="canonical" href="https://programming.coderoute90.workers.dev/">
+    <meta property="og:locale"      content="ja_JP">
+    <meta property="og:site_name"   content="CodeRoute 90">
+    <!-- Twitter Card -->
+    <meta name="twitter:card"        content="summary_large_image">
+    <meta name="twitter:title"       content="CodeRoute 90｜最短距離で「未経験」を脱却する攻略ログ">
+    <meta name="twitter:description" content="時間を最優先し、最短で結果を出すための転職活動・スクール活用・詰まりどころを公開する、90日間の攻略ログ。">
+    <meta name="twitter:image"       content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;600&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- tsParticles -->
+    <script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js" defer></script>
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <!-- ===== 構造化データ (JSON-LD) ===== -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebSite",
+      "@id": "https://programming.coderoute90.workers.dev/#website",
+      "url": "https://programming.coderoute90.workers.dev/",
+      "name": "CodeRoute 90",
+      "description": "40歳・文系から90日でエンジニア転職した運営者が、最短で結果を出すための学習設計と転職活動を事実ベースで共有するメディア",
+      "inLanguage": "ja",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "https://programming.coderoute90.workers.dev/blog.html?s={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      }
+    },
+    {
+      "@type": "Organization",
+      "@id": "https://programming.coderoute90.workers.dev/#organization",
+      "name": "CodeRoute 90",
+      "url": "https://programming.coderoute90.workers.dev/",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "https://programming.coderoute90.workers.dev/assets/images/logo.png"
+      }
+    }
+  ]
+}
+</script>
+    <!-- ===== /構造化データ ===== -->
+
+    <!-- ===== Google Analytics 4 ===== -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBW5E6N8M4"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', 'G-FBW5E6N8M4');
+    </script>
+    <!-- ===== /Google Analytics 4 ===== -->
+
+    <!-- ===== Microsoft Clarity ===== -->
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "vwxei3913s");
+    </script>
+    <!-- ===== /Microsoft Clarity ===== -->
+    <style>
+        /* ===== Hamburger Menu ===== */
+        .hamburger {
+            display: none;   /* デスクトップでは非表示 */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            width: 40px;
+            height: 40px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            z-index: 10001;
+            flex-shrink: 0;
+        }
+        .hamburger span {
+            display: block;
+            width: 22px;
+            height: 2px;
+            background: var(--text-primary, #e2e8f0);
+            border-radius: 2px;
+            transition: transform 0.35s cubic-bezier(0.4,0,0.2,1),
+                        opacity   0.25s ease,
+                        width     0.25s ease;
+            transform-origin: center;
+        }
+        .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+        .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+        .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+        /* モバイル用オーバーレイ */
+        .nav-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            z-index: 9998;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            -webkit-tap-highlight-color: transparent;
+            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
+        }
+        .nav-overlay.active { opacity: 1; pointer-events: auto; }
+
+        @media (max-width: 768px) {
+            /* モバイル: ハンバーガーを表示 */
+            .hamburger { display: flex !important; }
+            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
+
+            nav {
+                position: relative;
+            }
+            /* モバイル: メニューは右からスライドするドロワー */
+            .nav-links {
+                display: flex !important;
+                position: fixed !important;
+                top: 0 !important;
+                right: -100% !important;
+                width: 75vw !important;
+                max-width: 300px !important;
+                height: 100dvh !important;
+                height: 100vh !important;
+                background: var(--bg-card, #1e293b) !important;
+                border-left: 1px solid rgba(255,255,255,0.08) !important;
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                padding: 5rem 1.5rem 2rem !important;
+                gap: 0 !important;
+                z-index: 9999 !important;
+                /* [FIX] body portal でも overlay より上に表示 */
+                transition: right 0.35s cubic-bezier(0.4,0,0.2,1) !important;
+                box-shadow: -4px 0 24px rgba(0,0,0,0.4) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+            }
+            .nav-links.open { right: 0 !important; }
+            .nav-links li {
+                width: 100% !important;
+                border-bottom: 1px solid rgba(255,255,255,0.06) !important;
+            }
+            .nav-links li:last-child { border-bottom: none !important; }
+            .nav-links li a {
+                display: block !important;
+                padding: 1rem 0.5rem !important;
+                font-size: 1rem !important;
+                width: 100% !important;
+                color: var(--text-primary, #e2e8f0) !important;
+            }
+        }
+        /* ===== /Hamburger Menu ===== */
+
+        /* ===== Active Nav Link ===== */
+        .nav-links a.nav-active {
+            color: var(--accent-cyan, #22d3ee) !important;
+            font-weight: 600;
+        }
+        .nav-links a.nav-active::after {
+            content: '';
+            display: block;
+            height: 2px;
+            width: 100%;
+            background: var(--accent-cyan, #22d3ee);
+            border-radius: 1px;
+            margin-top: 2px;
+        }
+        /* ===== /Active Nav Link ===== */
+
+        /* ===== ローディングスピナー ===== */
+        .loading-spinner {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: var(--slate-gray, #94a3b8);
+            grid-column: 1 / -1;
+        }
+        .loading-spinner i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0%   { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        /* ===== /ローディングスピナー ===== */
+
+        /* ===== ホーム記事カード追加スタイル ===== */
+        .article-excerpt {
+            color: var(--slate-gray, #94a3b8);
+            line-height: 1.6;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        .article-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        .tag {
+            background: rgba(100, 180, 255, 0.1);
+            color: var(--accent-blue, #64b4ff);
+            padding: 0.3rem 0.8rem;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        .read-more {
+            display: inline-flex;
+            align-items: center;
+            color: var(--accent-blue, #64b4ff);
+            font-weight: 500;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+        .read-more:hover {
+            color: #3a7ec4;
+            transform: translateX(5px);
+        }
+        .read-more i {
+            margin-left: 0.5rem;
+            transition: transform 0.3s ease;
+        }
+        .read-more:hover i {
+            transform: translateX(3px);
+        }
+        .home-articles-error {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--slate-gray, #94a3b8);
+            grid-column: 1 / -1;
+        }
+        /* ===== /ホーム記事カード追加スタイル ===== */
+
+        /* ===== Footer Enhanced ===== */
+        footer {
+            background: var(--bg-secondary, #0f172a);
+            border-top: 1px solid var(--border-subtle, rgba(255,255,255,0.08));
+            padding: 2.5rem 2rem 1.5rem;
+            margin-top: auto;
+        }
+        .footer-content { max-width: 1200px; margin: 0 auto; }
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        .footer-logo {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--accent-cyan, #22d3ee);
+            margin-bottom: 0.4rem;
+        }
+        .footer-tagline {
+            font-size: 0.8rem;
+            color: var(--text-muted, #64748b);
+        }
+        .footer-nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+        .footer-nav a {
+            color: var(--text-secondary, #94a3b8);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+        .footer-nav a:hover { color: var(--accent-cyan, #22d3ee); }
+        .footer-copy {
+            font-size: 0.85rem;
+            color: var(--text-muted, #64748b);
+            margin-bottom: 0.4rem;
+        }
+        .footer-desc {
+            font-size: 0.78rem;
+            color: var(--text-muted, #64748b);
+            line-height: 1.6;
+        }
+        @media (max-width: 768px) {
+            .footer-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            .footer-nav ul { align-items: center; }
+            .footer-nav a { justify-content: center; }
+        }
+        /* ===== /Footer Enhanced ===== */
+
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav>
+            <div class="logo">
+                <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+            </div>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">ホーム</a></li>
+                <li><a href="#about">CodeRoute 90について</a></li>
+                <li><a href="about.html">about me</a></li>
+                <li><a href="#blog">ブログ</a></li>
+                <li><a href="#contact">お問い合わせ</a></li>
+            </ul>
+            <button class="hamburger" id="hamburgerBtn" aria-label="メニューを開く" aria-expanded="false" aria-controls="navLinks">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+    </header>
+    <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
+
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <canvas id="hero-canvas"></canvas>
+        <div class="hero-content">
+            <h1>「才能」ではなく「ルート」の問題。</h1>
+            <p>
+                CodeRoute 90は、40歳・文系営業職から90日でエンジニア転職した運営者が、
+                「最短で結果を出す」ためのすべてを、再現可能な形でまとめた攻略ログです。
+                夢のある美談より、時間の浪費をなくす現実的で最適な「ルート」を公開します。
+            </p>
+            <a href="#blog" class="cta-button">
+                <i class="fas fa-arrow-down" aria-hidden="true"></i> 最新記事へ
+            </a>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main role="main">
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-user-circle" aria-hidden="true"></i> CodeRoute 90について</h2>
+                <p>現状を変えるための「転職活動・スクール活用・詰まりどころ」を、最短目線でまとめた攻略ログです</p>
+            </div>
+
+            <div class="about-content">
+                <div class="profile-image">
+                    <div class="profile-avatar">
+                        <i class="fas fa-laptop-code" aria-hidden="true"></i>
+                    </div>
+                    <h3>CodeRoute 90</h3>
+                    <p>最短距離で「未経験」を脱却する攻略ログ</p>
+                </div>
+
+                <div class="profile-info">
+                    <h3>CodeRoute 90が扱うのは「最短で結果を出すための現実」</h3>
+                    <p>
+                        CodeRoute 90は、40歳・文系営業職から90日でエンジニア転職した運営者が、
+                        その過程で得た「最短攻略ルート」を共有するメディアです。<br>
+                        独学推奨の空気や"夢のある美談"はできるだけ排除し、効率最優先で前に進むための判断材料を整理して公開します。
+                    </p><br>
+
+                    <h3>なぜ「独学」ではなく「課金」なのか</h3>
+                    <p>
+                        挫折の原因は、難易度よりも「時間の浪費」にあります。<br>
+                        これは転職活動、プログラミング学習においても同様です。<br>
+                        本サイトでは、リクルート、スクール選びの観点と投資対効果が出る使い方を事実ベースで整理します。
+                    </p><br>
+
+                    <h3>90日間の「技術習得、転職ロードマップ」</h3>
+                    <p>
+                        Phase 1（1〜30日）：HTML/CSS/JSで静的サイト制作 → Webの構造を身体で理解と同時に転職活動スタート<br>
+                        Phase 2（31〜60日）：Python/Djangoでアプリ開発 → DB/バックエンドの勘所を掴む<br>
+                        Phase 3（61〜90日）：設計〜デプロイ〜SEO → 公開して動かすところまで完走、転職成功
+                    </p>
+                    <p>
+                        成功体験だけでなく、つまずいた箇所も含めて、
+                        「どこで詰まり、どう抜けたか」を再現できる形で記録します。
+                    </p>
+
+                    <div class="achievement">
+                        <h4><i class="fas fa-trophy" aria-hidden="true"></i> このサイトで目指せる到達点</h4>
+                        <p>知識ゼロからでも、学習→制作→公開までを線でつなぎ、「未経験」を脱却するための道筋が見える</p>
+                        <p>扱う領域：Web制作 / Webアプリ開発 / Python / JavaScript / デプロイ / SEO</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Latest Articles Section -->
+        <section id="blog" class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-blog" aria-hidden="true"></i> 最新記事</h2>
+                <p>転職活動・スクール活用・制作ログを中心に更新しています</p>
+            </div>
+
+            <!-- ===== [動的] 最新記事グリッド ===== -->
+            <div class="articles-grid" id="homeArticlesGrid">
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner" aria-hidden="true"></i>
+                    <p>記事を読み込んでいます...</p>
+                </div>
+            </div>
+            <!-- ===== /[動的] 最新記事グリッド ===== -->
+
+            <div class="text-center mt-4">
+                <a href="blog.html" class="cta-button">
+                    <i class="fas fa-list" aria-hidden="true"></i> 記事一覧を見る
+                </a>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <div class="section-title">
+                <h2><i class="fas fa-envelope" aria-hidden="true"></i> お問い合わせ</h2>
+                <p>転職活動・スクール選び・記事内容への質問など、お気軽にどうぞ</p>
+            </div>
+
+            <div class="text-center">
+                <div class="articles-grid" style="max-width: 600px; margin: 0 auto;">
+                    <div class="article-card">
+                        <h3><i class="fas fa-graduation-cap" aria-hidden="true"></i> ITスクール相談</h3>
+                        <p>どのITスクールが自分に合うか、学習の相談を受け付けています。</p>
+                        <a href="contact.html?type=question" class="cta-button">
+                            相談フォームへ
+                        </a>
+                    </div>
+
+                    <div class="article-card">
+                        <h3><i class="fas fa-question-circle" aria-hidden="true"></i> 転職相談</h3>
+                        <p>転職活動についてのご相談や感想をお受けしています。</p>
+                        <a href="contact.html?type=question" class="cta-button">
+                            相談フォームへ
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer role="contentinfo">
+        <div class="footer-content">
+            <div class="footer-grid">
+                <!-- Brand -->
+                <div>
+                    <p class="footer-logo">
+                        <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
+                    </p>
+                    <p class="footer-tagline">最短距離で「未経験」を脱却する攻略ログ</p>
+                </div>
+                <!-- Navigation -->
+                <nav class="footer-nav" aria-label="フッターナビゲーション">
+                    <ul>
+                        <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a></li>
+                        <li><a href="about.html"><i class="fas fa-user" aria-hidden="true"></i> about me</a></li>
+                        <li><a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> ブログ</a></li>
+                        <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> お問い合わせ</a></li>
+                    </ul>
+                </nav>
+                <!-- Copy -->
+                <div>
+                    <p class="footer-copy">&copy; 2026 CodeRoute 90</p>
+                    <p class="footer-desc">
+                        40歳・文系から90日でエンジニア転職した運営者が、<br>
+                        再現可能な最短ルートを事実ベースで公開するメディアです。
+                    </p>
+                </div>
+            </div><!-- /.footer-grid -->
+        </div><!-- /.footer-content -->
+    </footer>
+
+    <!-- JavaScript -->
+    <script src="assets/js/main.js" defer></script>
+    <script src="assets/js/hero-animation.js" defer></script>
+    <script src="assets/js/header-scroll.js" defer></script>
+
+
+    <!-- ===== Smooth Scroll（ナビ以外のアンカーリンク用） ===== -->
+    <script>
+    (function () {
+        'use strict';
+        document.documentElement.style.scrollBehavior = 'smooth';
+
+        document.addEventListener('DOMContentLoaded', function () {
+            /* .nav-links 内のリンクは上記ハンバーガースクリプトで制御済みのためスキップ */
+            document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
+                /* ナビリンクはスキップ（二重登録を防ぐ） */
+                if (anchor.closest('#navLinks')) return;
+
+                anchor.addEventListener('click', function (e) {
+                    var href = this.getAttribute('href');
+                    if (!href || href === '#') return;
+                    var target = document.querySelector(href);
+                    if (!target) return;
+                    e.preventDefault();
+                    var header  = document.querySelector('header');
+                    var headerH = header ? header.offsetHeight : 0;
+                    var OFFSET  = 16;
+                    var top =
+                        target.getBoundingClientRect().top +
+                        window.pageYOffset -
+                        headerH -
+                        OFFSET;
+                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                });
+            });
+        });
+    })();
+    </script>
+    <!-- ===== /Smooth Scroll ===== -->
+
+    <!-- ===== ホーム: 最新記事フェッチ ===== -->
+    <script>
+    document.addEventListener('DOMContentLoaded', async function () {
+
+        const homeArticlesGrid = document.getElementById('homeArticlesGrid');
+
+        // blog.html と共通の API エンドポイント
+        const API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
+
+        // ---- XSS 対策ヘルパー ----
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#039;');
+        }
+
+        // ---- 記事カード HTML を生成（index.html のデザインに合わせた形式） ----
+        function buildHomeArticleCard(post) {
+            const dateStr = post.createdAt
+                ? new Date(post.createdAt).toLocaleDateString('ja-JP')
+                : '';
+            const rawText = post.content
+                ? post.content.replace(/<[^>]*>?/gm, '')
+                : '';
+            const excerpt = rawText.length > 100
+                ? rawText.substring(0, 100) + '...'
+                : rawText || '記事の詳細は「続きを読む」からご確認ください。';
+
+            // アイキャッチがあれば表示、なければアイコン
+            const eyecatchHtml = post.eyecatch
+                ? `<img src="${post.eyecatch.url}" alt="${escapeHtml(post.title)}"
+                        style="width:100%;height:160px;object-fit:cover;border-radius:8px 8px 0 0;display:block;">`
+                : '';
+
+            return `
+                <a href="post.html?id=${encodeURIComponent(post.id)}" class="article-card-link">
+                    <article class="article-card" style="padding: ${eyecatchHtml ? '0' : ''};">
+                        ${eyecatchHtml}
+                        <div style="${eyecatchHtml ? 'padding: 1.5rem;' : ''}">
+                            <h3>${escapeHtml(post.title)}</h3>
+                            <p>${escapeHtml(excerpt)}</p>
+                            <div class="article-meta">
+                                <span class="category-tag">体験談</span>
+                                <span><i class="far fa-calendar" aria-hidden="true"></i> ${dateStr}</span>
+                            </div>
+                        </div>
+                    </article>
+                </a>`;
+        }
+
+        try {
+            // 最新3件を取得
+            const response = await fetch(`${API_URL}?limit=3&orders=-publishedAt`, {
+                method:  'GET',
+                mode:    'cors',
+                headers: { 'Accept': 'application/json' }
+            });
+
+            if (!response.ok) {
+                throw new Error(`サーバーエラー: ${response.status} ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            if (!data || !Array.isArray(data.contents)) {
+                throw new Error('APIレスポンスの形式が想定と異なります（contents 配列が見つかりません）');
+            }
+
+            homeArticlesGrid.innerHTML = '';
+
+            if (data.contents.length === 0) {
+                homeArticlesGrid.innerHTML = `
+                    <div class="home-articles-error">
+                        <i class="fas fa-inbox" style="font-size:2rem;margin-bottom:1rem;display:block;" aria-hidden="true"></i>
+                        <p>記事がまだありません。</p>
+                    </div>`;
+            } else {
+                data.contents.forEach(function (post) {
+                    homeArticlesGrid.innerHTML += buildHomeArticleCard(post);
+                });
+            }
+
+        } catch (error) {
+            console.error('[CodeRoute90] ホーム記事取得エラー:', error);
+            homeArticlesGrid.innerHTML = `
+                <div class="home-articles-error">
+                    <i class="fas fa-exclamation-triangle"
+                       style="font-size:2rem;margin-bottom:1rem;display:block;color:#ff6b6b;"
+                       aria-hidden="true"></i>
+                    <p>記事の読み込みに失敗しました。</p>
+                    <p style="font-size:0.78rem;color:#999;margin-top:0.5rem;word-break:break-all;">
+                        詳細: ${escapeHtml(error.message)}
+                    </p>
+                </div>`;
+        }
+    });
+    </script>
+    <!-- ===== /ホーム: 最新記事フェッチ ===== -->
+
+    <!-- ===== Hamburger Menu Script ===== -->
+    <script>
+    (function () {
+        'use strict';
+        document.addEventListener('DOMContentLoaded', function () {
+            var btn     = document.getElementById('hamburgerBtn');
+            var nav     = document.getElementById('navLinks');
+            var overlay = document.getElementById('navOverlay');
+            if (!btn || !nav) return;
+
+            if (typeof window.__relocateMobileNav === 'function') {
+                window.__relocateMobileNav();
+            }
+
+            function openMenu() {
+                btn.classList.add('open');
+                nav.classList.add('open');
+                btn.setAttribute('aria-expanded', 'true');
+                btn.setAttribute('aria-label', 'メニューを閉じる');
+                if (overlay) { overlay.style.display = 'block'; setTimeout(function(){ overlay.classList.add('active'); }, 10); }
+                /* スクロールロック */
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeMenu() {
+                btn.classList.remove('open');
+                nav.classList.remove('open');
+                btn.setAttribute('aria-expanded', 'false');
+                btn.setAttribute('aria-label', 'メニューを開く');
+                if (overlay) { overlay.classList.remove('active'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
+                /* スクロールロック解除 */
+                document.body.style.overflow = '';
+            }
+
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
+            });
+
+            /* オーバーレイクリックで閉じる */
+            if (overlay) {
+                overlay.addEventListener('click', closeMenu);
+            }
+
+            /* メニューリンククリックで閉じる＋ナビゲーション */
+            nav.querySelectorAll('a').forEach(function (link) {
+                link.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    var href = link.getAttribute('href');
+                    closeMenu();
+                    if (!href || href === '#') return;
+                    if (href.charAt(0) === '#') {
+                        /* 同一ページ内アンカースクロール */
+                        setTimeout(function () {
+                            var target = document.querySelector(href);
+                            if (target) {
+                                var headerEl = document.querySelector('header');
+                                var offset = headerEl ? headerEl.offsetHeight + 16 : 80;
+                                var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
+                                window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                            }
+                        }, 350);
+                    } else {
+                        /* 別ページへ遷移 */
+                        setTimeout(function () {
+                            window.location.href = href;
+                        }, 50);
+                    }
+                });
+            });
+
+            /* ESCキーで閉じる */
+            document.addEventListener('keydown', function (e) {
+                if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
+            });
+
+            /* リサイズ時にメニューをリセット */
+            window.addEventListener('resize', function () {
+                if (window.innerWidth > 768 && nav.classList.contains('open')) {
+                    closeMenu();
+                }
+                if (typeof window.__relocateMobileNav === 'function') {
+                    window.__relocateMobileNav();
+                }
+            });
+        });
+    })();
+    </script>
+    <!-- ===== /Hamburger Menu Script ===== -->
+</body>
+</html>
