@@ -18,13 +18,15 @@ function escapeHtml(str) {
 
 async function fetchArticle(id) {
   const res = await fetch(API_BASE + '/' + encodeURIComponent(id));
-  if (!res.ok) return null;
+  if (!res.ok) {
+    return null;
+  }
   const data = await res.json();
 
-  // パターン1: data.id が直接ある場合
-  if (data && data.id) return data;
+  if (data && data.id) {
+    return data;
+  }
 
-  // パターン2: data.contents という配列の中に記事がある場合  ← 追加
   if (data && Array.isArray(data.contents)) {
     return data.contents.find(function(item) {
       return item && item.id === id;
