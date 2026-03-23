@@ -1,4 +1,3 @@
-cat wrangler.toml
 name               = "programming-coderoute90"
 main               = "src/index.js"
 compatibility_date = "2026-03-22"
