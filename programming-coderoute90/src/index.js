@@ -23,7 +23,6 @@ async function fetchArticle(id, env) {
     headers: { 'X-MICROCMS-API-KEY': env.MICROCMS_API_KEY },
   });
   if (!res.ok) {
-    console.log('fetch失敗 status:', res.status);
     return null;
   }
   const data = await res.json();
@@ -112,7 +111,7 @@ export default {
           .transform(assetResponse);
 
       } catch (err) {
-        return new Response('エラー詳細: ' + err.message + '\n' + err.stack, {
+        return new Response('エラー詳細: ' + err.message, {
           status: 500,
           headers: { 'Content-Type': 'text/plain' }
         });
