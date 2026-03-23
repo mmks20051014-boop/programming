@@ -18,21 +18,28 @@ function escapeHtml(str) {
 
 async function fetchArticle(id) {
   const res = await fetch(API_BASE + '/' + encodeURIComponent(id));
-  if (!res.ok) return null;
+  if (!res.ok) {
+    console.log('fetch失敗 status:', res.status);
+    return null;
+  }
   const data = await res.json();
+  console.log('取得データ:', JSON.stringify(data).slice(0, 200));
 
-  // パターン1: data.id が直接ある場合
-  if (data && data.id) return data;
+  if (data && data.id) {
+    return data;
+  }
 
-  // パターン2: data.contents という配列の中に記事がある場合  ← 追加
   if (data && Array.isArray(data.contents)) {
-    return data.contents.find(function(item) {
+    const found = data.contents.find(function(item) {
       return item && item.id === id;
-    }) || null;
+    });
+    console.log('contents検索結果:', found ? found.title : 'null');
+    return found || null;
   }
 
   return null;
 }
+
 
 class TitleRewriter {
   constructor(title) { this.title = title; }
