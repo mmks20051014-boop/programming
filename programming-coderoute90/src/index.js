@@ -17,7 +17,7 @@ function escapeHtml(str) {
 }
 
 async function fetchArticle(id) {
-  const res = await fetch(API_BASE + '/=' + encodeURIComponent(id));
+  const res = await fetch(API_BASE + '/' + encodeURIComponent(id));
   if (!res.ok) return null;
   const data = await res.json();
   return (data && data.id) ? data : null;
@@ -94,7 +94,6 @@ export default {
         .on('title', new TitleRewriter(meta.title))
         .on('meta', new ExistingMetaRemover())
         .on('link[rel="canonical"]', new CanonicalRewriter(canonicalUrl))
-        .on('head', new OgpInjector).on('link[rel="canonical"]', new CanonicalRewriter(canonicalUrl))
         .on('head', new OgpInjector(meta, canonicalUrl))
         .transform(assetResponse);
     }
