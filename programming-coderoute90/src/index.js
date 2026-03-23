@@ -17,9 +17,12 @@ function escapeHtml(str) {
 }
 
 async function fetchArticle(id) {
-  const res = await fetch(API_BASE + '?limit=100&orders=-publishedAt');
+  const res = await fetch(API_BASE + '/' + encodeURIComponent(id));
   if (!res.ok) {
+<<<<<<<<< Temporary merge branch 1
+=========
     console.log('fetch失敗 status:', res.status);
+>>>>>>>>> Temporary merge branch 2
     return null;
   }
   const data = await res.json();
