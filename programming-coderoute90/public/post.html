@@ -198,12 +198,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Site CSS -->
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="assets/css/style.css">
 
     <style>
         /* ============================================================
            CSS Variables Fallback
-           (style.css が定義するものを補完。style.css ロード済みなら上書き不要)
         ============================================================ */
         :root {
             --bg-primary:       #0a0a0f;
@@ -244,7 +243,6 @@
            Base Reset / Body
         ============================================================ */
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
         html { scroll-behavior: smooth; }
 
         body {
@@ -253,13 +251,14 @@
             color: var(--text-primary);
             line-height: 1.7;
             -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
         }
 
         a { color: inherit; text-decoration: none; }
         img { max-width: 100%; height: auto; display: block; }
 
         /* ============================================================
-           Reading Progress Bar
+           Reading Progress Bar - Enhanced with glow pulse
         ============================================================ */
         #reading-progress {
             position: fixed;
@@ -268,28 +267,52 @@
             height: 3px;
             background: var(--gradient-primary);
             z-index: 9999;
-            transition: width 0.1s linear;
-            box-shadow: 0 0 12px rgba(0, 212, 255, 0.7);
+            transition: width 0.15s ease-out;
+            box-shadow: 0 0 12px rgba(0, 212, 255, 0.7), 0 0 30px rgba(0, 212, 255, 0.3);
+        }
+
+        #reading-progress::after {
+            content: '';
+            position: absolute;
+            right: 0;
+            top: -2px;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--accent-cyan);
+            box-shadow: 0 0 16px var(--accent-cyan), 0 0 32px rgba(0, 212, 255, 0.5);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        #reading-progress.active::after {
+            opacity: 1;
         }
 
         /* ============================================================
-           Header / Navigation
+           Header / Navigation - Benesse-style refined
         ============================================================ */
         header {
             position: fixed;
             top: 0; left: 0; right: 0;
             z-index: 1000;
-            background: rgba(10, 10, 15, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(10, 10, 15, 0.7);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             border-bottom: 1px solid var(--border-subtle);
             height: 68px;
-            transition: background 0.3s ease, box-shadow 0.3s ease;
+            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(0);
         }
 
         header.scrolled {
-            background: rgba(10, 10, 15, 0.97);
-            box-shadow: 0 2px 20px rgba(0, 0, 0, 0.5);
+            background: rgba(10, 10, 15, 0.95);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+            height: 60px;
+        }
+
+        header.header-hidden {
+            transform: translateY(-100%);
         }
 
         header nav {
@@ -316,8 +339,10 @@
             align-items: center;
             gap: 0.4rem;
             white-space: nowrap;
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
+        .logo:hover { transform: scale(1.03); }
         .logo i { -webkit-text-fill-color: var(--accent-cyan); }
 
         .nav-links {
@@ -333,8 +358,28 @@
             font-size: 0.88rem;
             font-weight: 500;
             color: var(--text-secondary);
-            transition: color 0.25s ease, background 0.25s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 4px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateX(-50%);
+        }
+
+        .nav-links a:hover::after,
+        .nav-links a.nav-active::after {
+            width: 60%;
         }
 
         .nav-links a:hover,
@@ -343,10 +388,9 @@
             background: rgba(0, 212, 255, 0.07);
         }
 
-        /* Hamburger */
         /* ===== Hamburger Menu ===== */
         .hamburger {
-            display: none;   /* デスクトップでは非表示 */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -375,7 +419,6 @@
         .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* モバイル用オーバーレイ */
         .nav-overlay {
             display: none;
             position: fixed;
@@ -385,19 +428,13 @@
             opacity: 0;
             transition: opacity 0.3s ease;
             -webkit-tap-highlight-color: transparent;
-            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
+            pointer-events: none;
         }
         .nav-overlay.active { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 768px) {
-            /* モバイル: ハンバーガーを表示 */
             .hamburger { display: flex !important; }
-            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
-
-            nav {
-                position: relative;
-            }
-            /* モバイル: メニューは右からスライドするドロワー */
+            nav { position: relative; }
             .nav-links {
                 display: flex !important;
                 position: fixed !important;
@@ -414,7 +451,6 @@
                 padding: 5rem 1.5rem 2rem !important;
                 gap: 0 !important;
                 z-index: 9999 !important;
-                /* [FIX] body portal でも overlay より上に表示 */
                 transition: right 0.35s cubic-bezier(0.4,0,0.2,1) !important;
                 box-shadow: -4px 0 24px rgba(0,0,0,0.4) !important;
                 overflow-y: auto !important;
@@ -434,42 +470,125 @@
                 color: var(--text-primary, #e2e8f0) !important;
             }
         }
-        /* ===== /Hamburger Menu ===== */
+
+        /* ============================================================
+           Scroll-Reveal Animation System (Benesse-inspired)
+        ============================================================ */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-80px);
+            transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(80px);
+            transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.85);
+            transition: all 0.9s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .reveal-mask {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reveal-mask::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--gradient-primary);
+            z-index: 2;
+            transform: scaleX(1);
+            transform-origin: right;
+            transition: transform 0.8s cubic-bezier(0.77, 0, 0.175, 1);
+        }
+
+        .reveal-mask.revealed::before {
+            transform: scaleX(0);
+        }
+
+        /* Stagger delays */
+        .stagger-1 { transition-delay: 0.1s; }
+        .stagger-2 { transition-delay: 0.2s; }
+        .stagger-3 { transition-delay: 0.3s; }
+        .stagger-4 { transition-delay: 0.4s; }
+        .stagger-5 { transition-delay: 0.5s; }
+        .stagger-6 { transition-delay: 0.6s; }
+
+        /* ============================================================
+           Floating Particles Background
+        ============================================================ */
+        #particles-canvas {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.4;
+        }
 
         /* ============================================================
            Post Page Wrapper
         ============================================================ */
         .post-wrapper a {
-                display: block;
-                padding: 1rem 0.5rem;
-                font-size: 1rem;
-                width: 100%;
-                /* ===== FIX: 暗い背景でもリンクを読みやすく ===== */
-                color: var(--text-primary, #e2e8f0) !important;
-                text-decoration: none;
-                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
-                pointer-events: auto !important;
-                -webkit-tap-highlight-color: transparent;
-                touch-action: manipulation;
-                cursor: pointer;
-            }
-        
+            display: block;
+            padding: 1rem 0.5rem;
+            font-size: 1rem;
+            width: 100%;
+            color: var(--text-primary, #e2e8f0) !important;
+            text-decoration: none;
+            pointer-events: auto !important;
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
+            cursor: pointer;
+        }
 
-        /* ============================================================
-           Post Page Wrapper
-        ============================================================ */
         .post-page {
             padding-top: 68px;
             min-height: 100vh;
             background: var(--bg-primary);
+            position: relative;
+            z-index: 1;
         }
 
         /* ============================================================
-           Post Hero
+           Post Hero - Dynamic Parallax with Geometric Lines
         ============================================================ */
         .post-hero {
             position: relative;
-            padding: 5rem 2rem 4.5rem;
+            padding: 6rem 2rem 5rem;
             overflow: hidden;
             border-bottom: 1px solid var(--border-subtle);
             background:
@@ -479,7 +598,54 @@
                 linear-gradient(180deg, #0d1117 0%, #080c14 100%);
         }
 
-        /* animated glow orbs */
+        /* Geometric grid overlay */
+        .hero-grid {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-grid-line {
+            position: absolute;
+            background: linear-gradient(to right, transparent, rgba(0, 212, 255, 0.06), transparent);
+            height: 1px;
+            width: 200%;
+            left: -50%;
+            animation: gridSlide 20s linear infinite;
+        }
+
+        .hero-grid-line:nth-child(1) { top: 20%; animation-delay: 0s; }
+        .hero-grid-line:nth-child(2) { top: 40%; animation-delay: -5s; animation-duration: 25s; }
+        .hero-grid-line:nth-child(3) { top: 60%; animation-delay: -10s; animation-duration: 18s; }
+        .hero-grid-line:nth-child(4) { top: 80%; animation-delay: -15s; animation-duration: 22s; }
+
+        .hero-grid-line-v {
+            position: absolute;
+            background: linear-gradient(to bottom, transparent, rgba(139, 92, 246, 0.04), transparent);
+            width: 1px;
+            height: 200%;
+            top: -50%;
+            animation: gridSlideV 25s linear infinite;
+        }
+
+        .hero-grid-line-v:nth-child(5) { left: 20%; animation-delay: -2s; }
+        .hero-grid-line-v:nth-child(6) { left: 50%; animation-delay: -7s; animation-duration: 20s; }
+        .hero-grid-line-v:nth-child(7) { left: 80%; animation-delay: -12s; animation-duration: 30s; }
+
+        @keyframes gridSlide {
+            0% { transform: translateX(-25%); }
+            100% { transform: translateX(25%); }
+        }
+
+        @keyframes gridSlideV {
+            0% { transform: translateY(-25%); }
+            100% { transform: translateY(25%); }
+        }
+
+        /* Animated glow orbs - Enhanced */
         .post-hero::before,
         .post-hero::after {
             content: '';
@@ -491,22 +657,82 @@
         }
 
         .post-hero::before {
-            width: 400px; height: 400px;
-            top: -100px; left: -80px;
-            background: radial-gradient(circle, rgba(0, 212, 255, 0.12), transparent 70%);
+            width: 500px; height: 500px;
+            top: -150px; left: -100px;
+            background: radial-gradient(circle, rgba(0, 212, 255, 0.15), transparent 70%);
             animation-delay: 0s;
         }
 
         .post-hero::after {
-            width: 350px; height: 350px;
-            bottom: -80px; right: -60px;
-            background: radial-gradient(circle, rgba(139, 92, 246, 0.12), transparent 70%);
+            width: 450px; height: 450px;
+            bottom: -120px; right: -80px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.15), transparent 70%);
             animation-delay: -4s;
         }
 
         @keyframes heroOrb {
-            0%   { transform: translate(0, 0) scale(1); opacity: 0.6; }
+            0%   { transform: translate(0, 0) scale(1); opacity: 0.5; }
+            50%  { transform: translate(15px, 10px) scale(1.05); opacity: 0.8; }
             100% { transform: translate(30px, 20px) scale(1.1); opacity: 1; }
+        }
+
+        /* Floating geometric shapes */
+        .hero-shapes {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .hero-shape {
+            position: absolute;
+            border: 1px solid;
+            opacity: 0;
+            animation: floatShape 12s ease-in-out infinite;
+        }
+
+        .hero-shape--circle {
+            width: 60px; height: 60px;
+            border-radius: 50%;
+            border-color: rgba(0, 212, 255, 0.12);
+            top: 15%; right: 10%;
+            animation-delay: 0s;
+        }
+
+        .hero-shape--square {
+            width: 40px; height: 40px;
+            border-color: rgba(139, 92, 246, 0.1);
+            top: 60%; left: 8%;
+            animation-delay: -3s;
+            animation-duration: 15s;
+        }
+
+        .hero-shape--diamond {
+            width: 35px; height: 35px;
+            border-color: rgba(236, 72, 153, 0.1);
+            top: 30%; right: 25%;
+            transform: rotate(45deg);
+            animation-delay: -6s;
+            animation-duration: 18s;
+        }
+
+        .hero-shape--triangle {
+            width: 0; height: 0;
+            border: none;
+            border-left: 20px solid transparent;
+            border-right: 20px solid transparent;
+            border-bottom: 35px solid rgba(0, 212, 255, 0.06);
+            top: 70%; right: 15%;
+            animation-delay: -9s;
+        }
+
+        @keyframes floatShape {
+            0%, 100% { opacity: 0; transform: translateY(20px) rotate(0deg); }
+            20% { opacity: 1; }
+            80% { opacity: 1; }
+            50% { transform: translateY(-20px) rotate(180deg); }
         }
 
         .post-hero-inner {
@@ -516,7 +742,9 @@
             z-index: 1;
         }
 
-        /* Breadcrumb */
+        /* ============================================================
+           Breadcrumb - Animated entrance
+        ============================================================ */
         .post-breadcrumb {
             display: flex;
             align-items: center;
@@ -530,18 +758,32 @@
         .post-breadcrumb a {
             color: var(--text-muted);
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
             gap: 0.3rem;
+            position: relative;
+        }
+
+        .post-breadcrumb a::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 1px;
+            background: var(--accent-cyan);
+            transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .post-breadcrumb a:hover { color: var(--accent-cyan); }
+        .post-breadcrumb a:hover::after { width: 100%; }
 
         .post-breadcrumb .sep {
             color: var(--text-muted);
             opacity: 0.5;
             font-size: 0.75rem;
+            transition: transform 0.3s ease;
         }
 
         .post-breadcrumb .current {
@@ -556,7 +798,7 @@
             white-space: nowrap;
         }
 
-        /* Category badge */
+        /* Category badge - Pulse animation */
         .post-category-badge {
             display: none;
             background: rgba(0, 212, 255, 0.1);
@@ -569,9 +811,25 @@
             letter-spacing: 0.08em;
             text-transform: uppercase;
             margin-bottom: 1.4rem;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* Post title */
+        .post-category-badge::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.15), transparent);
+            animation: shimmer 3s ease-in-out infinite;
+        }
+
+        @keyframes shimmer {
+            0% { left: -100%; }
+            100% { left: 200%; }
+        }
+
+        /* Post title - Type-reveal animation */
         #post-title {
             font-size: clamp(1.8rem, 4vw, 2.8rem);
             font-weight: 700;
@@ -582,15 +840,23 @@
             -webkit-text-fill-color: transparent;
             background-clip: text;
             margin-bottom: 1.75rem;
+            background-size: 200% 200%;
+            animation: gradientShift 6s ease-in-out infinite;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
         }
 
         #post-title.loading-text {
             background: none;
             -webkit-text-fill-color: var(--text-muted);
             color: var(--text-muted);
+            animation: none;
         }
 
-        /* Post meta bar */
+        /* Post meta bar - Stagger entrance */
         .post-meta-bar {
             display: flex;
             align-items: center;
@@ -604,9 +870,12 @@
             display: flex;
             align-items: center;
             gap: 0.45rem;
+            transition: color 0.3s ease;
         }
 
-        .post-meta-item svg { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; }
+        .post-meta-item:hover { color: var(--accent-cyan); }
+        .post-meta-item svg { width: 14px; height: 14px; opacity: 0.6; flex-shrink: 0; transition: opacity 0.3s ease; }
+        .post-meta-item:hover svg { opacity: 1; }
 
         .post-meta-divider {
             width: 1px;
@@ -614,11 +883,27 @@
             background: var(--border-subtle);
         }
 
-        /* Glow separator */
+        /* Glow separator - Animated pulse */
         .glow-line {
-            height: 1px;
+            height: 2px;
             background: var(--gradient-primary);
-            opacity: 0.25;
+            opacity: 0.4;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .glow-line::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -30%;
+            width: 30%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), transparent);
+            animation: glowPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes glowPulse {
+            0% { left: -30%; }
+            100% { left: 130%; }
         }
 
         /* ============================================================
@@ -639,7 +924,7 @@
         ============================================================ */
         .post-article { min-width: 0; }
 
-        /* Loading / Error */
+        /* Loading state - Enhanced with wave animation */
         .loading-state {
             display: flex;
             flex-direction: column;
@@ -651,17 +936,35 @@
         }
 
         .loading-spinner {
-            width: 44px; height: 44px;
+            width: 48px; height: 48px;
             border: 3px solid var(--border-subtle);
             border-top-color: var(--accent-cyan);
             border-radius: 50%;
             animation: spin 0.85s linear infinite;
+            position: relative;
+        }
+
+        .loading-spinner::after {
+            content: '';
+            position: absolute;
+            top: -8px; left: -8px;
+            right: -8px; bottom: -8px;
+            border: 2px solid transparent;
+            border-top-color: var(--accent-purple);
+            border-radius: 50%;
+            animation: spin 1.2s linear infinite reverse;
         }
 
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        .loading-state p { font-size: 0.92rem; letter-spacing: 0.02em; }
+        .loading-state p { font-size: 0.92rem; letter-spacing: 0.02em; animation: fadeInOut 1.5s ease-in-out infinite; }
 
+        @keyframes fadeInOut {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        /* Error state */
         .error-state {
             text-align: center;
             padding: 5rem 2rem;
@@ -689,17 +992,17 @@
             border: 1px solid rgba(0, 212, 255, 0.2);
             font-size: 0.88rem;
             font-weight: 500;
-            transition: all 0.25s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .error-state .back-btn:hover {
             background: rgba(0, 212, 255, 0.15);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.25);
         }
 
         /* ============================================================
-           Article Content (Rich Text from CMS)
+           Article Content (Rich Text from CMS) - Enhanced
         ============================================================ */
         .post-content {
             color: var(--text-secondary);
@@ -721,20 +1024,27 @@
             margin-bottom: 1rem;
         }
 
+        /* Each heading gets scroll-reveal */
         .post-content h2 {
             font-size: 1.5rem;
             padding-bottom: 0.6rem;
             border-bottom: 1px solid var(--border-subtle);
             position: relative;
+            overflow: hidden;
         }
 
         .post-content h2::after {
             content: '';
             position: absolute;
             bottom: -1px; left: 0;
-            width: 56px; height: 2px;
+            width: 0; height: 2px;
             background: var(--gradient-primary);
             border-radius: 2px;
+            transition: width 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .post-content h2.heading-visible::after {
+            width: 56px;
         }
 
         .post-content h3 { font-size: 1.2rem; }
@@ -750,7 +1060,8 @@
             text-decoration: underline;
             text-underline-offset: 3px;
             text-decoration-color: rgba(0, 212, 255, 0.3);
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         .post-content a:hover {
@@ -759,7 +1070,7 @@
         }
 
         /* ============================================================
-           Internal Link Card (引用リンクカード)
+           Internal Link Card
         ============================================================ */
         .internal-link-card {
             display: flex;
@@ -770,16 +1081,31 @@
             overflow: hidden;
             margin: 1.75rem 0;
             text-decoration: none !important;
-            transition: border-color 0.25s ease, box-shadow 0.25s ease, transform 0.2s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
             cursor: pointer;
             color: inherit;
             box-shadow: var(--shadow-card);
+            position: relative;
         }
+
+        .internal-link-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.05), transparent);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .internal-link-card:hover::before { opacity: 1; }
 
         .internal-link-card:hover {
             border-color: rgba(0, 212, 255, 0.35);
-            box-shadow: 0 6px 28px rgba(0, 212, 255, 0.12);
-            transform: translateY(-2px);
+            box-shadow: 0 8px 35px rgba(0, 212, 255, 0.15);
+            transform: translateY(-4px) scale(1.01);
             text-decoration: none !important;
         }
 
@@ -791,6 +1117,8 @@
             justify-content: center;
             gap: 0.4rem;
             min-width: 0;
+            position: relative;
+            z-index: 2;
         }
 
         .internal-link-card__label {
@@ -830,6 +1158,8 @@
             max-height: 130px;
             overflow: hidden;
             background: rgba(0,0,0,0.3);
+            position: relative;
+            z-index: 2;
         }
 
         .internal-link-card__thumb img {
@@ -841,6 +1171,11 @@
             border: none !important;
             margin: 0 !important;
             box-shadow: none !important;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .internal-link-card:hover .internal-link-card__thumb img {
+            transform: scale(1.08);
         }
 
         .internal-link-card__thumb-placeholder {
@@ -865,6 +1200,12 @@
             border: 1px solid var(--border-subtle);
             margin: 1.75rem 0;
             box-shadow: var(--shadow-card);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .post-content img:hover {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+            transform: scale(1.01);
         }
 
         .post-content ul, .post-content ol {
@@ -889,6 +1230,14 @@
             border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
             font-style: italic;
             color: var(--text-secondary);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .post-content blockquote:hover {
+            border-left-color: var(--accent-purple);
+            background: rgba(0, 212, 255, 0.06);
         }
 
         .post-content code {
@@ -909,6 +1258,12 @@
             overflow-x: auto;
             margin: 1.75rem 0;
             position: relative;
+            transition: all 0.4s ease;
+        }
+
+        .post-content pre:hover {
+            border-color: rgba(0, 212, 255, 0.2);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
         }
 
         .post-content pre code {
@@ -942,15 +1297,32 @@
             padding: 0.8rem 1rem;
             border-bottom: 1px solid var(--border-subtle);
             color: var(--text-secondary);
+            transition: background 0.3s ease;
         }
 
-        .post-content tr:hover td { background: rgba(255,255,255,0.02); }
+        .post-content tr:hover td { background: rgba(255,255,255,0.03); }
 
         .post-content hr {
             border: none;
             height: 1px;
             background: var(--border-subtle);
             margin: 2.5rem 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .post-content hr::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -30%;
+            width: 30%; height: 100%;
+            background: var(--gradient-primary);
+            animation: hrSlide 4s ease-in-out infinite;
+        }
+
+        @keyframes hrSlide {
+            0% { left: -30%; }
+            100% { left: 130%; }
         }
 
         /* Code copy button */
@@ -967,17 +1339,18 @@
             font-size: 0.73rem;
             font-family: var(--font-primary);
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .code-copy-btn:hover, .code-copy-btn.copied {
             background: rgba(0, 212, 255, 0.1);
             border-color: var(--accent-cyan);
             color: var(--accent-cyan);
+            transform: scale(1.05);
         }
 
         /* ============================================================
-           Post Footer
+           Post Footer - Enhanced transitions
         ============================================================ */
         .post-footer {
             margin-top: 3.5rem;
@@ -1000,12 +1373,15 @@
             font-size: 0.78rem;
             font-weight: 500;
             border: 1px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.2s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: default;
         }
 
         .post-tags .tag:hover {
-            background: rgba(139, 92, 246, 0.15);
+            background: rgba(139, 92, 246, 0.2);
             border-color: var(--accent-purple);
+            transform: translateY(-2px) scale(1.05);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
         }
 
         /* Share section */
@@ -1032,10 +1408,28 @@
             font-size: 0.8rem;
             font-weight: 500;
             text-decoration: none;
-            transition: all 0.25s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             border: none;
             font-family: var(--font-primary);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .share-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 0; height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        .share-btn:active::before {
+            width: 300px;
+            height: 300px;
         }
 
         .share-btn-x {
@@ -1047,7 +1441,8 @@
         .share-btn-x:hover {
             background: rgba(255,255,255,0.1);
             color: var(--text-primary);
-            transform: translateY(-2px);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
         }
 
         .share-btn-copy {
@@ -1058,8 +1453,8 @@
 
         .share-btn-copy:hover {
             background: rgba(0, 212, 255, 0.14);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.18);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 212, 255, 0.2);
         }
 
         /* Back to blog button */
@@ -1074,7 +1469,22 @@
             border: 1px solid var(--border-subtle);
             font-size: 0.88rem;
             font-weight: 500;
-            transition: all 0.25s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .back-to-blog::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 212, 255, 0.1), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .back-to-blog:hover::before {
+            left: 100%;
         }
 
         .back-to-blog:hover {
@@ -1082,10 +1492,11 @@
             color: var(--accent-cyan);
             border-color: rgba(0, 212, 255, 0.3);
             transform: translateX(-4px);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.15);
         }
 
         /* ============================================================
-           Sidebar
+           Sidebar - Enhanced with hover effects
         ============================================================ */
         .post-sidebar {
             position: sticky;
@@ -1102,10 +1513,31 @@
             padding: 1.4rem 1.3rem;
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            transition: border-color 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
+            overflow: hidden;
         }
 
-        .sidebar-card:hover { border-color: rgba(0, 212, 255, 0.15); }
+        .sidebar-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 2px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+
+        .sidebar-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .sidebar-card:hover {
+            border-color: rgba(0, 212, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+        }
 
         .sidebar-card-title {
             font-size: 0.78rem;
@@ -1121,7 +1553,7 @@
             border-bottom: 1px solid var(--border-subtle);
         }
 
-        /* TOC */
+        /* TOC - Animated active indicator */
         #toc-list {
             list-style: none;
             padding: 0;
@@ -1136,7 +1568,8 @@
             border-radius: var(--radius-sm);
             border-left: 2px solid transparent;
             line-height: 1.45;
-            transition: all 0.2s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
         }
 
         #toc-list a:hover,
@@ -1144,12 +1577,18 @@
             color: var(--accent-cyan);
             background: rgba(0, 212, 255, 0.05);
             border-left-color: var(--accent-cyan);
+            padding-left: 1rem;
+        }
+
+        #toc-list a.active {
+            box-shadow: -2px 0 10px rgba(0, 212, 255, 0.15);
         }
 
         #toc-list .toc-h3 a { padding-left: 1.5rem; font-size: 0.78rem; }
+        #toc-list .toc-h3 a:hover, #toc-list .toc-h3 a.active { padding-left: 2rem; }
         .toc-empty { font-size: 0.82rem; color: var(--text-muted); font-style: italic; padding: 0.4rem 0.7rem; }
 
-        /* Profile card */
+        /* Profile card - Enhanced */
         .sidebar-avatar {
             width: 80px; height: 80px;
             border-radius: 50%;
@@ -1163,9 +1602,15 @@
             flex-shrink: 0;
             border: 2px solid rgba(0, 212, 255, 0.35);
             box-shadow: 0 0 14px rgba(0, 212, 255, 0.2);
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+            position: relative;
         }
 
-        /* 著者写真 */
+        .sidebar-avatar:hover {
+            transform: scale(1.08) rotate(3deg);
+            box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+        }
+
         .sidebar-avatar img {
             width: 100%;
             height: 100%;
@@ -1175,7 +1620,6 @@
             display: block;
         }
 
-        /* 写真が読み込めない場合のフォールバック絵文字 */
         .sidebar-avatar .avatar-fallback {
             font-size: 1.6rem;
             line-height: 1;
@@ -1196,7 +1640,7 @@
             line-height: 1.55;
         }
 
-        /* Nav CTA button */
+        /* Nav CTA button - Magnetic hover */
         .sidebar-cta {
             display: block;
             width: 100%;
@@ -1208,24 +1652,92 @@
             font-size: 0.88rem;
             font-weight: 600;
             letter-spacing: 0.02em;
-            transition: opacity 0.2s ease, transform 0.2s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .sidebar-cta::before {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .sidebar-cta:hover::before {
+            left: 100%;
         }
 
         .sidebar-cta:hover {
-            opacity: 0.88;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 22px rgba(0, 212, 255, 0.28);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.35);
         }
 
         /* ============================================================
-           Footer
+           Scroll-to-Top Button
+        ============================================================ */
+        .scroll-top-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: none;
+            color: #fff;
+            font-size: 1.2rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 900;
+            opacity: 0;
+            transform: translateY(20px) scale(0.8);
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.32, 1);
+            box-shadow: 0 4px 20px rgba(0, 212, 255, 0.3);
+        }
+
+        .scroll-top-btn.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+
+        .scroll-top-btn:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 212, 255, 0.5);
+        }
+
+        .scroll-top-btn svg {
+            transition: transform 0.3s ease;
+        }
+
+        .scroll-top-btn:hover svg {
+            transform: translateY(-2px);
+        }
+
+        /* ============================================================
+           Footer - Enhanced
         ============================================================ */
         footer {
             background: rgba(8, 8, 14, 0.95);
             color: var(--text-secondary);
             padding: 4rem 2rem 2.5rem;
             border-top: 1px solid var(--border-subtle);
+            position: relative;
+            overflow: hidden;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 1px;
+            background: var(--gradient-primary);
+            opacity: 0.3;
         }
 
         .footer-inner {
@@ -1261,16 +1773,21 @@
         }
 
         .footer-nav-list { list-style: none; }
-
         .footer-nav-list li { margin-bottom: 0.55rem; }
 
         .footer-nav-list a {
             color: var(--text-muted);
             font-size: 0.86rem;
-            transition: color 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
         }
 
-        .footer-nav-list a:hover { color: var(--accent-cyan); }
+        .footer-nav-list a:hover {
+            color: var(--accent-cyan);
+            transform: translateX(4px);
+        }
 
         .footer-social {
             display: flex;
@@ -1288,14 +1805,15 @@
             justify-content: center;
             color: var(--text-secondary);
             font-size: 1rem;
-            transition: all 0.25s ease;
+            transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .footer-social a:hover {
             color: var(--accent-cyan);
             background: rgba(0,212,255,0.08);
             border-color: rgba(0,212,255,0.3);
-            transform: translateY(-2px);
+            transform: translateY(-3px) rotate(5deg);
+            box-shadow: 0 4px 16px rgba(0, 212, 255, 0.2);
         }
 
         .footer-bottom {
@@ -1307,18 +1825,54 @@
         }
 
         /* ============================================================
-           Animations
+           Page Transition Overlay
         ============================================================ */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(18px); }
-            to   { opacity: 1; transform: translateY(0); }
+        .page-transition {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: var(--bg-primary);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+            pointer-events: none;
         }
 
-        .animate-in { animation: fadeInUp 0.5s cubic-bezier(0.4,0,0.2,1) both; }
-        .anim-d1 { animation-delay: 0.08s; }
-        .anim-d2 { animation-delay: 0.16s; }
-        .anim-d3 { animation-delay: 0.24s; }
-        .anim-d4 { animation-delay: 0.32s; }
+        .page-transition.fade-out {
+            opacity: 0;
+        }
+
+        .page-transition .transition-logo {
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: pulseLogo 1s ease-in-out;
+        }
+
+        @keyframes pulseLogo {
+            0% { opacity: 0; transform: scale(0.8); }
+            50% { opacity: 1; transform: scale(1.05); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        /* ============================================================
+           Smooth content entrance animation
+        ============================================================ */
+        .content-enter {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .content-enter.entered {
+            opacity: 1;
+            transform: translateY(0);
+            transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+        }
 
         /* ============================================================
            Responsive
@@ -1329,7 +1883,6 @@
                 padding: 2.5rem 1.5rem 4rem;
             }
 
-            /* [FIX] スマホ・タブレット: 目次を本文より上に表示 */
             .post-article { order: 2; }
 
             .post-sidebar {
@@ -1346,28 +1899,51 @@
 
         @media (max-width: 640px) {
             .post-hero { padding: 4rem 1.25rem 3rem; }
-
             #post-title { font-size: 1.65rem; }
-
             .post-sidebar { grid-template-columns: 1fr; }
-
             .share-section { flex-direction: column; align-items: flex-start; }
-
             .footer-grid { grid-template-columns: 1fr; }
-
             header nav { padding: 0 1.25rem; }
-
             .post-layout { padding: 2rem 1.25rem 3rem; }
+
+            .scroll-top-btn {
+                bottom: 1.5rem;
+                right: 1.5rem;
+                width: 42px;
+                height: 42px;
+            }
+
+            .hero-shapes { display: none; }
         }
+
+        /* ============================================================
+           Custom Scrollbar
+        ============================================================ */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg-primary); }
+        ::-webkit-scrollbar-thumb { 
+            background: rgba(0, 212, 255, 0.2); 
+            border-radius: 4px;
+            transition: background 0.3s;
+        }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(0, 212, 255, 0.4); }
     </style>
 </head>
 <body>
 
+    <!-- Page Transition Overlay -->
+    <div class="page-transition" id="pageTransition">
+        <span class="transition-logo"><i class="fas fa-graduation-cap"></i> CodeRoute 90</span>
+    </div>
+
+    <!-- Floating Particles -->
+    <canvas id="particles-canvas"></canvas>
+
     <!-- Reading Progress Bar -->
-    <div id="reading-progress" role="progressbar" aria-label="読了進捗" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"></div>
+    <div id="reading-progress" role="progressbar" aria-label="読了進捗"></div>
 
     <!-- ===== Header ===== -->
-    <header id="site-header" role="banner" aria-label="サイトヘッダー" data-header>
+    <header id="site-header">
         <nav>
             <a href="index.html" class="logo">
                 <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
@@ -1392,11 +1968,30 @@
     <div class="post-page">
 
         <!-- Post Hero -->
-        <section class="post-hero">
+        <section class="post-hero" id="postHero">
+            <!-- Geometric Grid -->
+            <div class="hero-grid">
+                <div class="hero-grid-line"></div>
+                <div class="hero-grid-line"></div>
+                <div class="hero-grid-line"></div>
+                <div class="hero-grid-line"></div>
+                <div class="hero-grid-line-v"></div>
+                <div class="hero-grid-line-v"></div>
+                <div class="hero-grid-line-v"></div>
+            </div>
+
+            <!-- Floating Shapes -->
+            <div class="hero-shapes">
+                <div class="hero-shape hero-shape--circle"></div>
+                <div class="hero-shape hero-shape--square"></div>
+                <div class="hero-shape hero-shape--diamond"></div>
+                <div class="hero-shape hero-shape--triangle"></div>
+            </div>
+
             <div class="post-hero-inner">
 
                 <!-- Breadcrumb -->
-                <nav class="post-breadcrumb animate-in" aria-label="パンくずリスト">
+                <nav class="post-breadcrumb reveal stagger-1" aria-label="パンくずリスト">
                     <a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a>
                     <span class="sep"><i class="fas fa-chevron-right" aria-hidden="true"></i></span>
                     <a href="blog.html"><i class="fas fa-blog" aria-hidden="true"></i> ブログ</a>
@@ -1405,15 +2000,15 @@
                 </nav>
 
                 <!-- Category badge -->
-                <div id="post-category-badge" class="post-category-badge animate-in anim-d1"></div>
+                <div id="post-category-badge" class="post-category-badge reveal stagger-2"></div>
 
                 <!-- Title -->
-                <h1 id="post-title" class="loading-text animate-in anim-d1">
+                <h1 id="post-title" class="loading-text reveal stagger-2">
                     読み込み中...
                 </h1>
 
                 <!-- Meta -->
-                <div class="post-meta-bar animate-in anim-d2">
+                <div class="post-meta-bar reveal stagger-3">
                     <div class="post-meta-item">
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
@@ -1442,7 +2037,7 @@
         <div class="post-layout">
 
             <!-- Main Article -->
-            <article class="post-article animate-in anim-d2">
+            <article class="post-article content-enter">
 
                 <!-- Loading state -->
                 <div id="loading-state" class="loading-state">
@@ -1478,7 +2073,7 @@
                         <div class="post-tags" id="post-tags"></div>
 
                         <!-- Share -->
-                        <div class="share-section">
+                        <div class="share-section reveal">
                             <span class="share-label"><i class="fas fa-share-alt" aria-hidden="true"></i> シェアする：</span>
                             <a id="share-x" href="#" target="_blank" rel="noopener noreferrer" class="share-btn share-btn-x">
                                 <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -1493,17 +2088,10 @@
                         </div>
 
                         <!-- Back link -->
-                        <a href="blog.html" class="back-to-blog">
+                        <a href="blog.html" class="back-to-blog reveal">
                             <i class="fas fa-arrow-left" aria-hidden="true"></i>
                             記事一覧に戻る
                         </a>
-
-                    </div>
-                    
-                    <!-- 関連記事表示エリア（JavaScriptで動的に挿入） -->
-                    <div id="related-posts-container"></div>
-                    
-                </div>
 
                     </div>
                 </div>
@@ -1511,7 +2099,7 @@
             </article>
 
             <!-- Sidebar -->
-            <aside class="post-sidebar animate-in anim-d3">
+            <aside class="post-sidebar reveal-right stagger-3">
 
                 <!-- Table of Contents -->
                 <div class="sidebar-card">
@@ -1526,16 +2114,15 @@
                     <div class="sidebar-card-title">✍️ 著者について</div>
                     <div class="sidebar-profile">
                         <div class="sidebar-avatar">
-                            <!-- ★ 著者写真: src の画像パスを実際のファイルに変更してください -->
                             <img
-                                src="assets/images/author.jpg"
-                                alt="CodeRoute 90 著者"
+                                src="assets/images/author.png"
+                                alt="kobayashi yuto"
                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
                             />
                             <span class="avatar-fallback" aria-hidden="true" style="display:none;">🎓</span>
                         </div>
-                        <div class="sidebar-profile-name">kobayashi yuto</div>
-                        <div class="sidebar-profile-bio">40歳・文系営業職から90日でエンジニア転職。最短ルートを事実ベースで公開するメディア。</div>
+                        <div class="sidebar-profile-name">小林裕斗</div>
+                        <div class="sidebar-profile-bio">40歳・文系営業職から90日でエンジニア転職。そのほかにも数々の副業歴、転職歴多数。最短ルートを事実ベースで公開します。</div>
                     </div>
                 </div>
 
@@ -1551,19 +2138,26 @@
         </div>
     </div>
 
+    <!-- Scroll to Top -->
+    <button class="scroll-top-btn" id="scrollTopBtn" aria-label="ページトップへ戻る">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="18 15 12 9 6 15"></polyline>
+        </svg>
+    </button>
+
     <!-- ===== Footer ===== -->
     <footer>
         <div class="footer-inner">
             <div class="footer-grid">
 
-                <div class="footer-brand">
+                <div class="footer-brand reveal stagger-1">
                     <a href="index.html" class="logo">
                         <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
                     </a>
                     <p>40歳・文系から90日でエンジニア転職した運営者が、<br>再現可能な最短ルートを事実ベースで公開するメディアです。</p>
                 </div>
 
-                <div>
+                <div class="reveal stagger-2">
                     <div class="footer-col-title">メニュー</div>
                     <ul class="footer-nav-list">
                         <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a></li>
@@ -1574,7 +2168,7 @@
                     </ul>
                 </div>
 
-                <div>
+                <div class="reveal stagger-3">
                     <div class="footer-col-title">SNS</div>
                     <div class="footer-social">
                         <a href="#" title="X (Twitter)" aria-label="X (Twitter)">
@@ -1586,154 +2180,290 @@
                 </div>
 
             </div>
-            <div class="footer-bottom">
+            <div class="footer-bottom reveal stagger-4">
                 <p>© 2026 CodeRoute 90 — 最短距離で「未経験」を脱却する攻略ログ</p>
             </div>
         </div>
     </footer>
 
     <!-- ===== Scripts ===== -->
-    <script src="header-scroll.js" defer></script>
-    <script>
-        // 関連記事機能（インライン化）
-        (function() {
-            'use strict';
-
-            // 関連記事データ
-            const relatedPostsData = [
-                {
-                    id: 1,
-                    title: "40歳文系営業職が3日で挫折した話",
-                    excerpt: "独学でのプログラミング学習は、想像以上に困難だった。挫折した理由と、それでも成功できた転機とは...",
-                    category: "体験談",
-                    date: "2024-01-15",
-                    url: "?id=1"
-                },
-                {
-                    id: 2,
-                    title: "ITスクール選びで失敗しないための5つのポイント",
-                    excerpt: "スクール選びは、転職成功の分かれ道。料金だけで選ばないための重要なチェックポイントを解説。",
-                    category: "スクール選び",
-                    date: "2024-01-20",
-                    url: "?id=2"
-                },
-                {
-                    id: 3,
-                    title: "90日の学習ロードマップを公開",
-                    excerpt: "効率的に学習するための、90日間の詳細なスケジュールと学習内容を完全公開。",
-                    category: "学習ロードマップ",
-                    date: "2024-01-25",
-                    url: "?id=3"
-                }
-            ];
-
-            // 現在の記事IDを取得
-            function getCurrentPostId() {
-                const urlParams = new URLSearchParams(window.location.search);
-                const currentId = urlParams.get('id');
-                return currentId ? parseInt(currentId) : null;
-            }
-
-            // 関連記事を取得（現在の記事を除外）
-            function getRelatedPosts(currentId, count = 3) {
-                const availablePosts = relatedPostsData.filter(post => post.id !== currentId);
-                const shuffled = availablePosts.sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, count);
-            }
-
-            // 日付フォーマット
-            function formatDate(dateString) {
-                const date = new Date(dateString);
-                const year = date.getFullYear();
-                const month = String(date.getMonth() + 1).padStart(2, '0');
-                const day = String(date.getDate()).padStart(2, '0');
-                return `${year}年${month}月${day}日`;
-            }
-
-            // 関連記事カードを作成
-            function createRelatedPostCard(post) {
-                const card = document.createElement('div');
-                card.className = 'related-post-card';
-                
-                card.innerHTML = `
-                    <a href="${post.url}" class="related-post-link">
-                        <div class="related-post-header">
-                            <span class="related-post-category">${post.category}</span>
-                            <h3 class="related-post-title">${post.title}</h3>
-                        </div>
-                        <p class="related-post-excerpt">${post.excerpt}</p>
-                        <div class="related-post-meta">
-                            <span class="related-post-date">
-                                <i class="fas fa-calendar" aria-hidden="true"></i>
-                                ${formatDate(post.date)}
-                            </span>
-                            <span class="related-post-read-more">
-                                記事を読む
-                            </span>
-                        </div>
-                    </a>
-                `;
-                
-                return card;
-            }
-
-            // 関連記事を表示
-            function displayRelatedPosts() {
-                const currentId = getCurrentPostId();
-                const postsToShow = getRelatedPosts(currentId || 1);
-                
-                if (postsToShow.length === 0) return;
-                
-                const container = document.getElementById('related-posts-container');
-                if (!container) return;
-                
-                const section = document.createElement('section');
-                section.className = 'related-posts';
-                
-                section.innerHTML = `
-                    <h2 class="related-posts-title">関連記事</h2>
-                    <div class="related-posts-grid"></div>
-                `;
-                
-                const grid = section.querySelector('.related-posts-grid');
-                postsToShow.forEach(post => {
-                    grid.appendChild(createRelatedPostCard(post));
-                });
-                
-                container.appendChild(section);
-            }
-
-            // 初期化
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', displayRelatedPosts);
-            } else {
-                displayRelatedPosts();
-            }
-        })();
-    </script>
+    <script src="assets/js/header-scroll.js" defer></script>
 
     <script>
     /* ============================================================
-       Reading Progress Bar
+       Page Transition
     ============================================================ */
-    function updateReadingProgress() {
-        const el = document.getElementById('reading-progress');
-        if (!el) return;
-        const scrollTop = window.scrollY || document.documentElement.scrollTop;
-        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-        el.style.width = (docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0) + '%';
-    }
-    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+    (function() {
+        var transition = document.getElementById('pageTransition');
+        if (transition) {
+            window.addEventListener('load', function() {
+                setTimeout(function() {
+                    transition.classList.add('fade-out');
+                    setTimeout(function() {
+                        transition.style.display = 'none';
+                    }, 600);
+                }, 300);
+            });
+        }
+    })();
 
     /* ============================================================
-       Header: scroll shadow
+       Floating Particles Background
+    ============================================================ */
+    (function() {
+        var canvas = document.getElementById('particles-canvas');
+        if (!canvas) return;
+        var ctx = canvas.getContext('2d');
+        var particles = [];
+        var particleCount = 40;
+        var mouse = { x: null, y: null };
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        document.addEventListener('mousemove', function(e) {
+            mouse.x = e.clientX;
+            mouse.y = e.clientY;
+        });
+
+        function Particle() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.size = Math.random() * 2 + 0.5;
+            this.speedX = (Math.random() - 0.5) * 0.5;
+            this.speedY = (Math.random() - 0.5) * 0.5;
+            this.opacity = Math.random() * 0.5 + 0.1;
+            this.color = ['rgba(0, 212, 255,', 'rgba(139, 92, 246,', 'rgba(236, 72, 153,'][Math.floor(Math.random() * 3)];
+        }
+
+        Particle.prototype.update = function() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if (mouse.x !== null && mouse.y !== null) {
+                var dx = mouse.x - this.x;
+                var dy = mouse.y - this.y;
+                var dist = Math.sqrt(dx * dx + dy * dy);
+                if (dist < 150) {
+                    this.x -= dx * 0.002;
+                    this.y -= dy * 0.002;
+                }
+            }
+
+            if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+            if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+        };
+
+        Particle.prototype.draw = function() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+            ctx.fillStyle = this.color + this.opacity + ')';
+            ctx.fill();
+        };
+
+        for (var i = 0; i < particleCount; i++) {
+            particles.push(new Particle());
+        }
+
+        function connectParticles() {
+            for (var a = 0; a < particles.length; a++) {
+                for (var b = a + 1; b < particles.length; b++) {
+                    var dx = particles[a].x - particles[b].x;
+                    var dy = particles[a].y - particles[b].y;
+                    var dist = Math.sqrt(dx * dx + dy * dy);
+                    if (dist < 120) {
+                        ctx.beginPath();
+                        ctx.strokeStyle = 'rgba(0, 212, 255, ' + (0.05 * (1 - dist / 120)) + ')';
+                        ctx.lineWidth = 0.5;
+                        ctx.moveTo(particles[a].x, particles[a].y);
+                        ctx.lineTo(particles[b].x, particles[b].y);
+                        ctx.stroke();
+                    }
+                }
+            }
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            particles.forEach(function(p) {
+                p.update();
+                p.draw();
+            });
+            connectParticles();
+            requestAnimationFrame(animate);
+        }
+
+        animate();
+    })();
+
+    /* ============================================================
+       Scroll-Reveal Animation System (Benesse-inspired)
+    ============================================================ */
+    (function() {
+        var revealElements = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .reveal-mask');
+        
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    // Don't unobserve - allow re-triggering if scrolling back up is desired
+                }
+            });
+        }, {
+            threshold: 0.1,
+            rootMargin: '-20px 0px -50px 0px'
+        });
+
+        revealElements.forEach(function(el) {
+            observer.observe(el);
+        });
+
+        // Content entrance animation
+        setTimeout(function() {
+            var contentEnterEls = document.querySelectorAll('.content-enter');
+            contentEnterEls.forEach(function(el) {
+                el.classList.add('entered');
+            });
+        }, 500);
+    })();
+
+    /* ============================================================
+       Heading Animation - Draw underline on scroll
+    ============================================================ */
+    (function() {
+        function observeHeadings() {
+            var headings = document.querySelectorAll('.post-content h2');
+            if (headings.length === 0) return;
+            
+            var headingObserver = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('heading-visible');
+                    }
+                });
+            }, {
+                threshold: 0.3,
+                rootMargin: '0px'
+            });
+
+            headings.forEach(function(h) {
+                headingObserver.observe(h);
+            });
+        }
+
+        // Observe for content load
+        var contentObserver = new MutationObserver(function() {
+            observeHeadings();
+        });
+        var contentEl = document.getElementById('post-content');
+        if (contentEl) {
+            contentObserver.observe(contentEl, { childList: true, subtree: true });
+        }
+    })();
+
+    /* ============================================================
+       Hero Parallax Effect
+    ============================================================ */
+    (function() {
+        var hero = document.getElementById('postHero');
+        if (!hero) return;
+
+        window.addEventListener('scroll', function() {
+            var scrolled = window.pageYOffset;
+            var heroHeight = hero.offsetHeight;
+            if (scrolled > heroHeight) return;
+
+            var rate = scrolled * 0.3;
+            hero.style.transform = 'translateY(' + rate + 'px)';
+
+            // Fade out hero content as scrolling
+            var opacity = 1 - (scrolled / heroHeight) * 0.6;
+            var inner = hero.querySelector('.post-hero-inner');
+            if (inner) {
+                inner.style.opacity = Math.max(0, opacity);
+                inner.style.transform = 'translateY(' + (scrolled * 0.15) + 'px)';
+            }
+        }, { passive: true });
+    })();
+
+    /* ============================================================
+       Smart Header (Show/Hide on Scroll Direction)
     ============================================================ */
     (function () {
         var header = document.getElementById('site-header');
         if (!header) return;
+        var lastScroll = 0;
+        var ticking = false;
+
         window.addEventListener('scroll', function () {
-            header.classList.toggle('scrolled', window.scrollY > 20);
+            if (!ticking) {
+                window.requestAnimationFrame(function() {
+                    var currentScroll = window.scrollY;
+                    
+                    header.classList.toggle('scrolled', currentScroll > 20);
+                    
+                    if (currentScroll > 300) {
+                        if (currentScroll > lastScroll + 5) {
+                            header.classList.add('header-hidden');
+                        } else if (currentScroll < lastScroll - 5) {
+                            header.classList.remove('header-hidden');
+                        }
+                    } else {
+                        header.classList.remove('header-hidden');
+                    }
+                    
+                    lastScroll = currentScroll;
+                    ticking = false;
+                });
+                ticking = true;
+            }
         }, { passive: true });
+    })();
+
+    /* ============================================================
+       Reading Progress Bar (Enhanced)
+    ============================================================ */
+    function updateReadingProgress() {
+        var el = document.getElementById('reading-progress');
+        if (!el) return;
+        var scrollTop = window.scrollY || document.documentElement.scrollTop;
+        var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        var progress = docHeight > 0 ? Math.min((scrollTop / docHeight) * 100, 100) : 0;
+        el.style.width = progress + '%';
+        
+        if (progress > 0 && progress < 100) {
+            el.classList.add('active');
+        } else {
+            el.classList.remove('active');
+        }
+    }
+    window.addEventListener('scroll', updateReadingProgress, { passive: true });
+
+    /* ============================================================
+       Scroll to Top Button
+    ============================================================ */
+    (function() {
+        var btn = document.getElementById('scrollTopBtn');
+        if (!btn) return;
+
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 500) {
+                btn.classList.add('visible');
+            } else {
+                btn.classList.remove('visible');
+            }
+        }, { passive: true });
+
+        btn.addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
     })();
 
     /* ============================================================
@@ -1821,7 +2551,6 @@
 
     /* ============================================================
        Helper: Execute <script> tags injected via innerHTML
-       (Browsers do not execute scripts when inserted via innerHTML)
     ============================================================ */
     function executeInjectedScripts(container) {
         if (!container) return;
@@ -1829,12 +2558,10 @@
         container.querySelectorAll('script').forEach(function (oldScript) {
             var newScript = document.createElement('script');
 
-            // preserve attributes (e.g. src, async, type)
             Array.from(oldScript.attributes).forEach(function (attr) {
                 newScript.setAttribute(attr.name, attr.value);
             });
 
-            // preserve inline script content
             if (oldScript.textContent) {
                 newScript.textContent = oldScript.textContent;
             }
@@ -1902,8 +2629,6 @@
 
     /* ============================================================
        Internal Link Card Enricher
-       本文中の内部リンク (post.html?id=XXX / ?id=XXX) を
-       タイトル・eyecatch画像付きリッチカードに変換する
     ============================================================ */
     async function enrichInternalLinks(contentEl, API_URL) {
         if (!contentEl || !API_URL) return;
@@ -2037,13 +2762,11 @@
         var contentWrapper = document.getElementById('article-content-wrapper');
         var titleEl        = document.getElementById('post-title');
 
-        /* DOM guard */
         if (!loadingState || !errorState || !contentWrapper || !titleEl) {
             console.error('[CodeRoute90] fetchPost: 必要なDOM要素が見つかりません。');
             return;
         }
 
-        /* No postId */
         if (!postId) {
             console.warn('[CodeRoute90] fetchPost: URLパラメータ ?id が見つかりません。');
             loadingState.style.display = 'none';
@@ -2056,7 +2779,6 @@
         console.log('[CodeRoute90] fetchPost: 記事取得開始 postId =', postId);
 
         try {
-            /* --- 1st attempt: individual endpoint --- */
             console.log('[CodeRoute90] 一次リクエスト:', API_URL + '/' + postId);
             var post = null;
 
@@ -2090,10 +2812,7 @@
             } else if (res) {
                 console.warn('[CodeRoute90] 一次リクエスト失敗 HTTP', res.status, res.statusText);
             }
-            
-        
 
-            /* --- Fallback: list endpoint --- */
             if (!post) {
                 console.log('[CodeRoute90] フォールバック: 一覧取得');
                 var fallbackPosts = await fetchPostsFallbackList(API_URL);
@@ -2104,14 +2823,11 @@
                 if (!post) console.warn('[CodeRoute90] フォールバックでもID一致なし postId =', postId);
             }
 
-            /* --- Render --- */
             if (post) {
                 console.log('[CodeRoute90] 記事取得成功:', post);
 
-                /* Safe title */
                 var postTitle = (post.title && typeof post.title === 'string') ? post.title : '(タイトルなし)';
 
-                /* Title */
                 titleEl.textContent = postTitle;
                 titleEl.classList.remove('loading-text');
                 if (window.__cr90PostHead && typeof window.__cr90PostHead.applyPostMeta === 'function') {
@@ -2120,13 +2836,11 @@
                     document.title = postTitle + ' - CodeRoute 90';
                 }
 
-                /* Breadcrumb */
                 var bcTitle = document.getElementById('breadcrumb-title');
                 if (bcTitle) {
                     bcTitle.textContent = (postTitle.length > 30) ? postTitle.slice(0, 30) + '…' : postTitle;
                 }
 
-                /* Date */
                 var dateEl = document.getElementById('post-date');
                 if (dateEl && post.publishedAt) {
                     try {
@@ -2137,47 +2851,54 @@
                     }
                 }
 
-                /* Category badge */
                 var badge = document.getElementById('post-category-badge');
                 if (badge && post.category) {
                     badge.textContent = post.category.name || post.category;
                     badge.style.display = 'inline-block';
                 }
 
-                /* Tags */
                 var tagsEl = document.getElementById('post-tags');
                 if (tagsEl && post.tags && Array.isArray(post.tags) && post.tags.length > 0) {
-                    post.tags.forEach(function (tag) {
+                    post.tags.forEach(function (tag, idx) {
                         var span = document.createElement('span');
                         span.className = 'tag';
                         span.textContent = '#' + (tag.name || tag);
+                        span.style.animationDelay = (idx * 0.1) + 's';
                         tagsEl.appendChild(span);
                     });
                 }
 
-                /* Content */
                 var contentEl = document.getElementById('post-content');
                 if (contentEl) {
                     contentEl.innerHTML = post.content || '<p>本文がありません。</p>';
                     executeInjectedScripts(contentEl);
 
-                    /* Read time */
                     var rtEl = document.getElementById('read-time');
 
                     buildTOC(contentEl);
                     addCodeCopyButtons(contentEl);
 
-                    /* Internal link cards: タイトル・画像付きリッチカードに変換 */
                     enrichInternalLinks(contentEl, API_URL);
+
+                    // Re-observe new reveal elements within content
+                    setTimeout(function() {
+                        var newReveals = document.querySelectorAll('.reveal:not(.revealed), .reveal-left:not(.revealed), .reveal-right:not(.revealed)');
+                        var obs = new IntersectionObserver(function(entries) {
+                            entries.forEach(function(entry) {
+                                if (entry.isIntersecting) {
+                                    entry.target.classList.add('revealed');
+                                }
+                            });
+                        }, { threshold: 0.1, rootMargin: '-20px 0px -50px 0px' });
+                        newReveals.forEach(function(el) { obs.observe(el); });
+                    }, 100);
                 }
 
-                /* Share X */
                 var shareX = document.getElementById('share-x');
                 if (shareX) {
                     shareX.href = 'https://x.com/intent/tweet?text=' + encodeURIComponent(postTitle + ' | CodeRoute 90\n' + window.location.href);
                 }
 
-                /* Copy URL */
                 var copyBtn = document.getElementById('copy-link-btn');
                 if (copyBtn) {
                     copyBtn.addEventListener('click', function () {
@@ -2194,7 +2915,6 @@
                     });
                 }
 
-                /* Show content */
                 loadingState.style.display = 'none';
                 contentWrapper.style.display = 'block';
 
@@ -2210,7 +2930,6 @@
             titleEl.textContent = '読み込みエラー';
             titleEl.classList.remove('loading-text');
 
-            /* Append detail for debugging */
             if (!errorState.querySelector('.error-detail')) {
                 var detail = document.createElement('p');
                 detail.className = 'error-detail';
@@ -2244,7 +2963,6 @@
                 btn.setAttribute('aria-expanded', 'true');
                 btn.setAttribute('aria-label', 'メニューを閉じる');
                 if (overlay) { overlay.style.display = 'block'; setTimeout(function(){ overlay.classList.add('active'); }, 10); }
-                /* スクロールロック */
                 document.body.style.overflow = 'hidden';
             }
 
@@ -2254,7 +2972,6 @@
                 btn.setAttribute('aria-expanded', 'false');
                 btn.setAttribute('aria-label', 'メニューを開く');
                 if (overlay) { overlay.classList.remove('active'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
-                /* スクロールロック解除 */
                 document.body.style.overflow = '';
             }
 
@@ -2263,12 +2980,10 @@
                 if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
             });
 
-            /* オーバーレイクリックで閉じる */
             if (overlay) {
                 overlay.addEventListener('click', closeMenu);
             }
 
-            /* メニューリンククリックで閉じる＋ナビゲーション */
             nav.querySelectorAll('a').forEach(function (link) {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -2276,7 +2991,6 @@
                     closeMenu();
                     if (!href || href === '#') return;
                     if (href.charAt(0) === '#') {
-                        /* 同一ページ内アンカースクロール */
                         setTimeout(function () {
                             var target = document.querySelector(href);
                             if (target) {
@@ -2287,7 +3001,6 @@
                             }
                         }, 350);
                     } else {
-                        /* 別ページへ遷移 */
                         setTimeout(function () {
                             window.location.href = href;
                         }, 50);
@@ -2295,12 +3008,10 @@
                 });
             });
 
-            /* ESCキーで閉じる */
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
             });
 
-            /* リサイズ時にメニューをリセット */
             window.addEventListener('resize', function () {
                 if (window.innerWidth > 768 && nav.classList.contains('open')) {
                     closeMenu();
