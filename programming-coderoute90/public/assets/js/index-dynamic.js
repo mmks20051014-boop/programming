@@ -10,7 +10,7 @@
     if (!overlay || !counter) { onComplete(); return; }
 
     var current = 0;
-    var target  = 100;
+    var target  = 90;
     var duration = 1800; // ms
     var start = performance.now();
 
@@ -24,7 +24,7 @@
       if (progress < 1) {
         requestAnimationFrame(tick);
       } else {
-        counter.textContent = '100';
+        counter.textContent = '90';
         if (bar) bar.style.width = '100%';
         setTimeout(function () {
           overlay.classList.add('done');

@@ -60,6 +60,10 @@
         }
         .nav-links a.nav-active{color:var(--accent-cyan,#22d3ee)!important;font-weight:600}
         .nav-links a.nav-active::after{content:'';display:block;height:2px;width:100%;background:var(--accent-cyan,#22d3ee);border-radius:1px;margin-top:2px}
+        /* Hero h1 fix: disable global gradient on h1, let clip-line-inner handle it */
+        .hero-entrance h1{background:none;-webkit-background-clip:unset;-webkit-text-fill-color:transparent;background-clip:unset;overflow:visible}
+        .hero-entrance .clip-line{overflow:hidden}
+        .hero-entrance .clip-line-inner{background:var(--gradient-text);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
         /* Spinner */
         .loading-spinner{text-align:center;padding:4rem 2rem;color:var(--slate-gray,#94a3b8);grid-column:1/-1}
         .loading-spinner i{font-size:2.5rem;margin-bottom:1rem;display:block;animation:spin 1s linear infinite}
