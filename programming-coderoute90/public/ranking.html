@@ -19,6 +19,21 @@
     </script>
 </head>
 <body>
+    <!-- CYBER CURSOR -->
+    <div id="cyber-cursor">
+        <div class="cursor-dot"></div>
+        <div class="cursor-ring"></div>
+    </div>
+
+    <!-- PRELOADER -->
+    <div id="tech-loader">
+        <div class="loader-content">
+            <div class="loader-glitch" data-text="System Data Fetching...">System Data Fetching...</div>
+            <div class="loader-bar-bg"><div class="loader-progress"></div></div>
+            <div class="loader-text">Loading ranking modules... <span class="loader-perc">0%</span></div>
+        </div>
+    </div>
+
     <header>
         <nav>
             <div class="logo">
@@ -632,8 +647,11 @@
             contents.forEach(c => c.classList.remove('active'));
             tab.classList.add('active');
             document.getElementById('content-' + target).classList.add('active');
-            // Re-trigger scroll reveal for newly visible content
-            setTimeout(() => triggerScrollReveal(), 100);
+            
+            // Re-calculate GSAP scroll triggers for newly visible layout
+            if(window.ScrollTrigger) {
+                setTimeout(() => { ScrollTrigger.refresh(); }, 150);
+            }
         });
     });
 
@@ -652,23 +670,6 @@
         });
     });
 
-    // ===== Scroll Reveal Animation =====
-    function triggerScrollReveal() {
-        const els = document.querySelectorAll('.sr');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
-                    observer.unobserve(entry.target);
-                }
-            });
-        }, { threshold: 0.1 });
-        els.forEach(el => {
-            if (!el.classList.contains('visible')) observer.observe(el);
-        });
-    }
-    triggerScrollReveal();
-
     // ===== Hamburger Menu =====
     const hamburgerBtn = document.getElementById('hamburgerBtn');
     const navLinks = document.getElementById('navLinks');
@@ -683,5 +684,10 @@
         });
     });
     </script>
+
+    <!-- GSAP & Animation Script -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="assets/js/ranking-anim.js"></script>
 </body>
 </html>

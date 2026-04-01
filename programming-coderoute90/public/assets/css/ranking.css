@@ -631,3 +631,181 @@ footer {
     .footer-nav ul { align-items: center; }
     .footer-nav a { justify-content: center; }
 }
+
+/* =========================================================================
+   NEW GSAP & CYBER ANIMATIONS
+   ========================================================================= */
+
+/* ---------- Preloader ---------- */
+#tech-loader {
+    position: fixed;
+    inset: 0;
+    background: #050505;
+    z-index: 99999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.loader-content {
+    text-align: center;
+    width: 80%;
+    max-width: 400px;
+}
+
+.loader-glitch {
+    font-size: 1.2rem;
+    color: var(--accent-cyan);
+    margin-bottom: 2rem;
+    position: relative;
+    letter-spacing: 0.1em;
+}
+
+.loader-glitch::before,
+.loader-glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #050505;
+}
+
+.loader-glitch::before {
+    left: 2px;
+    text-shadow: -1px 0 red;
+    clip: rect(24px, 550px, 90px, 0);
+    animation: glitch-anim-2 3s infinite linear alternate-reverse;
+}
+
+.loader-glitch::after {
+    left: -2px;
+    text-shadow: -1px 0 blue;
+    clip: rect(85px, 550px, 140px, 0);
+    animation: glitch-anim 2.5s infinite linear alternate-reverse;
+}
+
+.loader-bar-bg {
+    height: 2px;
+    background: rgba(255,255,255,0.1);
+    position: relative;
+    margin-bottom: 0.8rem;
+    overflow: hidden;
+}
+
+.loader-progress {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 0%;
+    background: var(--accent-cyan);
+    box-shadow: 0 0 10px var(--accent-cyan);
+}
+
+.loader-text {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.loader-perc {
+    color: var(--accent-cyan);
+    font-weight: 700;
+}
+
+/* ---------- Custom Cyber Cursor ---------- */
+@media (pointer: fine) {
+    body { cursor: none; }
+    a, button, .cat-tab { cursor: none; }
+
+    #cyber-cursor {
+        position: fixed;
+        top: 0;
+        left: 0;
+        pointer-events: none;
+        z-index: 100000;
+        mix-blend-mode: exclusion;
+    }
+
+    .cursor-dot {
+        position: absolute;
+        width: 6px;
+        height: 6px;
+        background: #fff;
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.2s, height 0.2s;
+    }
+
+    .cursor-ring {
+        position: absolute;
+        width: 36px;
+        height: 36px;
+        border: 1px solid var(--accent-cyan);
+        border-radius: 50%;
+        transform: translate(-50%, -50%);
+        transition: width 0.3s, height 0.3s, background 0.3s, border-color 0.3s;
+    }
+
+    .cursor-hover .cursor-dot {
+        opacity: 0;
+    }
+    .cursor-hover .cursor-ring {
+        width: 50px;
+        height: 50px;
+        background: rgba(0, 212, 255, 0.1);
+        border-color: rgba(0, 212, 255, 0.8);
+        box-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    }
+}
+
+/* ---------- Glitch Utility Classes ---------- */
+.is-glitching {
+    animation: rgb-shift 0.3s ease;
+}
+
+@keyframes rgb-shift {
+    0% { filter: drop-shadow(4px 0 0 rgba(255,0,0,0.5)) drop-shadow(-4px 0 0 rgba(0,255,255,0.5)); transform: translate(1px, 1px); }
+    20% { filter: drop-shadow(-3px 0 0 rgba(255,0,0,0.5)) drop-shadow(3px 0 0 rgba(0,255,255,0.5)); transform: translate(-1px, 0); }
+    40% { filter: drop-shadow(2px 0 0 rgba(255,0,0,0.5)) drop-shadow(-2px 0 0 rgba(0,255,255,0.5)); transform: translate(0, -1px); }
+    60% { filter: drop-shadow(-1px 0 0 rgba(255,0,0,0.5)) drop-shadow(1px 0 0 rgba(0,255,255,0.5)); transform: translate(1px, 0); }
+    80% { filter: drop-shadow(1px 0 0 rgba(255,0,0,0.5)) drop-shadow(-1px 0 0 rgba(0,255,255,0.5)); transform: translate(-1px, 1px); }
+    100% { filter: none; transform: translate(0, 0); }
+}
+
+/* ---------- GSAP Scroll Reveal Overrides ---------- */
+/* Hide GSAP elements initially so there's no layout flashing */
+.gsap-reveal {
+    opacity: 0;
+    visibility: hidden;
+}
+
+/* Magnetic Button Container */
+.magnetic-wrap {
+    display: inline-block;
+}
+
+/* Scanline Effect */
+.scanline-btn {
+    position: relative;
+    overflow: hidden;
+}
+.scanline-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 20%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transform: skewX(-20deg);
+}
+.scanline-btn:hover::before {
+    animation: scanline 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+@keyframes scanline {
+    0% { left: -100%; }
+    100% { left: 200%; }
+}
