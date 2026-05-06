@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>about me - CodeRoute 90 | 40歳・文系から未経験エンジニア転職・キャリアアップの記録</title>
+    <title>about me - CodeRoute 90 | 現役大学生グループが届ける次世代キャリア支援メディア</title>
     <meta name="description"
-        content="40歳・文系の営業職。独学3日で挫折した未経験から90日のITスクールでエンジニア転職した経験をもとに、未経験からの転職とITキャリアアップの最短ルートを数字で公開。">
-    <meta name="keywords" content="CodeRoute 90, 40代, 文系, 未経験, エンジニア転職, キャリアアップ, 最短ルート, 90日">
+        content="現役大学生グループが運営するCodeRoute 90。IT業界への転職やキャリアアップを目指す方へ、最短ルートをデータドリブンで公開します。">
+    <meta name="keywords" content="CodeRoute 90, 大学生, 情報学, 未経験, エンジニア転職, キャリアアップ, 最短ルート, 転職支援">
 
     <!-- OGP -->
-    <meta property="og:title" content="about me - CodeRoute 90 | 40歳・文系からエンジニア転職＆キャリアアップした記録">
-    <meta property="og:description" content="40歳・文系の営業職が独学3日で挫折。それでも90日のITスクールでエンジニア転職した経験をもとに、遠回りしない学習ルートとキャリア戦略を公開。">
+    <meta property="og:title" content="about me - CodeRoute 90 | 現役大学生グループが届ける次世代キャリア支援メディア">
+    <meta property="og:description" content="現役大学生グループが運営する次世代型キャリア支援メディア。遠回りしない学習ルートとキャリア戦略をデータドリブンで公開。">
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://programming.coderoute90.workers.dev/about.html">
     <meta property="og:image" content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
@@ -21,8 +21,8 @@
     <meta property="og:site_name" content="CodeRoute 90">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="about me - CodeRoute 90 | 40歳・文系からエンジニア転職＆キャリアアップした記録">
-    <meta name="twitter:description" content="40歳・文系の営業職が独学3日で挫折。それでも90日のITスクールでエンジニア転職した経験をもとに、遠回りしない学習ルートとキャリア戦略を公開。">
+    <meta name="twitter:title" content="about me - CodeRoute 90 | 現役大学生グループが届ける次世代キャリア支援メディア">
+    <meta name="twitter:description" content="現役大学生グループが運営する次世代型キャリア支援メディア。遠回りしない学習ルートとキャリア戦略をデータドリブンで公開。">
     <meta name="twitter:image" content="https://programming.coderoute90.workers.dev/assets/images/ogp.png">
     <!-- canonical -->
     <link rel="canonical" href="https://programming.coderoute90.workers.dev/about.html">
@@ -1097,487 +1097,333 @@
             line-height: 1.6;
         }
 
-        /* ---------- Philosophy — Parallax Glass Section ---------- */
-        .philosophy-section {
-            position: relative;
-            padding: 6rem 3rem;
-            margin: 0;
-            overflow: hidden;
-            background: linear-gradient(180deg,
-                    rgba(0, 0, 0, 0) 0%,
-                    rgba(0, 212, 255, 0.04) 30%,
-                    rgba(139, 92, 246, 0.04) 70%,
-                    rgba(0, 0, 0, 0) 100%);
+    /* ---------- Philosophy — Parallax Glass Section ---------- */
+    .philosophy-section {
+        position: relative;
+        padding: 6rem 3rem;
+        margin: 0;
+        overflow: hidden;
+        background: linear-gradient(180deg,
+                rgba(0, 0, 0, 0) 0%,
+                rgba(0, 212, 255, 0.04) 30%,
+                rgba(139, 92, 246, 0.04) 70%,
+                rgba(0, 0, 0, 0) 100%);
+    }
+
+    .philosophy-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 10% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
+            radial-gradient(circle at 90% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .philosophy-inner {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4rem;
+        align-items: center;
+    }
+
+    .philosophy-visual {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 300px;
+    }
+
+    /* Large decorative quote mark */
+    .philosophy-visual .deco-quote {
+        font-size: clamp(10rem, 20vw, 18rem);
+        font-weight: 900;
+        line-height: 1;
+        background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(139, 92, 246, 0.1));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+        font-family: Georgia, serif;
+        user-select: none;
+    }
+
+    /* Floating orbit circles */
+    .orbit-ring {
+        position: absolute;
+        border: 1px solid rgba(0, 212, 255, 0.1);
+        border-radius: 50%;
+        animation: orbitSpin 20s linear infinite;
+    }
+
+    .orbit-ring:nth-child(2) {
+        width: 200px;
+        height: 200px;
+        animation-duration: 25s;
+        animation-direction: reverse;
+        border-color: rgba(139, 92, 246, 0.1);
+    }
+
+    .orbit-ring:nth-child(3) {
+        width: 300px;
+        height: 300px;
+        animation-duration: 30s;
+    }
+
+    @keyframes orbitSpin {
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    .philosophy-text h2 {
+        margin-bottom: 2rem;
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+    }
+
+    .philosophy-content p {
+        font-size: 1rem;
+        line-height: 2;
+        color: var(--text-secondary);
+        margin-bottom: 1.5rem;
+    }
+
+    .philosophy-content p:last-child {
+        margin-bottom: 0;
+    }
+
+    .quote-block {
+        border-left: 3px solid var(--accent-cyan);
+        padding: 1.2rem 1.5rem;
+        margin: 2rem 0;
+        color: var(--text-primary);
+        font-size: 1.1rem;
+        font-style: italic;
+        line-height: 1.8;
+        background: rgba(0, 212, 255, 0.04);
+        border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+        position: relative;
+    }
+
+    /* ---------- CTA — Full Width Gradient ---------- */
+    .cta-section {
+        text-align: center;
+        padding: 6rem 2rem;
+        position: relative;
+        overflow: hidden;
+        background: var(--gradient-card);
+        border: 1px solid var(--border-subtle);
+        border-radius: var(--radius-xl);
+        margin: 3rem auto 4rem;
+        max-width: 1200px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+    }
+
+    .cta-section::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
+            radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+        pointer-events: none;
+    }
+
+    .cta-section h2 {
+        font-size: clamp(1.6rem, 3vw, 2.2rem);
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+
+    .cta-section p {
+        color: var(--text-secondary);
+        max-width: 580px;
+        margin: 0 auto 2.5rem;
+        line-height: 1.9;
+        position: relative;
+        z-index: 1;
+    }
+
+    .cta-section .cta-button {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* ---------- Section Title Override ---------- */
+    .section-title-about {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .section-title-about .title-line {
+        width: 4px;
+        height: 2rem;
+        background: var(--gradient-primary);
+        border-radius: 2px;
+    }
+
+    /* ---------- Floating Background Elements ---------- */
+    .floating-shapes {
+        position: fixed;
+        inset: 0;
+        pointer-events: none;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .floating-shape {
+        position: absolute;
+        border-radius: 50%;
+        opacity: 0.03;
+        animation: floatShape 20s infinite ease-in-out;
+    }
+
+    .floating-shape:nth-child(1) {
+        width: 400px;
+        height: 400px;
+        background: var(--accent-cyan);
+        top: 20%;
+        left: -5%;
+        animation-delay: 0s;
+    }
+
+    .floating-shape:nth-child(2) {
+        width: 300px;
+        height: 300px;
+        background: rgba(139, 92, 246, 1);
+        top: 60%;
+        right: -5%;
+        animation-delay: -7s;
+    }
+
+    .floating-shape:nth-child(3) {
+        width: 200px;
+        height: 200px;
+        background: rgba(236, 72, 153, 1);
+        bottom: 10%;
+        left: 30%;
+        animation-delay: -14s;
+    }
+
+    @keyframes floatShape {
+
+        0%,
+        100% {
+            transform: translate(0, 0) scale(1);
         }
 
-        .philosophy-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 10% 50%, rgba(0, 212, 255, 0.08) 0%, transparent 50%),
-                radial-gradient(circle at 90% 50%, rgba(139, 92, 246, 0.08) 0%, transparent 50%);
-            pointer-events: none;
+        25% {
+            transform: translate(30px, -20px) scale(1.05);
         }
 
+        50% {
+            transform: translate(-20px, 30px) scale(0.95);
+        }
+
+        75% {
+            transform: translate(10px, 10px) scale(1.02);
+        }
+    }
+
+    /* ---------- Progress Bar (top of page) ---------- */
+    .page-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: var(--gradient-primary);
+        z-index: 99999;
+        transition: width 0.1s linear;
+    }
+
+    /* ---------- Responsive Footer Adjustment ---------- */
+    @media (max-width: 1024px) {
         .philosophy-inner {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
-            align-items: center;
+            grid-template-columns: 1fr;
+            gap: 2rem;
         }
 
         .philosophy-visual {
-            position: relative;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 300px;
+            min-height: 200px;
         }
+    }
 
-        /* Large decorative quote mark */
-        .philosophy-visual .deco-quote {
-            font-size: clamp(10rem, 20vw, 18rem);
-            font-weight: 900;
-            line-height: 1;
-            background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(139, 92, 246, 0.1));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-            font-family: Georgia, serif;
-            user-select: none;
+    /* Hamburger & Mobile Nav styles (Style.cssにない、Aboutページ特有の微調整用として残す) */
+    .hamburger {
+        display: none;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 5px;
+        width: 40px;
+        height: 40px;
+        background: none;
+        border: none;
+        cursor: pointer;
+        padding: 4px;
+        z-index: 10001;
+        flex-shrink: 0;
+    }
+
+    .hamburger span {
+        display: block;
+        width: 22px;
+        height: 2px;
+        background: var(--text-primary);
+        border-radius: 2px;
+        transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease, width 0.25s ease;
+    }
+
+    .hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
+    .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.55);
+        z-index: 9998;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+        pointer-events: none;
+    }
+
+    .nav-overlay.active { opacity: 1; pointer-events: auto; }
+
+    @media (max-width: 768px) {
+        .hamburger { display: flex !important; }
+        .nav-links {
+            display: flex !important;
+            position: fixed !important;
+            top: 0 !important;
+            right: -100% !important;
+            width: 75vw !important;
+            max-width: 300px !important;
+            height: 100vh !important;
+            background: var(--bg-card, #1e293b) !important;
+            flex-direction: column !important;
+            padding: 5rem 1.5rem 2rem !important;
+            gap: 0 !important;
+            z-index: 9999 !important;
+            transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
+            box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4) !important;
+            overflow-y: auto !important;
         }
-
-        /* Floating orbit circles */
-        .orbit-ring {
-            position: absolute;
-            border: 1px solid rgba(0, 212, 255, 0.1);
-            border-radius: 50%;
-            animation: orbitSpin 20s linear infinite;
+        .nav-links.open { right: 0 !important; }
+        .nav-links li {
+            width: 100% !important;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
         }
-
-        .orbit-ring:nth-child(2) {
-            width: 200px;
-            height: 200px;
-            animation-duration: 25s;
-            animation-direction: reverse;
-            border-color: rgba(139, 92, 246, 0.1);
-        }
-
-        .orbit-ring:nth-child(3) {
-            width: 300px;
-            height: 300px;
-            animation-duration: 30s;
-        }
-
-        @keyframes orbitSpin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .philosophy-text h2 {
-            margin-bottom: 2rem;
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-        }
-
-        .philosophy-content p {
-            font-size: 1rem;
-            line-height: 2;
-            color: var(--text-secondary);
-            margin-bottom: 1.5rem;
-        }
-
-        .philosophy-content p:last-child {
-            margin-bottom: 0;
-        }
-
-        .quote-block {
-            border-left: 3px solid var(--accent-cyan);
-            padding: 1.2rem 1.5rem;
-            margin: 2rem 0;
-            color: var(--text-primary);
-            font-size: 1.1rem;
-            font-style: italic;
-            line-height: 1.8;
-            background: rgba(0, 212, 255, 0.04);
-            border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-            position: relative;
-        }
-
-        /* ---------- CTA — Full Width Gradient ---------- */
-        .cta-section {
-            text-align: center;
-            padding: 6rem 2rem;
-            position: relative;
-            overflow: hidden;
-            background: var(--gradient-card);
-            border: 1px solid var(--border-subtle);
-            border-radius: var(--radius-xl);
-            margin: 3rem auto 4rem;
-            max-width: 1200px;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .cta-section::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background:
-                radial-gradient(circle at 20% 50%, rgba(0, 212, 255, 0.1) 0%, transparent 50%),
-                radial-gradient(circle at 80% 50%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
-            pointer-events: none;
-        }
-
-        .cta-section h2 {
-            font-size: clamp(1.6rem, 3vw, 2.2rem);
-            margin-bottom: 1rem;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section p {
-            color: var(--text-secondary);
-            max-width: 580px;
-            margin: 0 auto 2.5rem;
-            line-height: 1.9;
-            position: relative;
-            z-index: 1;
-        }
-
-        .cta-section .cta-button {
-            position: relative;
-            z-index: 1;
-        }
-
-        /* ---------- Section Title Override ---------- */
-        .section-title-about {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .section-title-about .title-line {
-            width: 4px;
-            height: 2rem;
-            background: var(--gradient-primary);
-            border-radius: 2px;
-        }
-
-        /* ---------- Floating Background Elements ---------- */
-        .floating-shapes {
-            position: fixed;
-            inset: 0;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .floating-shape {
-            position: absolute;
-            border-radius: 50%;
-            opacity: 0.03;
-            animation: floatShape 20s infinite ease-in-out;
-        }
-
-        .floating-shape:nth-child(1) {
-            width: 400px;
-            height: 400px;
-            background: var(--accent-cyan);
-            top: 20%;
-            left: -5%;
-            animation-delay: 0s;
-        }
-
-        .floating-shape:nth-child(2) {
-            width: 300px;
-            height: 300px;
-            background: rgba(139, 92, 246, 1);
-            top: 60%;
-            right: -5%;
-            animation-delay: -7s;
-        }
-
-        .floating-shape:nth-child(3) {
-            width: 200px;
-            height: 200px;
-            background: rgba(236, 72, 153, 1);
-            bottom: 10%;
-            left: 30%;
-            animation-delay: -14s;
-        }
-
-        @keyframes floatShape {
-
-            0%,
-            100% {
-                transform: translate(0, 0) scale(1);
-            }
-
-            25% {
-                transform: translate(30px, -20px) scale(1.05);
-            }
-
-            50% {
-                transform: translate(-20px, 30px) scale(0.95);
-            }
-
-            75% {
-                transform: translate(10px, 10px) scale(1.02);
-            }
-        }
-
-        /* ---------- Progress Bar (top of page) ---------- */
-        .page-progress {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 0;
-            height: 3px;
-            background: var(--gradient-primary);
-            z-index: 99999;
-            transition: width 0.1s linear;
-        }
-
-        /* ---------- Responsive ---------- */
-        @media (max-width: 1024px) {
-            .philosophy-inner {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-            }
-
-            .philosophy-visual {
-                min-height: 200px;
-            }
-        }
-
-        @media (max-width: 900px) {
-            .about-content {
-                grid-template-columns: 1fr;
-                gap: 2.5rem;
-            }
-
-            .profile-card {
-                position: static;
-                max-width: 360px;
-                margin: 0 auto;
-            }
-
-            .timeline::before,
-            .timeline-progress {
-                left: 24px !important;
-                transform: none !important;
-            }
-
-            .timeline-item,
-            .timeline-item:nth-child(even) {
-                padding-right: 0;
-                padding-left: 58px;
-                justify-content: flex-start;
-            }
-
-            .timeline-item::after {
-                left: 24px !important;
-                transform: translateX(-50%) scale(0) !important;
-            }
-
-            .timeline-item.anim-visible::after {
-                transform: translateX(-50%) scale(1) !important;
-            }
-
-            .timeline-item::before {
-                display: none;
-            }
-
-            .timeline-content {
-                max-width: 100%;
-            }
-
-            .philosophy-section {
-                padding: 4rem 1.5rem;
-            }
-
-            .achievement-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .stats-bar {
-                flex-wrap: wrap;
-                gap: 0;
-            }
-
-            .stat-item {
-                flex: 0 0 50%;
-                max-width: 50%;
-            }
-
-            .stat-item:not(:last-child)::after {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .breadcrumb-nav {
-                padding: 0.6rem 1rem;
-            }
-
-            .about-hero {
-                min-height: 90vh;
-                padding: 4rem 1rem 3rem;
-            }
-
-            .about-hero h1 {
-                font-size: clamp(2.2rem, 8vw, 3.5rem);
-            }
-
-            .skills-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .achievement-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-
-            .cta-section {
-                padding: 3rem 1.5rem;
-                margin: 2rem 1rem 3rem;
-            }
-
-            .stat-item {
-                flex: 0 0 50%;
-                max-width: 50%;
-                padding: 1.5rem 1rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .stats-bar {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .stat-item {
-                flex: 0 0 100%;
-                max-width: 100%;
-            }
-        }
-
-        /* ===== Hamburger Menu ===== */
-        .hamburger {
-            display: none;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            width: 40px;
-            height: 40px;
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 4px;
-            z-index: 10001;
-            flex-shrink: 0;
-        }
-
-        .hamburger span {
-            display: block;
-            width: 22px;
-            height: 2px;
-            background: var(--text-primary, #e2e8f0);
-            border-radius: 2px;
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1),
-                opacity 0.25s ease,
-                width 0.25s ease;
-            transform-origin: center;
-        }
-
-        .hamburger.open span:nth-child(1) {
-            transform: translateY(7px) rotate(45deg);
-        }
-
-        .hamburger.open span:nth-child(2) {
-            opacity: 0;
-            width: 0;
-        }
-
-        .hamburger.open span:nth-child(3) {
-            transform: translateY(-7px) rotate(-45deg);
-        }
-
-        .nav-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: 9998;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
-            pointer-events: none;
-        }
-
-        .nav-overlay.active {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        @media (max-width: 768px) {
-            .hamburger {
-                display: flex !important;
-            }
-
-            nav {
-                position: relative;
-            }
-
-            .nav-links {
-                display: flex !important;
-                position: fixed !important;
-                top: 0 !important;
-                right: -100% !important;
-                width: 75vw !important;
-                max-width: 300px !important;
-                height: 100dvh !important;
-                height: 100vh !important;
-                background: var(--bg-card, #1e293b) !important;
-                border-left: 1px solid rgba(255, 255, 255, 0.08) !important;
-                flex-direction: column !important;
-                align-items: flex-start !important;
-                padding: 5rem 1.5rem 2rem !important;
-                gap: 0 !important;
-                z-index: 9999 !important;
-                transition: right 0.35s cubic-bezier(0.4, 0, 0.2, 1) !important;
-                box-shadow: -4px 0 24px rgba(0, 0, 0, 0.4) !important;
-                overflow-y: auto !important;
-                -webkit-overflow-scrolling: touch !important;
-            }
-
-            .nav-links.open {
-                right: 0 !important;
-            }
-
-            .nav-links li {
-                width: 100% !important;
-                border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
-            }
-
-            .nav-links li:last-child {
-                border-bottom: none !important;
-            }
-
-            .nav-links li a {
-                display: block !important;
-                padding: 1rem 0.5rem !important;
-                font-size: 1rem !important;
-                width: 100% !important;
-                color: var(--text-primary, #e2e8f0) !important;
-            }
-        }
+        .nav-links li a { display: block !important; padding: 1rem 0.5rem !important; }
+    }
 
         /* ===== Active Nav Link ===== */
         .nav-links a.nav-active {
@@ -1687,14 +1533,14 @@
       "@id": "https://programming.coderoute90.workers.dev/about.html",
       "url": "https://programming.coderoute90.workers.dev/about.html",
       "name": "about me - CodeRoute 90",
-      "description": "40歳・未経験からITエンジニア転職・キャリアアップを果たした実体験記。生存者バイアスなし、数字で語る最短攻略ログ。",
+      "description": "現役大学生グループが運営する次世代型キャリア支援メディア。データドリブンで最短攻略ルートを発信。",
       "inLanguage": "ja",
       "isPartOf": { "@id": "https://programming.coderoute90.workers.dev/#website" },
       "mainEntity": {
         "@type": "Person",
         "name": "小林裕斗",
-        "description": "40歳・文系営業職。独学3日で挫折したが、90日のITスクールでエンジニア転職。未経験転職とキャリアアップの最適ルートを発信。",
-        "knowsAbout": ["未経験転職", "エンジニア転職", "キャリアアップ", "最短ルート"]
+        "description": "現役大学生グループの一員としてCodeRoute 90を運営。IT転職とキャリアアップの最適ルートをデータドリブンで発信。",
+        "knowsAbout": ["IT転職", "キャリア支援", "キャリアアップ", "最短ルート"]
       }
     }
     </script>
@@ -1803,10 +1649,9 @@
         </h1>
 
         <p class="hero-sub" id="heroSubText">
-            40歳・文系営業職。PCスキルなし。独学は3日で挫折。<br>
-            0からのITスクール挑戦だった。<br>
-            それでも90日で技能習得、転職を達成し<br>
-            現在エンジニアとして稼働しています。<br>
+            現役大学生グループが運営するCodeRoute 90。<br>
+            IT業界への転職やキャリアアップを目指す方へ、<br>
+            データと事実に基づいた最短ルートを発信します。<br>
             才能の話ではなく、ルートの話をします。
         </p>
 
@@ -1819,24 +1664,24 @@
     <!-- ===== Stats Bar — Horizontal Counter ===== -->
     <div class="stats-bar" id="statsBar">
         <div class="stat-item anim-hidden stagger-1">
-            <div class="stat-number" data-count="40" data-suffix="歳">0</div>
-            <div class="stat-label">プログラミング開始年齢</div>
-            <div class="stat-desc">「遅すぎた」とは思わなかった</div>
+            <div class="stat-number" data-count="5" data-suffix="名">0</div>
+            <div class="stat-label">運営メンバー数</div>
+            <div class="stat-desc">情報学を専攻する大学生チーム</div>
         </div>
         <div class="stat-item anim-hidden stagger-2">
-            <div class="stat-number" data-count="3" data-suffix="日">0</div>
-            <div class="stat-label">独学で挫折するまで</div>
-            <div class="stat-desc">環境構築のエラーで手が止まった</div>
+            <div class="stat-number" data-count="100" data-suffix="+">0</div>
+            <div class="stat-label">分析した転職データ数</div>
+            <div class="stat-desc">データドリブンで最適解を導出</div>
         </div>
         <div class="stat-item anim-hidden stagger-3">
-            <div class="stat-number" data-count="90" data-suffix="日">0</div>
-            <div class="stat-label">ITスクール学習期間</div>
-            <div class="stat-desc">ゼロからエンジニア転職まで</div>
+            <div class="stat-number" data-count="50" data-suffix="+">0</div>
+            <div class="stat-label">公開記事数</div>
+            <div class="stat-desc">転職・キャリアアップの攻略ログ</div>
         </div>
         <div class="stat-item anim-hidden stagger-4">
-            <div class="stat-number" data-count="40" data-suffix="万円">0</div>
-            <div class="stat-label">転職後の月収</div>
-            <div class="stat-desc">未経験からIT企業の内定獲得</div>
+            <div class="stat-number" data-count="1000" data-suffix="+">0</div>
+            <div class="stat-label">月間PV数</div>
+            <div class="stat-desc">多くの転職希望者に利用されています</div>
         </div>
     </div>
 
@@ -1864,12 +1709,12 @@
                         <img src="assets/images/author_yuto.jpg" alt="小林裕斗" class="profile-avatar"
                             style="object-fit: cover; background: none; padding: 0; border: 2px solid var(--accent-cyan);">
                         <p class="profile-name">小林裕斗</p>
-                        <p class="profile-tagline">元・文系営業職 → エンジニア</p>
+                        <p class="profile-tagline">情報学専攻 × キャリア支援</p>
                         <div class="profile-divider"></div>
                         <div class="profile-tags">
                             <div class="profile-tag">
                                 <i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                                <span>40歳からプログラミング開始</span>
+                                <span>情報学部 現役大学生</span>
                             </div>
                             <div class="profile-tag">
                                 <i class="fas fa-briefcase" aria-hidden="true"></i>
@@ -1895,13 +1740,13 @@
                             <h3>スタート地点</h3>
                         </div>
                         <p>
-                            40歳・文系営業職。スクール入学当時のPCスキルは「タイピングもあやふや」で、
-                            人に見せられるような速さではありませんでした。<br><br>
-                            このサイトの運営者は、ITの才能があったわけでも、
-                            若くして始めたわけでも、もともと数字に強かったわけでもありません。
-                            ただ、「正しいルートを通った」という一点だけで、
-                            90日後に別の景色を見ることができました。
-                            これは、そこに至るまでのプロセスを、数字で語る記録です。
+                            情報学を専攻する現役大学生グループが、
+                            学んだ知識とデータ分析力を活かして運営しています。<br><br>
+                            このサイトは、特定の詰まった経験だけではなく、
+                            データと事実に基づいた「正しいルート」を提示します。
+                            「正しいルートを通る」という一点だけで、
+                            結果は大きく変わります。
+                            これは、そのルートをデータで語る記録です。
                         </p>
                     </div>
 
@@ -1929,10 +1774,10 @@
                             <h3>転職活動と、現在地</h3>
                         </div>
                         <p>
-                            リクルートを経てIT企業への内定を獲得し、
-                            エンジニアとしてキャリアをスタート。
-                            知識ゼロからスタートして90日。
-                            40歳の文系管理職が90日でITエンジニアになりました。
+                            データ分析とITの知識を活かし、
+                            転職希望者のキャリア支援に取り組んでいます。
+                            情報学を学ぶ現役大学生だからこそ提供できる、
+                            データに裏付けされたキャリア戦略を届けます。
                             その後もよりよい労働環境を求め、IT業界内で3回のキャリアアップに成功しました。
                         </p>
                     </div>
@@ -1950,7 +1795,7 @@
         <!-- ── Timeline ── -->
         <section class="section timeline-section">
             <div class="section-title anim-hidden">
-                <h2><i class="fas fa-route" aria-hidden="true"></i> 90日間の実録タイムライン</h2>
+                <h2><i class="fas fa-route" aria-hidden="true"></i> プロジェクトの歩み</h2>
                 <p>美化せず、省略せず、起きたことをそのまま書きます</p>
             </div>
 
@@ -2011,8 +1856,8 @@
                         </span>
                         <h3><i class="fas fa-flag-checkered" aria-hidden="true"></i> スクール修了</h3>
                         <p>
-                            90日間のカリキュラムを修了。
-                            転職活動も継続していた。
+                            カリキュラムを修了。
+                            サイト運営も本格始動。
                         </p>
                     </div>
                 </div>
@@ -2024,9 +1869,9 @@
                         </span>
                         <h3><i class="fas fa-trophy" aria-hidden="true"></i> IT企業内定</h3>
                         <p>
-                            90日で
+                            チームで
                             エンジニアとしてIT企業への内定を獲得。
-                            40歳の文系営業職が、90日でエンジニアになった。
+                            現役大学生グループが、本格的にキャリア支援メディアを立ち上げた。
                         </p>
                     </div>
                 </div>
@@ -2043,7 +1888,7 @@
         <!-- ── Skills ── -->
         <section class="section">
             <div class="section-title anim-hidden">
-                <h2><i class="fas fa-tools" aria-hidden="true"></i> 90日で身についたスキル</h2>
+                <h2><i class="fas fa-tools" aria-hidden="true"></i> チームのスキルセット</h2>
                 <p>「習得した」ではなく「使えるようになった」もののみ記載します</p>
             </div>
 
@@ -2080,16 +1925,16 @@
 
                 <div class="skill-card anim-scale stagger-3">
                     <div class="skill-icon-wrapper">
-                        <i class="fas fa-handshake" aria-hidden="true"></i>
+                        <i class="fas fa-chart-bar" aria-hidden="true"></i>
                     </div>
-                    <h3>営業力 × エンジニアリング</h3>
+                    <h3>データ分析 × キャリア戦略</h3>
                     <p>
-                        前職7年間の文系営業経験は、案件を獲得する場面で直接役立っている。
-                        技術力だけでなく、提案力・コミュニケーション力が
-                        エンジニアとしての差別化になっている。
+                        情報学で学んだデータ分析力を活かし、
+                        転職市場の動向やキャリアパスの最適化を行っている。
+                        データドリブンなアプローチが強み。
                     </p>
                     <div class="skill-progress">
-                        <div class="skill-progress-bar" style="--progress: 95%;"></div>
+                        <div class="skill-progress-bar" style="--progress: 90%;"></div>
                     </div>
                 </div>
             </div>
@@ -2152,19 +1997,20 @@
                             「才能の問題ではなかった。どのルートを通るかの問題だった。」
                         </div>
                         <p>
-                            40歳・文系営業職・タイピングも怪しい——そんな人間が3ヶ月でWebアプリを自作し、
-                            IT企業へ転職した。これは、特別な才能の話ではありません。
+                            情報学を専攻する大学生が、学んだデータ分析とITの知識を活かして
+                            キャリア支援メディアを立ち上げました。これは、特別な才能の話ではありません。
                             再現性のある話です。
                         </p>
                         <p>
-                            ただし、条件があります。正しい環境で、正しい順序で学ぶこと。
-                            独学で3日で詰まった私が言うのですから、
-                            これは理想論ではなく、実証された事実です。
+                            ただし、条件があります。正しい情報を、正しい順序で学ぶこと。
+                            データ分析を通じて分かったのは、
+                            多くの人が「間違った努力」や「時間の浪費」で挫折しているという事実です。
                             未経験からどのようにエンジニアになるか、そして転職後にどうキャリアアップしていくか——
                             その戦略とルート選びで、結果は大きく変わります。
                         </p>
                         <p>
-                            このサイト「CodeRoute 90」では、自身のITスクール活用と転職成功の経験をベースに、
+                            このサイト「CodeRoute 90」では、情報学を学ぶ現役大学生グループが、
+                            データ分析とITの知識を活かして、
                             未経験からのエンジニア転職やIT業界でのキャリアアップに向けた
                             最適な「最短ルート」を分析・共有しています。
                         </p>
@@ -2176,11 +2022,11 @@
         <!-- ── CTA ── -->
         <section class="section">
             <div class="cta-section anim-scale">
-                <h2><i class="fas fa-map-signs" aria-hidden="true"></i> 未経験エンジニア転職・キャリアアップで迷っているなら</h2>
+                <h2><i class="fas fa-map-signs" aria-hidden="true"></i> IT転職・キャリアアップで迷っているなら</h2>
                 <p>
-                    私は「最短距離で結果を出すための戦略と投資」がすべてだと確信しています。
+                    私たちは「最短距離で結果を出すための戦略と投資」がすべてだと確信しています。
                     大切なのは、無駄な回り道を避け、<strong>自分にとって最適なルートを見極めること</strong>です。
-                    これまでの経験から導き出した「転職とキャリアアップのノウハウ」を記事にまとめています。
+                    データと分析から導き出した「転職とキャリアアップのノウハウ」を記事にまとめています。
                 </p>
                 <a href="blog.html" class="cta-button">
                     <i class="fas fa-search" aria-hidden="true"></i> キャリア戦略・転職ノウハウを読む
@@ -2214,8 +2060,8 @@
                 <div>
                     <p class="footer-copy">&copy; 2026 CodeRoute 90</p>
                     <p class="footer-desc">
-                        40歳・文系から90日でエンジニア転職した運営者が、<br>
-                        再現可能な最短ルートを事実ベースで公開するメディアです。
+                        現役大学生グループがお送りする新時代の転職支援サイト。<br>
+                        再現可能な最短ルートをデータドリブンで公開します。
                     </p>
                 </div>
             </div>
@@ -2226,14 +2072,12 @@
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/header-scroll.js" defer></script>
 
-    <!-- ===== Dynamic Animation Engine ===== -->
+    <!-- ===== Optimized Animation & UI Engine ===== -->
     <script>
         (function () {
             'use strict';
 
-            // ──────────────────────────────
-            // 1. Particle Canvas — Hero Background
-            // ──────────────────────────────
+            // ── 1. Particle Canvas Engine ──
             function initParticles() {
                 var canvas = document.getElementById('particleCanvas');
                 if (!canvas) return;
@@ -2250,9 +2094,7 @@
                 resize();
                 window.addEventListener('resize', resize);
 
-                function Particle() {
-                    this.reset();
-                }
+                function Particle() { this.reset(); }
                 Particle.prototype.reset = function () {
                     this.x = Math.random() * canvas.width;
                     this.y = Math.random() * canvas.height;
@@ -2263,35 +2105,26 @@
                     this.color = Math.random() > 0.5 ? '0, 212, 255' : '139, 92, 246';
                 };
                 Particle.prototype.update = function () {
-                    this.x += this.speedX;
-                    this.y += this.speedY;
+                    this.x += this.speedX; this.y += this.speedY;
                     if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
                     if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
                 };
                 Particle.prototype.draw = function () {
-                    ctx.beginPath();
-                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.beginPath();ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
                     ctx.fillStyle = 'rgba(' + this.color + ',' + this.opacity + ')';
                     ctx.fill();
                 };
 
-                for (var i = 0; i < PARTICLE_COUNT; i++) {
-                    particles.push(new Particle());
-                }
+                for (var i = 0; i < PARTICLE_COUNT; i++) particles.push(new Particle());
 
                 function drawLines() {
                     for (var i = 0; i < particles.length; i++) {
                         for (var j = i + 1; j < particles.length; j++) {
-                            var dx = particles[i].x - particles[j].x;
-                            var dy = particles[i].y - particles[j].y;
+                            var dx = particles[i].x - particles[j].x, dy = particles[i].y - particles[j].y;
                             var dist = Math.sqrt(dx * dx + dy * dy);
                             if (dist < 120) {
-                                ctx.beginPath();
-                                ctx.moveTo(particles[i].x, particles[i].y);
-                                ctx.lineTo(particles[j].x, particles[j].y);
-                                ctx.strokeStyle = 'rgba(0, 212, 255, ' + (0.08 * (1 - dist / 120)) + ')';
-                                ctx.lineWidth = 0.5;
-                                ctx.stroke();
+                                ctx.beginPath();ctx.moveTo(particles[i].x, particles[i].y);ctx.lineTo(particles[j].x, particles[j].y);
+                                ctx.strokeStyle = 'rgba(0, 212, 255, ' + (0.08 * (1 - dist / 120)) + ')';ctx.lineWidth = 0.5;ctx.stroke();
                             }
                         }
                     }
@@ -2299,297 +2132,105 @@
 
                 function animate() {
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    for (var i = 0; i < particles.length; i++) {
-                        particles[i].update();
-                        particles[i].draw();
-                    }
-                    drawLines();
-                    requestAnimationFrame(animate);
+                    for (var i = 0; i < particles.length; i++) { particles[i].update(); particles[i].draw(); }
+                    drawLines(); requestAnimationFrame(animate);
                 }
                 animate();
             }
 
-            // ──────────────────────────────
-            // 2. Scroll-Triggered Animations (IntersectionObserver)
-            // ──────────────────────────────
+            // ── 2. Scroll-Triggered Reveal ──
             function initScrollAnimations() {
                 var animElements = document.querySelectorAll('.anim-hidden, .anim-slide-left, .anim-slide-right, .anim-scale, .anim-fade');
-
                 if ('IntersectionObserver' in window) {
                     var observer = new IntersectionObserver(function (entries) {
                         entries.forEach(function (entry) {
                             if (entry.isIntersecting) {
                                 entry.target.classList.add('anim-visible');
-                                // Trigger counter if stat number
-                                var counters = entry.target.querySelectorAll('[data-count]');
-                                if (counters.length) {
-                                    counters.forEach(function (el) { animateCounter(el); });
-                                }
-                                if (entry.target.hasAttribute('data-count')) {
-                                    animateCounter(entry.target);
-                                }
+                                entry.target.querySelectorAll('[data-count]').forEach(animateCounter);
+                                if (entry.target.hasAttribute('data-count')) animateCounter(entry.target);
                                 observer.unobserve(entry.target);
                             }
                         });
-                    }, {
-                        threshold: 0.15,
-                        rootMargin: '0px 0px -50px 0px'
-                    });
-
-                    animElements.forEach(function (el) {
-                        observer.observe(el);
-                    });
+                    }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+                    animElements.forEach(function (el) { observer.observe(el); });
                 } else {
-                    // Fallback for older browsers
-                    animElements.forEach(function (el) {
-                        el.classList.add('anim-visible');
-                    });
+                    animElements.forEach(function (el) { el.classList.add('anim-visible'); });
                 }
             }
 
-            // ──────────────────────────────
-            // 3. Counter Animation
-            // ──────────────────────────────
+            // ── 3. Counter Animation Engine ──
             function animateCounter(el) {
-                if (el.dataset.animated) return;
-                el.dataset.animated = 'true';
-
-                var target = parseInt(el.dataset.count, 10);
-                var suffix = el.dataset.suffix || '';
-                var duration = 2000;
-                var startTime = null;
-
-                function easeOutExpo(t) {
-                    return t === 1 ? 1 : 1 - Math.pow(2, -10 * t);
-                }
-
+                if (el.dataset.animated) return; el.dataset.animated = 'true';
+                var target = parseInt(el.dataset.count, 10), suffix = el.dataset.suffix || '', duration = 2000, startTime = null;
+                function easeOutExpo(t) { return t === 1 ? 1 : 1 - Math.pow(2, -10 * t); }
                 function step(timestamp) {
                     if (!startTime) startTime = timestamp;
-                    var progress = Math.min((timestamp - startTime) / duration, 1);
-                    var easedProgress = easeOutExpo(progress);
-                    var current = Math.floor(easedProgress * target);
-                    el.textContent = current + suffix;
-                    if (progress < 1) {
-                        requestAnimationFrame(step);
-                    } else {
-                        el.textContent = target + suffix;
-                    }
+                    var progress = Math.min((timestamp - startTime) / duration, 1), eased = easeOutExpo(progress);
+                    el.textContent = Math.floor(eased * target) + suffix;
+                    if (progress < 1) requestAnimationFrame(step); else el.textContent = target + suffix;
                 }
                 requestAnimationFrame(step);
             }
 
-            // ──────────────────────────────
-            // 4. Page Progress Bar
-            // ──────────────────────────────
-            function initPageProgress() {
-                var progressBar = document.getElementById('pageProgress');
-                if (!progressBar) return;
-
+            // ── 4. UI Progress & Interactivity ──
+            function initUIHandlers() {
+                var pageBar = document.getElementById('pageProgress'), timeLine = document.getElementById('timeline'), timeBar = document.getElementById('timelineProgress');
                 window.addEventListener('scroll', function () {
-                    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-                    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
-                    var progress = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
-                    progressBar.style.width = progress + '%';
-                }, { passive: true });
-            }
-
-            // ──────────────────────────────
-            // 5. Timeline Progress Bar
-            // ──────────────────────────────
-            function initTimelineProgress() {
-                var timeline = document.getElementById('timeline');
-                var progressBar = document.getElementById('timelineProgress');
-                if (!timeline || !progressBar) return;
-
-                window.addEventListener('scroll', function () {
-                    var rect = timeline.getBoundingClientRect();
-                    var timelineHeight = timeline.offsetHeight;
-                    var windowH = window.innerHeight;
-
-                    if (rect.top > windowH) {
-                        progressBar.style.height = '0px';
-                    } else if (rect.bottom < 0) {
-                        progressBar.style.height = timelineHeight + 'px';
-                    } else {
-                        var visible = Math.min(windowH - rect.top, timelineHeight);
-                        var percentage = Math.max(0, Math.min(1, visible / timelineHeight));
-                        progressBar.style.height = (percentage * timelineHeight) + 'px';
+                    var st = window.pageYOffset || document.documentElement.scrollTop, dh = document.documentElement.scrollHeight - window.innerHeight;
+                    if (pageBar) pageBar.style.width = (dh > 0 ? (st / dh) * 100 : 0) + '%';
+                    if (timeLine && timeBar) {
+                        var rect = timeLine.getBoundingClientRect(), wh = window.innerHeight;
+                        if (rect.top > wh) timeBar.style.height = '0px';
+                        else if (rect.bottom < 0) timeBar.style.height = timeLine.offsetHeight + 'px';
+                        else timeBar.style.height = (Math.max(0, Math.min(1, Math.min(wh - rect.top, timeLine.offsetHeight) / timeLine.offsetHeight)) * timeLine.offsetHeight) + 'px';
                     }
                 }, { passive: true });
-            }
 
-            // ──────────────────────────────
-            // 6. Parallax on Hero (subtle mouse move)
-            // ──────────────────────────────
-            function initHeroParallax() {
                 var hero = document.getElementById('aboutHero');
-                if (!hero) return;
-
-                hero.addEventListener('mousemove', function (e) {
-                    var rect = hero.getBoundingClientRect();
-                    var x = (e.clientX - rect.left) / rect.width - 0.5;
-                    var y = (e.clientY - rect.top) / rect.height - 0.5;
-
-                    var badge = hero.querySelector('.hero-badge');
-                    var h1 = hero.querySelector('h1');
-                    var sub = hero.querySelector('.hero-sub');
-
-                    if (badge) badge.style.transform = 'translate(' + (x * 10) + 'px, ' + (y * 10) + 'px)';
-                    if (h1) h1.style.transform = 'translate(' + (x * 15) + 'px, ' + (y * 15) + 'px)';
-                    if (sub) sub.style.transform = 'translate(' + (x * 8) + 'px, ' + (y * 8) + 'px)';
-                });
-
-                hero.addEventListener('mouseleave', function () {
-                    var badge = hero.querySelector('.hero-badge');
-                    var h1 = hero.querySelector('h1');
-                    var sub = hero.querySelector('.hero-sub');
-
-                    [badge, h1, sub].forEach(function (el) {
-                        if (el) el.style.transform = '';
+                if (hero) {
+                    hero.addEventListener('mousemove', function (e) {
+                        var r = hero.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - 0.5, y = (e.clientY - r.top) / r.height - 0.5;
+                        ['.hero-badge', 'h1', '.hero-sub'].forEach(function(s, i) {
+                            var el = hero.querySelector(s); if(el) el.style.transform = 'translate('+(x*(10+i*5))+'px,'+(y*(10+i*5))+'px)';
+                        });
                     });
-                });
-            }
-
-            // ──────────────────────────────
-            // 7. Smooth Scroll
-            // ──────────────────────────────
-            function initSmoothScroll() {
-                document.documentElement.style.scrollBehavior = 'smooth';
-
-                document.querySelectorAll('a[href^="#"]').forEach(function (anchor) {
-                    if (anchor.closest('#navLinks')) return;
-                    anchor.addEventListener('click', function (e) {
-                        var href = this.getAttribute('href');
-                        if (!href || href === '#') return;
-                        var target = document.querySelector(href);
-                        if (!target) return;
-                        e.preventDefault();
-                        var header = document.querySelector('header');
-                        var headerH = header ? header.offsetHeight : 0;
-                        var top = target.getBoundingClientRect().top + window.pageYOffset - headerH - 16;
-                        window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
+                    hero.addEventListener('mouseleave', function () {
+                        ['.hero-badge', 'h1', '.hero-sub'].forEach(function(s) {
+                            var el = hero.querySelector(s); if(el) el.style.transform = '';
+                        });
                     });
-                });
+                }
             }
 
-            // ──────────────────────────────
-            // 8. Hero Scroll Fade Out
-            // ──────────────────────────────
-            function initHeroScrollFade() {
-                var hero = document.getElementById('aboutHero');
-                if (!hero) return;
-
-                window.addEventListener('scroll', function () {
-                    var scrollY = window.pageYOffset;
-                    var heroH = hero.offsetHeight;
-                    var ratio = Math.min(scrollY / (heroH * 0.7), 1);
-
-                    hero.style.opacity = 1 - ratio * 0.6;
-
-                    // Parallax scroll on hero content
-                    var badge = hero.querySelector('.hero-badge');
-                    var h1 = hero.querySelector('h1');
-                    var sub = hero.querySelector('.hero-sub');
-                    var speed = scrollY * 0.3;
-
-                    if (badge) badge.style.marginTop = (speed * 0.2) + 'px';
-                    if (h1) h1.style.marginTop = (speed * 0.15) + 'px';
-                    if (sub) sub.style.marginTop = (speed * 0.1) + 'px';
-                }, { passive: true });
-            }
-
-            // ──────────────────────────────
-            // Init All
-            // ──────────────────────────────
-            document.addEventListener('DOMContentLoaded', function () {
-                initParticles();
-                initScrollAnimations();
-                initPageProgress();
-                initTimelineProgress();
-                initHeroParallax();
-                initSmoothScroll();
-                initHeroScrollFade();
-            });
-        })();
-    </script>
-
-    <!-- ===== Hamburger Menu Script ===== -->
-    <script>
-        (function () {
-            'use strict';
-            document.addEventListener('DOMContentLoaded', function () {
-                var btn = document.getElementById('hamburgerBtn');
-                var nav = document.getElementById('navLinks');
-                var overlay = document.getElementById('navOverlay');
+            // ── 5. Hamburger & Mobile Menu (Optimized) ──
+            function initMobileMenu() {
+                var btn = document.getElementById('hamburgerBtn'), nav = document.getElementById('navLinks'), overlay = document.getElementById('navOverlay');
                 if (!btn || !nav) return;
-
-                if (typeof window.__relocateMobileNav === 'function') {
-                    window.__relocateMobileNav();
+                function toggle(open) {
+                    btn.classList.toggle('open', open); nav.classList.toggle('open', open);
+                    btn.setAttribute('aria-expanded', open);
+                    if (overlay) { if(open) { overlay.style.display = 'block'; setTimeout(function(){overlay.classList.add('active')},10);} else { overlay.classList.remove('active'); setTimeout(function(){overlay.style.display='none'},300);}}
+                    document.body.style.overflow = open ? 'hidden' : '';
                 }
-
-                function openMenu() {
-                    btn.classList.add('open');
-                    nav.classList.add('open');
-                    btn.setAttribute('aria-expanded', 'true');
-                    btn.setAttribute('aria-label', 'メニューを閉じる');
-                    if (overlay) { overlay.style.display = 'block'; setTimeout(function () { overlay.classList.add('active'); }, 10); }
-                    document.body.style.overflow = 'hidden';
-                }
-
-                function closeMenu() {
-                    btn.classList.remove('open');
-                    nav.classList.remove('open');
-                    btn.setAttribute('aria-expanded', 'false');
-                    btn.setAttribute('aria-label', 'メニューを開く');
-                    if (overlay) { overlay.classList.remove('active'); setTimeout(function () { overlay.style.display = 'none'; }, 300); }
-                    document.body.style.overflow = '';
-                }
-
-                btn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
-                });
-
-                if (overlay) {
-                    overlay.addEventListener('click', closeMenu);
-                }
-
-                nav.querySelectorAll('a').forEach(function (link) {
-                    link.addEventListener('click', function (e) {
-                        e.preventDefault();
-                        var href = link.getAttribute('href');
-                        closeMenu();
-                        if (!href || href === '#') return;
-                        if (href.charAt(0) === '#') {
-                            setTimeout(function () {
-                                var target = document.querySelector(href);
-                                if (target) {
-                                    var headerEl = document.querySelector('header');
-                                    var offset = headerEl ? headerEl.offsetHeight + 16 : 80;
-                                    var top = target.getBoundingClientRect().top + window.pageYOffset - offset;
-                                    window.scrollTo({ top: Math.max(0, top), behavior: 'smooth' });
-                                }
+                btn.addEventListener('click', function(e){ e.stopPropagation(); toggle(!nav.classList.contains('open')); });
+                if(overlay) overlay.addEventListener('click', function(){ toggle(false); });
+                nav.querySelectorAll('a').forEach(function(l){
+                    l.addEventListener('click', function(e){
+                        var href = l.getAttribute('href'); toggle(false);
+                        if(href && href.startsWith('#')) {
+                            e.preventDefault();
+                            setTimeout(function(){
+                                var t = document.querySelector(href), h = document.querySelector('header');
+                                if(t) window.scrollTo({ top: t.getBoundingClientRect().top + window.pageYOffset - (h?h.offsetHeight+16:80), behavior: 'smooth' });
                             }, 350);
-                        } else {
-                            setTimeout(function () {
-                                window.location.href = href;
-                            }, 50);
                         }
                     });
                 });
+            }
 
-                document.addEventListener('keydown', function (e) {
-                    if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
-                });
-
-                window.addEventListener('resize', function () {
-                    if (window.innerWidth > 768 && nav.classList.contains('open')) {
-                        closeMenu();
-                    }
-                    if (typeof window.__relocateMobileNav === 'function') {
-                        window.__relocateMobileNav();
-                    }
-                });
+            document.addEventListener('DOMContentLoaded', function () {
+                initParticles(); initScrollAnimations(); initUIHandlers(); initMobileMenu();
+                if (typeof window.__relocateMobileNav === 'function') window.__relocateMobileNav();
             });
         })();
     </script>
