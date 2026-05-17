@@ -37,256 +37,806 @@
     <link rel="stylesheet" href="assets/css/style.css">
     
     <style>
+        /* ===========================
+           BLOG PAGE — Benesse-inspired
+           Dynamic & Systematic Redesign
+           =========================== */
+
+        /* ---------- Reset page-specific ---------- */
+        body { overflow-x: hidden; }
+
+        /* ---------- HERO — full-viewport immersive ---------- */
         .blog-hero {
-            background: var(--gradient-hero);
-            color: var(--text-light);
-            padding: 8rem 2rem 4rem;
+            position: relative;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            overflow: hidden;
+            background: var(--gradient-hero);
+            margin-top: 0;
+            padding-top: 72px;
+        }
+
+        .blog-hero::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 80% 60% at 20% 80%, rgba(0,212,255,0.12) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 50% at 80% 20%, rgba(139,92,246,0.10) 0%, transparent 60%),
+                radial-gradient(ellipse 40% 40% at 50% 50%, rgba(236,72,153,0.06) 0%, transparent 60%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        /* Animated grid pattern overlay */
+        .blog-hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background-image:
+                linear-gradient(rgba(0,212,255,0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,212,255,0.03) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        @keyframes gridMove {
+            0%   { transform: translate(0, 0); }
+            100% { transform: translate(60px, 60px); }
+        }
+
+        .hero-inner {
+            position: relative;
+            z-index: 2;
+            max-width: 900px;
+            padding: 2rem;
+        }
+
+        /* Staggered text reveal */
+        .hero-label {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
+            border: 1px solid rgba(0,212,255,0.3);
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeSlideUp 0.8s 0.2s forwards;
+        }
+
+        .hero-title-main {
+            font-size: clamp(3rem, 8vw, 6rem);
+            font-weight: 700;
+            line-height: 1.05;
+            margin-bottom: 1.5rem;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0;
+            transform: translateY(40px);
+            animation: fadeSlideUp 1s 0.4s forwards;
+        }
+
+        .hero-subtitle {
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            color: var(--text-secondary);
+            max-width: 600px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeSlideUp 0.8s 0.7s forwards;
+        }
+
+        .hero-scroll-indicator {
+            position: absolute;
+            bottom: 3rem;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            letter-spacing: 0.2em;
+            opacity: 0;
+            animation: fadeSlideUp 0.8s 1.2s forwards;
+        }
+
+        .hero-scroll-indicator .scroll-line {
+            width: 1px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--accent-cyan), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.3; transform: scaleY(0.6); }
+            50%      { opacity: 1;   transform: scaleY(1); }
+        }
+
+        @keyframes fadeSlideUp {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ---------- Floating particles on hero ---------- */
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatParticle linear infinite;
+        }
+
+        @keyframes floatParticle {
+            0%   { opacity: 0; transform: translateY(100vh) scale(0); }
+            10%  { opacity: 1; }
+            90%  { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-10vh) scale(1); }
+        }
+
+        /* ---------- MARQUEE SECTION ---------- */
+        .marquee-section {
+            overflow: hidden;
+            padding: 2rem 0;
+            background: rgba(10,10,10,0.6);
+            border-top: 1px solid var(--border-subtle);
+            border-bottom: 1px solid var(--border-subtle);
+        }
+
+        .marquee-track {
+            display: flex;
+            width: max-content;
+            animation: marqueeScroll 30s linear infinite;
+        }
+
+        .marquee-track:hover {
+            animation-play-state: paused;
+        }
+
+        .marquee-item {
+            flex-shrink: 0;
+            padding: 0 3rem;
+            font-size: clamp(1.5rem, 3vw, 2.5rem);
+            font-weight: 700;
+            white-space: nowrap;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            opacity: 0.4;
+            transition: opacity 0.3s;
+        }
+
+        .marquee-track:hover .marquee-item {
+            opacity: 0.7;
+        }
+
+        @keyframes marqueeScroll {
+            0%   { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* ---------- STATS COUNTER BAR ---------- */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 5rem 2rem;
+        }
+
+        .stat-item {
+            text-align: center;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.6s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .stat-item.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .stat-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        /* ---------- SECTION COMMON — scroll-reveal ---------- */
+        .blog-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 6rem 2rem;
             position: relative;
         }
-        
-        .blog-hero h1 {
-            color: var(--text-light);
+
+        .section-header {
+            margin-bottom: 4rem;
+        }
+
+        .section-number {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: clamp(5rem, 10vw, 10rem);
+            font-weight: 700;
+            line-height: 1;
+            background: linear-gradient(135deg, rgba(0,212,255,0.08), rgba(139,92,246,0.08));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            position: absolute;
+            top: 2rem;
+            left: 2rem;
+            pointer-events: none;
+            z-index: 0;
+            user-select: none;
+        }
+
+        .section-tag {
+            display: inline-block;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--accent-cyan);
             margin-bottom: 1rem;
+            position: relative;
+            z-index: 1;
         }
-        
-        .blog-hero p {
-            font-size: 1.2rem;
-            color: var(--slate-gray);
+
+        .section-tag::before {
+            content: '';
+            display: inline-block;
+            width: 40px;
+            height: 1px;
+            background: var(--accent-cyan);
+            vertical-align: middle;
+            margin-right: 1rem;
         }
-        
+
+        .section-title-text {
+            font-size: clamp(1.8rem, 4vw, 3rem);
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Scroll-reveal animation class */
+        .reveal {
+            opacity: 0;
+            transform: translateY(60px);
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
+                        transform 0.8s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .reveal.revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-left {
+            opacity: 0;
+            transform: translateX(-60px);
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
+                        transform 0.8s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .reveal-left.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-right {
+            opacity: 0;
+            transform: translateX(60px);
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
+                        transform 0.8s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .reveal-right.revealed {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .reveal-scale {
+            opacity: 0;
+            transform: scale(0.85);
+            transition: opacity 0.8s cubic-bezier(0.4,0,0.2,1),
+                        transform 0.8s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .reveal-scale.revealed {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* ---------- SEARCH & FILTER — refined ---------- */
+        .search-filter-area {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 0;
+        }
+
+        .search-box {
+            max-width: 700px;
+            margin: 0 auto 2.5rem;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 1.2rem 3.5rem 1.2rem 1.5rem;
+            border: 1px solid var(--border-subtle);
+            border-radius: 60px;
+            font-size: 1rem;
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .search-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--accent-cyan);
+            box-shadow: 0 0 30px rgba(0,212,255,0.15), 0 0 60px rgba(0,212,255,0.05);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 1.5rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-muted);
+            pointer-events: none;
+            font-size: 1.1rem;
+        }
+
         .category-filter {
             display: flex;
             justify-content: center;
-            gap: 1rem;
-            margin: 3rem 0;
+            gap: 0.75rem;
             flex-wrap: wrap;
         }
-        
+
         .category-btn {
-            background: white;
-            border: 2px solid var(--border-color);
-            color: var(--text-dark);
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            color: var(--text-secondary);
+            padding: 0.6rem 1.4rem;
+            border-radius: 30px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
             font-weight: 500;
+            font-size: 0.9rem;
+            position: relative;
+            overflow: hidden;
         }
-        
+
+        .category-btn::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: var(--gradient-primary);
+            opacity: 0;
+            transition: opacity 0.3s;
+            z-index: -1;
+            border-radius: 30px;
+        }
+
         .category-btn:hover,
         .category-btn.active {
-            background: var(--accent-blue);
-            color: white;
-            border-color: var(--accent-blue);
+            color: #fff;
+            border-color: transparent;
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(100, 180, 255, 0.3);
+            box-shadow: 0 4px 20px rgba(0,212,255,0.25);
         }
-        
+
+        .category-btn:hover::before,
+        .category-btn.active::before {
+            opacity: 1;
+        }
+
+        /* ---------- ARTICLES GRID — staggered ---------- */
+        .articles-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem 6rem;
+        }
+
+        .articles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 2rem;
+            margin-top: 0;
+        }
+
+        /* Article card — enhanced with hover effects */
         .article-card {
-            transition: all 0.3s ease;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
             cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+            opacity: 0;
+            transform: translateY(50px);
         }
-        
+
+        .article-card.card-revealed {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .article-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0,212,255,0.04), transparent);
+            transition: left 0.6s ease;
+            pointer-events: none;
+        }
+
+        .article-card:hover::before {
+            left: 100%;
+        }
+
+        .article-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-primary);
+            transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .article-card:hover::after {
+            width: 100%;
+        }
+
+        .article-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--border-glow);
+            box-shadow: 0 20px 60px rgba(0,212,255,0.12), 0 0 0 1px rgba(0,212,255,0.1);
+        }
+
         .article-card.hidden {
             display: none;
         }
-        
+
         .article-header {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
             margin-bottom: 1rem;
         }
-        
+
         .article-title {
             flex: 1;
             margin-right: 1rem;
         }
-        
+
+        .article-title .meta {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            margin-bottom: 0.5rem;
+        }
+
+        .article-title h3 {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            color: var(--text-primary);
+            -webkit-text-fill-color: unset;
+            background: none;
+        }
+
         .article-image {
-            width: 80px;
-            height: 80px;
-            border-radius: 8px;
-            background: var(--gradient-cta);
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(0,212,255,0.2), rgba(139,92,246,0.2));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2rem;
-            color: white;
+            font-size: 1.8rem;
+            color: var(--accent-cyan);
             flex-shrink: 0;
+            overflow: hidden;
+            border: 1px solid var(--border-subtle);
         }
-        
+
+        .article-excerpt {
+            color: var(--text-secondary);
+            line-height: 1.7;
+            font-size: 0.92rem;
+            margin-bottom: 1rem;
+        }
+
+        .article-tags {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.8rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(0,212,255,0.08);
+            color: var(--accent-cyan);
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border: 1px solid rgba(0,212,255,0.15);
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            background: rgba(0,212,255,0.15);
+            border-color: rgba(0,212,255,0.3);
+        }
+
         .read-more {
             display: inline-flex;
             align-items: center;
-            color: var(--accent-blue);
+            color: var(--accent-cyan);
             font-weight: 500;
+            font-size: 0.9rem;
             margin-top: 1rem;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
         }
-        
-        .read-more:hover {
-            color: #3a7ec4;
-            transform: translateX(5px);
-        }
-        
+
         .read-more i {
             margin-left: 0.5rem;
             transition: transform 0.3s ease;
         }
-        
+
+        .read-more:hover {
+            color: var(--accent-purple);
+        }
+
         .read-more:hover i {
-            transform: translateX(3px);
+            transform: translateX(5px);
         }
-        
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            margin: 4rem 0;
+
+        /* ---------- POPULAR SECTION — horizontal scroll ---------- */
+        .popular-section {
+            padding: 6rem 0;
+            background: linear-gradient(180deg, rgba(10,10,10,0.4) 0%, rgba(15,25,35,0.6) 100%);
+            border-top: 1px solid var(--border-subtle);
+            overflow: hidden;
         }
-        
-        .page-btn {
-            background: white;
-            border: 2px solid var(--border-color);
-            color: var(--text-dark);
-            padding: 0.8rem 1.2rem;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-weight: 500;
+
+        .popular-section .section-header {
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            padding: 0 2rem;
         }
-        
-        .page-btn:hover,
-        .page-btn.active {
-            background: var(--accent-blue);
-            color: white;
-            border-color: var(--accent-blue);
-        }
-        
-        .page-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        
-        .search-box {
-            max-width: 600px;
-            margin: 2rem auto;
+
+        .popular-scroll-wrapper {
             position: relative;
         }
-        
-        .search-input {
-            width: 100%;
-            padding: 1rem 3rem 1rem 1rem;
-            border: 2px solid var(--border-color);
-            border-radius: 25px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
+
+        .popular-scroll-track {
+            display: flex;
+            gap: 2rem;
+            padding: 0 2rem 2rem;
+            overflow-x: auto;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: none;
         }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 20px rgba(100, 180, 255, 0.2);
+
+        .popular-scroll-track::-webkit-scrollbar {
+            display: none;
         }
-        
-        .search-icon {
+
+        .popular-card {
+            flex: 0 0 350px;
+            scroll-snap-align: start;
+            background: var(--gradient-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .popular-card::after {
+            content: '';
             position: absolute;
-            right: 1rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--slate-gray);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: var(--gradient-primary);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.5s cubic-bezier(0.4,0,0.2,1);
+        }
+
+        .popular-card:hover::after {
+            transform: scaleX(1);
+        }
+
+        .popular-card:hover {
+            transform: translateY(-6px);
+            border-color: var(--border-glow);
+            box-shadow: 0 20px 50px rgba(0,212,255,0.1);
+        }
+
+        .popular-rank {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, rgba(0,212,255,0.15), rgba(139,92,246,0.15));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+
+        /* ---------- CTA SECTION at bottom ---------- */
+        .blog-cta-section {
+            text-align: center;
+            padding: 8rem 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .blog-cta-section::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background:
+                radial-gradient(ellipse 50% 50% at 50% 50%, rgba(0,212,255,0.06) 0%, transparent 70%);
             pointer-events: none;
         }
-        
+
+        .cta-big-text {
+            font-size: clamp(2rem, 5vw, 3.5rem);
+            font-weight: 700;
+            background: var(--gradient-text);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.3;
+            margin-bottom: 1.5rem;
+        }
+
+        .cta-sub {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 3rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-button-blog {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: var(--gradient-primary);
+            color: #fff;
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            border: none;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.4,0,0.2,1);
+            position: relative;
+            overflow: hidden;
+            text-decoration: none;
+        }
+
+        .cta-button-blog::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .cta-button-blog:hover::before {
+            left: 100%;
+        }
+
+        .cta-button-blog:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 40px rgba(0,212,255,0.3);
+            color: #fff;
+        }
+
+        /* ---------- No results ---------- */
         .no-results {
             text-align: center;
-            padding: 4rem 2rem;
-            color: var(--slate-gray);
+            padding: 5rem 2rem;
+            color: var(--text-muted);
         }
-        
+
         .no-results i {
             font-size: 4rem;
             margin-bottom: 1rem;
-            opacity: 0.5;
-        }
-        
-        .article-excerpt {
-            color: var(--slate-gray);
-            line-height: 1.6;
-            margin-bottom: 1rem;
-        }
-        
-        .article-tags {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-        
-        .tag {
-            background: rgba(100, 180, 255, 0.1);
-            color: var(--accent-blue);
-            padding: 0.3rem 0.8rem;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            font-weight: 500;
-        }
-        
-        .popular-articles {
-            background: var(--gradient-section);
-            padding: 3rem 2rem;
-            margin: 3rem -2rem;
-            border-radius: 20px;
-        }
-        
-        .popular-articles h3 {
-            text-align: center;
-            color: var(--primary-bg);
-            margin-bottom: 2rem;
+            opacity: 0.4;
         }
 
-        /* ローディングスピナー */
+        .no-results h3 {
+            margin-bottom: 0.5rem;
+        }
+
+        /* ---------- Loading spinner ---------- */
         .loading-spinner {
             text-align: center;
-            padding: 4rem 2rem;
-            color: var(--slate-gray);
+            padding: 5rem 2rem;
+            color: var(--text-muted);
         }
+
         .loading-spinner i {
             font-size: 2.5rem;
             margin-bottom: 1rem;
             animation: spin 1s linear infinite;
         }
+
         @keyframes spin {
             0%   { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
-        }
-        
-        @media (max-width: 768px) {
-            .category-filter {
-                gap: 0.5rem;
-            }
-            
-            .category-btn {
-                padding: 0.6rem 1rem;
-                font-size: 0.9rem;
-            }
-            
-            .article-header {
-                flex-direction: column;
-            }
-            
-            .article-image {
-                width: 100%;
-                height: 120px;
-                margin-top: 1rem;
-            }
-            
-            .popular-articles {
-                margin: 2rem -1rem;
-                padding: 2rem 1rem;
-            }
         }
 
         /* ---------- Breadcrumb ---------- */
@@ -294,7 +844,12 @@
             background: rgba(10, 10, 10, 0.6);
             border-bottom: 1px solid var(--border-subtle);
             padding: 0.75rem 2rem;
-            margin-top: 72px;
+            position: fixed;
+            top: 72px;
+            left: 0;
+            right: 0;
+            z-index: 999;
+            backdrop-filter: blur(10px);
         }
 
         .breadcrumb-list {
@@ -325,7 +880,6 @@
 
         .breadcrumb-list li a:hover {
             color: var(--accent-cyan);
-            text-shadow: var(--shadow-glow);
         }
 
         .breadcrumb-list .separator {
@@ -340,10 +894,10 @@
             background-clip: text;
             font-weight: 600;
         }
-    
+
         /* ===== Hamburger Menu ===== */
         .hamburger {
-            display: none;   /* デスクトップでは非表示 */
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -372,7 +926,6 @@
         .hamburger.open span:nth-child(2) { opacity: 0; width: 0; }
         .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-        /* モバイル用オーバーレイ */
         .nav-overlay {
             display: none;
             position: fixed;
@@ -381,20 +934,15 @@
             z-index: 9998;
             opacity: 0;
             transition: opacity 0.3s ease;
-            -webkit-tap-highlight-color: transparent;
-            pointer-events: none; /* メニューが閉じているときはタップ無効化 */
+            pointer-events: none;
         }
         .nav-overlay.active { opacity: 1; pointer-events: auto; }
 
         @media (max-width: 768px) {
-            /* モバイル: ハンバーガーを表示 */
             .hamburger { display: flex !important; }
-            /* [FIX] .nav-overlay { display: block; } → 削除: overlay が常時タップをブロックするバグの原因 */
 
-            nav {
-                position: relative;
-            }
-            /* モバイル: メニューは右からスライドするドロワー */
+            nav { position: relative; }
+
             .nav-links {
                 display: flex !important;
                 position: fixed !important;
@@ -411,7 +959,6 @@
                 padding: 5rem 1.5rem 2rem !important;
                 gap: 0 !important;
                 z-index: 9999 !important;
-                /* [FIX] body portal でも overlay より上に表示 */
                 transition: right 0.35s cubic-bezier(0.4,0,0.2,1) !important;
                 box-shadow: -4px 0 24px rgba(0,0,0,0.4) !important;
                 overflow-y: auto !important;
@@ -429,20 +976,14 @@
                 font-size: 1rem !important;
                 width: 100% !important;
                 color: var(--text-primary, #e2e8f0) !important;
-            }
-        }
-        /* ===== /Hamburger Menu ===== */
-                color: var(--text-primary, #e2e8f0) !important;
                 text-decoration: none;
-                /* ===== FIX: iOS Safari でタップを確実に受け取る ===== */
                 pointer-events: auto !important;
                 -webkit-tap-highlight-color: transparent;
                 touch-action: manipulation;
                 cursor: pointer;
             }
         }
-        /* ===== /Hamburger Menu ===== */
-        /* ===== Active Nav Link ===== */
+
         .nav-links a.nav-active {
             color: var(--accent-cyan, #22d3ee) !important;
             font-weight: 600;
@@ -456,8 +997,6 @@
             border-radius: 1px;
             margin-top: 2px;
         }
-        /* ===== /Active Nav Link ===== */
-
 
         /* ===== Footer Enhanced ===== */
         footer {
@@ -511,7 +1050,40 @@
             color: var(--text-muted, #64748b);
             line-height: 1.6;
         }
+
+        /* ---------- Responsive ---------- */
         @media (max-width: 768px) {
+            .stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+                padding: 3rem 1.5rem;
+            }
+
+            .category-filter { gap: 0.5rem; }
+            .category-btn { padding: 0.5rem 1rem; font-size: 0.85rem; }
+
+            .articles-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .article-header {
+                flex-direction: column;
+            }
+
+            .article-image {
+                width: 100%;
+                height: 120px;
+                margin-top: 1rem;
+            }
+
+            .article-title { margin-right: 0; }
+
+            .popular-card {
+                flex: 0 0 85vw;
+            }
+
+            .blog-section { padding: 4rem 1.5rem; }
+
             .footer-grid {
                 grid-template-columns: 1fr;
                 gap: 1.5rem;
@@ -520,11 +1092,35 @@
             .footer-nav ul { align-items: center; }
             .footer-nav a { justify-content: center; }
         }
-        /* ===== /Footer Enhanced ===== */
 
-        </style>
+        @media (max-width: 480px) {
+            .stats-bar {
+                grid-template-columns: 1fr 1fr;
+                gap: 1rem;
+                padding: 2rem 1rem;
+            }
 
-    <!-- ===== 構造化データ (JSON-LD) ===== -->
+            .hero-title-main {
+                font-size: clamp(2.2rem, 10vw, 3.5rem);
+            }
+        }
+
+        /* ---------- Prefers reduced motion ---------- */
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+            .reveal, .reveal-left, .reveal-right, .reveal-scale,
+            .stat-item, .article-card {
+                opacity: 1 !important;
+                transform: none !important;
+            }
+        }
+    </style>
+
+    <!-- ===== Structured Data (JSON-LD) ===== -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -563,7 +1159,6 @@
       ]
     }
     </script>
-    <!-- ===== /構造化データ ===== -->
 
     <!-- ===== Google Analytics 4 ===== -->
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-FBW5E6N8M4"></script>
@@ -573,7 +1168,6 @@
       gtag('js', new Date());
       gtag('config', 'G-FBW5E6N8M4');
     </script>
-    <!-- ===== /Google Analytics 4 ===== -->
 
     <!-- ===== Microsoft Clarity ===== -->
     <script type="text/javascript">
@@ -583,7 +1177,6 @@
             y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
         })(window, document, "clarity", "script", "vwxei3913s");
     </script>
-    <!-- ===== /Microsoft Clarity ===== -->
 </head>
 <body>
     <!-- Header -->
@@ -607,7 +1200,6 @@
     </header>
     <div class="nav-overlay" id="navOverlay" aria-hidden="true"></div>
 
-
     <!-- ===== Breadcrumb ===== -->
     <nav class="breadcrumb-nav" aria-label="パンくずリスト">
         <ol class="breadcrumb-list">
@@ -621,34 +1213,95 @@
         </ol>
     </nav>
 
-    <!-- Blog Hero Section -->
+    <!-- ========== HERO — Full Viewport ========== -->
     <section class="blog-hero">
-        <div class="container">
-            <h1><i class="fas fa-blog" aria-hidden="true"></i> ブログ</h1>
-            <p>ITスクールでプログラミングを学習した体験談、リクルーター経由の転職活動、おすすめスクール情報</p>
+        <div class="hero-particles" id="heroParticles"></div>
+        <div class="hero-inner">
+            <span class="hero-label">CodeRoute 90 Blog</span>
+            <h1 class="hero-title-main">
+                学びの軌跡を、<br>ここに記録する。
+            </h1>
+            <p class="hero-subtitle">
+                ITスクールでプログラミングを学習した体験談、<br>
+                リクルーター経由の転職活動、おすすめスクール情報
+            </p>
+        </div>
+        <div class="hero-scroll-indicator">
+            <span>SCROLL</span>
+            <div class="scroll-line"></div>
         </div>
     </section>
 
-    <!-- Main Content -->
+    <!-- ========== MARQUEE ========== -->
+    <div class="marquee-section">
+        <div class="marquee-track">
+            <span class="marquee-item">PROGRAMMING</span>
+            <span class="marquee-item">IT SCHOOL</span>
+            <span class="marquee-item">CAREER CHANGE</span>
+            <span class="marquee-item">CODE LEARNING</span>
+            <span class="marquee-item">WEB DEVELOPMENT</span>
+            <span class="marquee-item">EXPERIENCE</span>
+            <span class="marquee-item">GROWTH</span>
+            <span class="marquee-item">CHALLENGE</span>
+            <!-- Duplicate for seamless loop -->
+            <span class="marquee-item">PROGRAMMING</span>
+            <span class="marquee-item">IT SCHOOL</span>
+            <span class="marquee-item">CAREER CHANGE</span>
+            <span class="marquee-item">CODE LEARNING</span>
+            <span class="marquee-item">WEB DEVELOPMENT</span>
+            <span class="marquee-item">EXPERIENCE</span>
+            <span class="marquee-item">GROWTH</span>
+            <span class="marquee-item">CHALLENGE</span>
+        </div>
+    </div>
+
+    <!-- ========== STATS COUNTER ========== -->
+    <div class="stats-bar" id="statsBar">
+        <div class="stat-item" style="transition-delay: 0s;">
+            <div class="stat-number" data-target="90">0</div>
+            <div class="stat-label">日間の学習期間</div>
+        </div>
+        <div class="stat-item" style="transition-delay: 0.15s;">
+            <div class="stat-number" data-target="40">0</div>
+            <div class="stat-label">歳からの挑戦</div>
+        </div>
+        <div class="stat-item" style="transition-delay: 0.3s;">
+            <div class="stat-number" data-target="500" data-suffix="+">0</div>
+            <div class="stat-label">時間のコーディング</div>
+        </div>
+        <div class="stat-item" style="transition-delay: 0.45s;">
+            <div class="stat-number" data-target="1">0</div>
+            <div class="stat-label">回の転職成功</div>
+        </div>
+    </div>
+
+    <!-- ========== MAIN: ARTICLES ========== -->
     <main role="main">
-        <!-- Search Box -->
-        <div class="search-box">
-            <input type="text" class="search-input" placeholder="記事を検索..." id="searchInput" aria-label="記事を検索">
-            <i class="fas fa-search search-icon" aria-hidden="true"></i>
-        </div>
 
-        <!-- Category Filter -->
-        <div class="category-filter">
-            <button class="category-btn active" data-category="all">すべて</button>
-            <button class="category-btn" data-category="it-school">ITスクール</button>
-            <button class="category-btn" data-category="programming">転職</button>
-            <button class="category-btn" data-category="learning">学習方法</button>
-            <button class="category-btn" data-category="experience">体験談</button>
-        </div>
+        <!-- Section 01 — Latest Articles -->
+        <section class="blog-section" id="latestSection">
+            <span class="section-number reveal">01</span>
+            <div class="section-header reveal">
+                <span class="section-tag">Latest Articles</span>
+                <h2 class="section-title-text">最新の記事</h2>
+            </div>
 
-        <!-- Articles Grid -->
-        <section id="blog" class="section">
-            <!-- [FIX] 初期ローディング表示を追加 -->
+            <!-- Search & Filter -->
+            <div class="search-filter-area reveal" style="padding: 0; margin-bottom: 3rem;">
+                <div class="search-box">
+                    <input type="text" class="search-input" placeholder="記事を検索..." id="searchInput" aria-label="記事を検索">
+                    <i class="fas fa-search search-icon" aria-hidden="true"></i>
+                </div>
+                <div class="category-filter">
+                    <button class="category-btn active" data-category="all">すべて</button>
+                    <button class="category-btn" data-category="it-school">ITスクール</button>
+                    <button class="category-btn" data-category="programming">転職</button>
+                    <button class="category-btn" data-category="learning">学習方法</button>
+                    <button class="category-btn" data-category="experience">体験談</button>
+                </div>
+            </div>
+
+            <!-- Articles Grid -->
             <div class="articles-grid" id="articlesGrid">
                 <div class="loading-spinner">
                     <i class="fas fa-spinner"></i>
@@ -664,28 +1317,64 @@
             </div>
         </section>
 
-        <!-- Popular Articles Section -->
-        <section class="popular-articles">
-            <h3><i class="fas fa-fire" aria-hidden="true"></i> 人気の記事</h3>
-            <!-- [FIX] \"..\" のエスケープ文字バグを修正 → 正しいダブルクォート -->
-            <div class="articles-grid" id="popularGrid">
-                <!-- JS により動的に挿入 -->
+        <!-- Section 02 — Popular Articles (horizontal scroll) -->
+        <section class="popular-section">
+            <div class="section-header reveal" style="position: relative;">
+                <span class="section-number" style="position: relative; top: 0; left: 0; margin-bottom: -2rem; display: block;">02</span>
+                <span class="section-tag">Popular</span>
+                <h2 class="section-title-text">人気の記事</h2>
+            </div>
+            <div class="popular-scroll-wrapper">
+                <div class="popular-scroll-track" id="popularGrid">
+                    <!-- JS inserts popular cards here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CTA SECTION ========== -->
+        <section class="blog-cta-section">
+            <div class="reveal">
+                <p class="cta-big-text">
+                    未経験からの挑戦を、<br>一緒に始めませんか？
+                </p>
+                <p class="cta-sub">
+                    プログラミング学習の不安や疑問、何でもお気軽にご相談ください。
+                </p>
+                <a href="contact.html" class="cta-button-blog">
+                    お問い合わせ <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
         </section>
     </main>
+
+    <!-- ========== BOTTOM MARQUEE ========== -->
+    <div class="marquee-section">
+        <div class="marquee-track" style="animation-direction: reverse;">
+            <span class="marquee-item">NEVER TOO LATE</span>
+            <span class="marquee-item">KEEP CODING</span>
+            <span class="marquee-item">STAY CURIOUS</span>
+            <span class="marquee-item">BUILD YOUR FUTURE</span>
+            <span class="marquee-item">LEARN BY DOING</span>
+            <span class="marquee-item">DREAM BIG</span>
+            <span class="marquee-item">NEVER TOO LATE</span>
+            <span class="marquee-item">KEEP CODING</span>
+            <span class="marquee-item">STAY CURIOUS</span>
+            <span class="marquee-item">BUILD YOUR FUTURE</span>
+            <span class="marquee-item">LEARN BY DOING</span>
+            <span class="marquee-item">DREAM BIG</span>
+        </div>
+    </div>
 
     <!-- Footer -->
     <footer role="contentinfo">
         <div class="footer-content">
             <div class="footer-grid">
-                <!-- Brand -->
                 <div>
                     <p class="footer-logo">
                         <i class="fas fa-graduation-cap" aria-hidden="true"></i> CodeRoute 90
                     </p>
                     <p class="footer-tagline">最短距離で「未経験」を脱却する攻略ログ</p>
                 </div>
-                <!-- Navigation -->
                 <nav class="footer-nav" aria-label="フッターナビゲーション">
                     <ul>
                         <li><a href="index.html"><i class="fas fa-home" aria-hidden="true"></i> ホーム</a></li>
@@ -694,7 +1383,6 @@
                         <li><a href="contact.html"><i class="fas fa-envelope" aria-hidden="true"></i> お問い合わせ</a></li>
                     </ul>
                 </nav>
-                <!-- Copy -->
                 <div>
                     <p class="footer-copy">&copy; 2026 CodeRoute 90</p>
                     <p class="footer-desc">
@@ -702,57 +1390,188 @@
                         再現可能な最短ルートを事実ベースで公開するメディアです。
                     </p>
                 </div>
-            </div><!-- /.footer-grid -->
-        </div><!-- /.footer-content -->
+            </div>
+        </div>
     </footer>
 
-    <!-- JavaScript -->
+    <!-- ===== Scripts ===== -->
     <script src="assets/js/main.js" defer></script>
     <script src="assets/js/header-scroll.js" defer></script>
-    <script>
-        // Blog functionality（カテゴリ絞り込み・検索）
-        // ※ 記事カードは下の fetch スクリプトが DOM に追加した後に動作する
-        function initBlogFilters() {
-            const categoryButtons = document.querySelectorAll('.category-btn');
-            const searchInput = document.getElementById('searchInput');
-            const noResults = document.getElementById('noResults');
-            let currentCategory = 'all';
 
-            // Category filtering
-            categoryButtons.forEach(button => {
-                button.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    categoryButtons.forEach(btn => btn.classList.remove('active'));
+    <!-- ===== Scroll Reveal / Counter / Particles ===== -->
+    <script>
+    (function () {
+        'use strict';
+
+        /* ---------- Intersection Observer — scroll reveal ---------- */
+        function initScrollReveal() {
+            var revealEls = document.querySelectorAll('.reveal, .reveal-left, .reveal-right, .reveal-scale, .stat-item');
+            if (!revealEls.length) return;
+
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('revealed');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+            revealEls.forEach(function (el) { observer.observe(el); });
+        }
+
+        /* ---------- Counter animation ---------- */
+        function initCounters() {
+            var counters = document.querySelectorAll('.stat-number[data-target]');
+            var observed = false;
+
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting && !observed) {
+                        observed = true;
+                        counters.forEach(function (el) {
+                            var target = parseInt(el.dataset.target, 10);
+                            var suffix = el.dataset.suffix || '';
+                            var duration = 1800;
+                            var start = 0;
+                            var startTime = null;
+
+                            function animate(ts) {
+                                if (!startTime) startTime = ts;
+                                var progress = Math.min((ts - startTime) / duration, 1);
+                                var ease = 1 - Math.pow(1 - progress, 3); // easeOutCubic
+                                var current = Math.round(ease * target);
+                                el.textContent = current + suffix;
+                                if (progress < 1) requestAnimationFrame(animate);
+                            }
+
+                            requestAnimationFrame(animate);
+                        });
+                        observer.disconnect();
+                    }
+                });
+            }, { threshold: 0.3 });
+
+            var bar = document.getElementById('statsBar');
+            if (bar) observer.observe(bar);
+        }
+
+        /* ---------- Staggered card reveal ---------- */
+        function initCardReveal() {
+            var observer = new IntersectionObserver(function (entries) {
+                entries.forEach(function (entry) {
+                    if (entry.isIntersecting) {
+                        // Stagger the cards
+                        var cards = entry.target.querySelectorAll('.article-card:not(.card-revealed)');
+                        cards.forEach(function (card, i) {
+                            setTimeout(function () {
+                                card.classList.add('card-revealed');
+                            }, i * 120);
+                        });
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.05 });
+
+            var grid = document.getElementById('articlesGrid');
+            if (grid) observer.observe(grid);
+        }
+
+        /* ---------- Hero particles ---------- */
+        function initParticles() {
+            var container = document.getElementById('heroParticles');
+            if (!container) return;
+
+            var colors = [
+                'rgba(0,212,255,0.4)',
+                'rgba(139,92,246,0.3)',
+                'rgba(236,72,153,0.3)',
+                'rgba(0,212,255,0.2)'
+            ];
+
+            for (var i = 0; i < 30; i++) {
+                var p = document.createElement('div');
+                p.className = 'particle';
+                var size = Math.random() * 4 + 2;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.left = Math.random() * 100 + '%';
+                p.style.background = colors[Math.floor(Math.random() * colors.length)];
+                p.style.animationDuration = (Math.random() * 15 + 10) + 's';
+                p.style.animationDelay = (Math.random() * 10) + 's';
+                container.appendChild(p);
+            }
+        }
+
+        /* ---------- Parallax on hero ---------- */
+        function initParallax() {
+            var heroInner = document.querySelector('.hero-inner');
+            if (!heroInner) return;
+
+            window.addEventListener('scroll', function () {
+                var scrollY = window.pageYOffset;
+                if (scrollY < window.innerHeight) {
+                    heroInner.style.transform = 'translateY(' + (scrollY * 0.3) + 'px)';
+                    heroInner.style.opacity = 1 - (scrollY / window.innerHeight) * 0.6;
+                }
+            }, { passive: true });
+        }
+
+        /* ---------- Init all on DOMContentLoaded ---------- */
+        document.addEventListener('DOMContentLoaded', function () {
+            initScrollReveal();
+            initCounters();
+            initParticles();
+            initParallax();
+            // Card reveal is re-initialized after articles load
+        });
+
+        // Expose for post-fetch re-init
+        window.__initCardReveal = initCardReveal;
+        window.__initScrollReveal = initScrollReveal;
+    })();
+    </script>
+
+    <!-- ===== Blog filters (category & search) ===== -->
+    <script>
+        function initBlogFilters() {
+            var categoryButtons = document.querySelectorAll('.category-btn');
+            var searchInput = document.getElementById('searchInput');
+            var noResults = document.getElementById('noResults');
+            var currentCategory = 'all';
+
+            categoryButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    categoryButtons.forEach(function (btn) { btn.classList.remove('active'); });
                     this.classList.add('active');
-                    currentCategory = category;
+                    currentCategory = this.dataset.category;
                     filterArticles();
                 });
             });
 
-            // Search functionality
-            searchInput.addEventListener('input', function() {
-                filterArticles();
-            });
+            if (searchInput) {
+                searchInput.addEventListener('input', function () {
+                    filterArticles();
+                });
+            }
 
-            // Filter articles based on category and search
             function filterArticles() {
-                const articleCards = document.querySelectorAll('#articlesGrid .article-card');
-                const searchTerm = searchInput.value.toLowerCase();
-                let visibleCount = 0;
+                var articleCards = document.querySelectorAll('#articlesGrid .article-card');
+                var searchTerm = (searchInput ? searchInput.value : '').toLowerCase();
+                var visibleCount = 0;
 
-                articleCards.forEach(card => {
-                    const titleEl  = card.querySelector('h3');
-                    const excerptEl = card.querySelector('.article-excerpt');
-                    const title    = titleEl  ? titleEl.textContent.toLowerCase()   : '';
-                    const excerpt  = excerptEl ? excerptEl.textContent.toLowerCase() : '';
-                    const tags     = Array.from(card.querySelectorAll('.tag')).map(tag => tag.textContent.toLowerCase());
+                articleCards.forEach(function (card) {
+                    var titleEl = card.querySelector('h3');
+                    var excerptEl = card.querySelector('.article-excerpt');
+                    var title = titleEl ? titleEl.textContent.toLowerCase() : '';
+                    var excerpt = excerptEl ? excerptEl.textContent.toLowerCase() : '';
+                    var tags = Array.from(card.querySelectorAll('.tag')).map(function (t) { return t.textContent.toLowerCase(); });
 
-                    const matchesSearch = title.includes(searchTerm) ||
-                                         excerpt.includes(searchTerm) ||
-                                         tags.some(tag => tag.includes(searchTerm));
-
-                    const matchesCategory = currentCategory === 'all' ||
-                                            (card.dataset.category || '').includes(currentCategory);
+                    var matchesSearch = title.includes(searchTerm) ||
+                                        excerpt.includes(searchTerm) ||
+                                        tags.some(function (t) { return t.includes(searchTerm); });
+                    var matchesCategory = currentCategory === 'all' ||
+                                          (card.dataset.category || '').includes(currentCategory);
 
                     if (matchesSearch && matchesCategory) {
                         card.style.display = 'block';
@@ -764,68 +1583,59 @@
                     }
                 });
 
-                noResults.style.display = visibleCount === 0 ? 'block' : 'none';
+                if (noResults) noResults.style.display = visibleCount === 0 ? 'block' : 'none';
             }
         }
     </script>
 
-
-
-
-    <!-- ===== [FIX] 記事フェッチ（修正版） ===== -->
+    <!-- ===== Article Fetch ===== -->
     <script>
     document.addEventListener('DOMContentLoaded', async function () {
 
-        const articlesGrid = document.getElementById('articlesGrid');
-        const popularGrid  = document.getElementById('popularGrid');
+        var articlesGrid = document.getElementById('articlesGrid');
+        var popularGrid  = document.getElementById('popularGrid');
+        var API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
 
-        // ---- [FIX 1] APIエンドポイント（末尾スラッシュなし統一） ----
-        const API_URL = 'https://coderoute90-api.coderoute90.workers.dev';
-
-        // ---- ヘルパー: 記事カードの HTML を生成 ----
         function buildArticleCard(post) {
-            // [FIX] post自体やtitleが存在しない場合のガード
-            if (!post || typeof post !== 'object') {
-                console.error('[CodeRoute90] buildArticleCard: postが不正な値です', post);
-                return '';
-            }
-            const postTitle = post.title || '(タイトルなし)';
-            const dateStr = post.createdAt
-                ? new Date(post.createdAt).toLocaleDateString('ja-JP')
-                : '';
-            const eyecatchHtml = post.eyecatch
-                ? `<img src="${post.eyecatch.url}" alt="${escapeHtml(postTitle)}" style="width:100%;height:100%;object-fit:cover;border-radius:8px;">`
+            if (!post || typeof post !== 'object') return '';
+            var postTitle = post.title || '(タイトルなし)';
+            var dateStr = post.createdAt ? new Date(post.createdAt).toLocaleDateString('ja-JP') : '';
+            var eyecatchHtml = post.eyecatch
+                ? '<img src="' + post.eyecatch.url + '" alt="' + escapeHtml(postTitle) + '" style="width:100%;height:100%;object-fit:cover;border-radius:12px;">'
                 : '<i class="fas fa-code"></i>';
-            const rawText = post.content
-                ? post.content.replace(/<[^>]*>?/gm, '')
-                : '';
-            const excerpt = rawText.length > 80
-                ? rawText.substring(0, 80) + '...'
-                : rawText || '記事の詳細は「続きを読む」からご確認ください。';
+            var rawText = post.content ? post.content.replace(/<[^>]*>?/gm, '') : '';
+            var excerpt = rawText.length > 80 ? rawText.substring(0, 80) + '...' : rawText || '記事の詳細は「続きを読む」からご確認ください。';
 
-            return `
-                <article class="article-card card" data-category="experience">
-                    <div class="article-header">
-                        <div class="article-title">
-                            <p class="meta">
-                                <span class="date"><i class="far fa-calendar-alt"></i> ${dateStr}</span>
-                            </p>
-                            <h3>${escapeHtml(postTitle)}</h3>
-                        </div>
-                        <div class="article-image">${eyecatchHtml}</div>
-                    </div>
-                    <p class="article-excerpt">${escapeHtml(excerpt)}</p>
-                    <div class="article-tags">
-                        <span class="tag">#ITスクール</span>
-                        <span class="tag">#未経験</span>
-                    </div>
-                    <a href="post.html?id=${encodeURIComponent(post.id)}" class="read-more">
-                        続きを読む <i class="fas fa-arrow-right"></i>
-                    </a>
-                </article>`;
+            return '<article class="article-card" data-category="experience">' +
+                '<div class="article-header">' +
+                    '<div class="article-title">' +
+                        '<p class="meta"><span class="date"><i class="far fa-calendar-alt"></i> ' + dateStr + '</span></p>' +
+                        '<h3>' + escapeHtml(postTitle) + '</h3>' +
+                    '</div>' +
+                    '<div class="article-image">' + eyecatchHtml + '</div>' +
+                '</div>' +
+                '<p class="article-excerpt">' + escapeHtml(excerpt) + '</p>' +
+                '<div class="article-tags"><span class="tag">#ITスクール</span><span class="tag">#未経験</span></div>' +
+                '<a href="post.html?id=' + encodeURIComponent(post.id) + '" class="read-more">続きを読む <i class="fas fa-arrow-right"></i></a>' +
+            '</article>';
         }
 
-        // ---- ヘルパー: XSS 対策 ----
+        function buildPopularCard(post, rank) {
+            if (!post || typeof post !== 'object') return '';
+            var postTitle = post.title || '(タイトルなし)';
+            var dateStr = post.createdAt ? new Date(post.createdAt).toLocaleDateString('ja-JP') : '';
+            var rawText = post.content ? post.content.replace(/<[^>]*>?/gm, '') : '';
+            var excerpt = rawText.length > 60 ? rawText.substring(0, 60) + '...' : rawText || '';
+
+            return '<div class="popular-card" onclick="window.location.href=\'post.html?id=' + encodeURIComponent(post.id) + '\'">' +
+                '<div class="popular-rank">0' + rank + '</div>' +
+                '<p style="font-size:0.8rem;color:var(--text-muted);margin-bottom:0.5rem;"><i class="far fa-calendar-alt"></i> ' + dateStr + '</p>' +
+                '<h3 style="font-size:1.1rem;color:var(--text-primary);-webkit-text-fill-color:unset;background:none;margin-bottom:0.75rem;line-height:1.4;">' + escapeHtml(postTitle) + '</h3>' +
+                '<p style="font-size:0.85rem;color:var(--text-secondary);line-height:1.6;">' + escapeHtml(excerpt) + '</p>' +
+                '<span class="read-more" style="margin-top:1rem;display:inline-flex;align-items:center;">続きを読む <i class="fas fa-arrow-right" style="margin-left:0.5rem;"></i></span>' +
+            '</div>';
+        }
+
         function escapeHtml(str) {
             return String(str)
                 .replace(/&/g, '&amp;')
@@ -835,85 +1645,74 @@
                 .replace(/'/g, '&#039;');
         }
 
-        // ---- ヘルパー: カード クリックで続きを読む ----
         function attachCardClickHandlers(grid) {
-            grid.querySelectorAll('.article-card').forEach(card => {
+            grid.querySelectorAll('.article-card').forEach(function (card) {
                 card.addEventListener('click', function (e) {
                     if (e.target.tagName === 'A' || e.target.closest('a')) return;
-                    const link = card.querySelector('.read-more');
+                    var link = card.querySelector('.read-more');
                     if (link) link.click();
                 });
             });
         }
 
         try {
-            // ---- [FIX 2] fetch に CORS モード・Accept ヘッダを明示 ----
-            const response = await fetch(`${API_URL}?limit=100&orders=-publishedAt`, {
-  method:  'GET',
-  mode:    'cors',
-  headers: { 'Accept': 'application/json' }
-});
+            var response = await fetch(API_URL + '?limit=100&orders=-publishedAt', {
+                method: 'GET',
+                mode: 'cors',
+                headers: { 'Accept': 'application/json' }
+            });
 
-
-            // ---- [FIX 3] HTTP エラーを明示的に検出 ----
             if (!response.ok) {
-                throw new Error(`サーバーエラー: ${response.status} ${response.statusText}`);
+                throw new Error('サーバーエラー: ' + response.status + ' ' + response.statusText);
             }
 
-            const data = await response.json();
+            var data = await response.json();
 
-            // ---- [FIX 4] レスポンス構造を検証 ----
             if (!data || !Array.isArray(data.contents)) {
-                throw new Error('APIレスポンスの形式が想定と異なります（contents 配列が見つかりません）');
+                throw new Error('APIレスポンスの形式が想定と異なります');
             }
 
-            // ---- 記事グリッドをクリアして差し込む ----
             articlesGrid.innerHTML = '';
 
             if (data.contents.length === 0) {
-                articlesGrid.innerHTML = `
-                    <div class="no-results">
-                        <i class="fas fa-inbox" aria-hidden="true"></i>
-                        <h3>記事がまだありません</h3>
-                        <p>最初の記事を公開しましょう！</p>
-                    </div>`;
+                articlesGrid.innerHTML =
+                    '<div class="no-results">' +
+                    '<i class="fas fa-inbox" aria-hidden="true"></i>' +
+                    '<h3>記事がまだありません</h3>' +
+                    '<p>最初の記事を公開しましょう！</p>' +
+                    '</div>';
             } else {
-                data.contents.forEach(post => {
+                data.contents.forEach(function (post) {
                     articlesGrid.innerHTML += buildArticleCard(post);
                 });
                 attachCardClickHandlers(articlesGrid);
             }
 
-            // ---- [FIX 5] popularGrid にも記事を反映（先頭3件） ----
+            // Popular grid — top 3
             if (popularGrid) {
                 popularGrid.innerHTML = '';
-                const popular = data.contents.slice(0, 3);
-                popular.forEach(post => {
-                    popularGrid.innerHTML += buildArticleCard(post);
+                var popular = data.contents.slice(0, 3);
+                popular.forEach(function (post, idx) {
+                    popularGrid.innerHTML += buildPopularCard(post, idx + 1);
                 });
-                attachCardClickHandlers(popularGrid);
             }
 
-            // ---- フィルター機能を初期化（DOM 挿入後に呼ぶ） ----
+            // Init filters & card reveal after DOM insert
             if (typeof initBlogFilters === 'function') initBlogFilters();
+            if (typeof window.__initCardReveal === 'function') window.__initCardReveal();
 
         } catch (error) {
-            // ---- [FIX 6] エラー詳細をページに表示してデバッグを容易に ----
             console.error('[CodeRoute90] 記事取得エラー:', error);
-
-            articlesGrid.innerHTML = `
-                <div class="no-results">
-                    <i class="fas fa-exclamation-triangle" style="color:#ff6b6b;" aria-hidden="true"></i>
-                    <h3>記事の読み込みに失敗しました</h3>
-                    <p>時間をおいて再度お試しください。</p>
-                    <p style="font-size:0.78rem;color:#999;margin-top:0.75rem;word-break:break-all;">
-                        詳細: ${escapeHtml(error.message)}
-                    </p>
-                </div>`;
+            articlesGrid.innerHTML =
+                '<div class="no-results">' +
+                '<i class="fas fa-exclamation-triangle" style="color:#ff6b6b;" aria-hidden="true"></i>' +
+                '<h3>記事の読み込みに失敗しました</h3>' +
+                '<p>時間をおいて再度お試しください。</p>' +
+                '<p style="font-size:0.78rem;color:#999;margin-top:0.75rem;word-break:break-all;">詳細: ' + escapeHtml(error.message) + '</p>' +
+                '</div>';
         }
     });
     </script>
-    <!-- ===== /[FIX] 記事フェッチ ===== -->
 
     <!-- ===== Hamburger Menu Script ===== -->
     <script>
@@ -935,7 +1734,6 @@
                 btn.setAttribute('aria-expanded', 'true');
                 btn.setAttribute('aria-label', 'メニューを閉じる');
                 if (overlay) { overlay.style.display = 'block'; setTimeout(function(){ overlay.classList.add('active'); }, 10); }
-                /* スクロールロック */
                 document.body.style.overflow = 'hidden';
             }
 
@@ -945,7 +1743,6 @@
                 btn.setAttribute('aria-expanded', 'false');
                 btn.setAttribute('aria-label', 'メニューを開く');
                 if (overlay) { overlay.classList.remove('active'); setTimeout(function(){ overlay.style.display = 'none'; }, 300); }
-                /* スクロールロック解除 */
                 document.body.style.overflow = '';
             }
 
@@ -954,12 +1751,8 @@
                 if (nav.classList.contains('open')) { closeMenu(); } else { openMenu(); }
             });
 
-            /* オーバーレイクリックで閉じる */
-            if (overlay) {
-                overlay.addEventListener('click', closeMenu);
-            }
+            if (overlay) { overlay.addEventListener('click', closeMenu); }
 
-            /* メニューリンククリックで閉じる＋ナビゲーション */
             nav.querySelectorAll('a').forEach(function (link) {
                 link.addEventListener('click', function (e) {
                     e.preventDefault();
@@ -967,7 +1760,6 @@
                     closeMenu();
                     if (!href || href === '#') return;
                     if (href.charAt(0) === '#') {
-                        /* 同一ページ内アンカースクロール */
                         setTimeout(function () {
                             var target = document.querySelector(href);
                             if (target) {
@@ -978,31 +1770,21 @@
                             }
                         }, 350);
                     } else {
-                        /* 別ページへ遷移 */
-                        setTimeout(function () {
-                            window.location.href = href;
-                        }, 50);
+                        setTimeout(function () { window.location.href = href; }, 50);
                     }
                 });
             });
 
-            /* ESCキーで閉じる */
             document.addEventListener('keydown', function (e) {
                 if (e.key === 'Escape' && nav.classList.contains('open')) { closeMenu(); }
             });
 
-            /* リサイズ時にメニューをリセット */
             window.addEventListener('resize', function () {
-                if (window.innerWidth > 768 && nav.classList.contains('open')) {
-                    closeMenu();
-                }
-                if (typeof window.__relocateMobileNav === 'function') {
-                    window.__relocateMobileNav();
-                }
+                if (window.innerWidth > 768 && nav.classList.contains('open')) { closeMenu(); }
+                if (typeof window.__relocateMobileNav === 'function') { window.__relocateMobileNav(); }
             });
         });
     })();
     </script>
-    <!-- ===== /Hamburger Menu Script ===== -->
 </body>
 </html>
